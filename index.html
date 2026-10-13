@@ -709,6 +709,13 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 .eveInfo{font-size:14px}
 .eveInfo p{margin:2px 0}
 .panel.atHome .btns,.panel.atHome .held{display:none}
+/* v1.60.2：夕がたの ボタンの 段（とばす・おやすみ）。「きょうのできごと」の すぐ下。おうちの あいだだけ。
+   scroll-margin：さいごに ボタンを 見せるとき、画面の 下の はしに ぴったり つけない */
+.eveBtns{display:none;gap:8px}
+.panel.atHome .eveBtns{display:flex}
+.eveBtns .btn{min-height:46px}
+.eveBtns #homeSkip{flex:none;padding:10px 18px}
+.eveBtns #sleepBtn{flex:1 1 auto;scroll-margin:12px 0 24px}
 .plate{display:block;margin:6px auto 0;width:150px;height:84px}
 .xfer textarea{width:100%;height:60px;font-size:16px;line-height:1.2;border:1px solid var(--border);border-radius:10px;padding:6px;font-family:ui-monospace,monospace;color:var(--muted);background:#fff;resize:none}
 .xfer .msg{font-size:12px;color:var(--muted);min-height:1.4em}
@@ -1325,7 +1332,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.60.1</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.60.2</span></span>
   </div>
 
   <div class="hud">
@@ -1760,9 +1767,12 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
       <div class="logTitle">きょうのできごと</div>
       <div class="logText" id="logText" aria-live="polite"></div>
     </div>
+    <!-- v1.60.2（依頼者「おやすみ（次の日へ）のボタンが下に移動してしまいました。きょうのできごとの近くあたり、画面からよく見える位置に作り直してください。」）：
+         夕がたの ボタンの 段は「きょうのできごと」の すぐ下（畑の「1日を終える」の 段と ほぼ 同じ ところ）。夕がたの まとめ（#eveningBar）は その下。
+         前は まとめの いちばん下で、まとめの 行が ふえるたびに 下へ ずれていた -->
+    <div class="eveBtns" id="eveBtns"><button class="btn" id="homeSkip" type="button">とばす</button><button class="btn primary" id="sleepBtn" type="button" disabled>おやすみ（次の日へ）</button></div>
     <div class="evening" id="eveningBar">
       <div class="eveInfo" id="eveInfo"></div>
-      <div class="rowEnd"><button class="btn small" id="homeSkip" type="button">とばす</button><button class="btn primary" id="sleepBtn" type="button" disabled>おやすみ（次の日へ）</button></div>
     </div>
     <div class="btns" id="mainBtns">
       <button class="btn" id="restBtn" type="button">ひとやすみ（30分）</button>
@@ -9604,7 +9614,6 @@ async function homeEvening(cands){
   eveInfo.innerHTML=info;
   homeSkipBtn.style.display='none';
   sleepBtn.disabled=false;
-  try{ sleepBtn.scrollIntoView({block:'nearest',behavior:reduceMotion?'auto':'smooth'}); sleepBtn.focus({preventScroll:true}); }catch(e){}
   if(dish) log('夕ごはんは'+dish.name+'。ほまれくんは「'+yumH+'」、しゃだはる君は「'+yumD+'」と大よろこびでした。');
   if(reqDone) log('ほまれくんのリクエストの'+CROPS[reqDone].name+'がとれて、とてもよろこんでいました。');
   if(newReq) log('ほまれくんが「'+(newReq.soon?'あしたは':'こんど、')+CROPS[newReq.crop].name+'が食べたいなあ」と言っていました。');
@@ -9613,6 +9622,7 @@ async function homeEvening(cands){
   if(newDecor) log('なごみ度のごほうびで、おうちに、'+newDecor.name+'がふえました。');
   else if(newReward) log(newReward.log);
   if(newSeasonal) log(newSeasonal.log);
+  try{ sleepBtn.scrollIntoView({block:'nearest',behavior:reduceMotion?'auto':'smooth'}); sleepBtn.focus({preventScroll:true}); }catch(e){}   /* v1.60.2：ログを 書いた あとで 見せる */
   saveNow();   /* v1.54.1：保存は待たない（前は await。アプリのプレビューでは 保存が通信なので、おわるまで「おやすみ」を押しても反応しなかった） */
   await new Promise(res=>sleepBtn.addEventListener('click',res,{once:true}));
   sleepBtn.disabled=true; Snd.hush(4200); Snd.play('night',.5);
