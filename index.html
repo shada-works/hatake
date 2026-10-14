@@ -478,6 +478,28 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 .sheet{position:absolute;left:0;top:0;right:0;bottom:0;z-index:200;display:none;align-items:flex-end;justify-content:center;background:rgba(70,63,55,.28);border-radius:20px;padding:10px}
 .sheet.on{display:flex}
 .sheet.center{align-items:center}
+/* v1.61.2（依頼者「メニュー表示は、画面のスクロールなしで、すべてのメニューが見られるように」）：夕ごはんの メニューは 景色の 枠（440px）では なく 画面ぜんたいに かさねる（.sheet.full＝position:fixed。カードは 画面の 高さまで）。
+   メニューの 行は 少し つめる（56px → 48px）。それでも 入りきらない 低い 画面では fitSheet が .card.tight（説明の 文 .fitSub を けす・字と 絵を 小さく）→ .tighter（見出しも つめる）を 足す。さいごまで 入らないとき（横向きなど）だけ スクロール。
+   v1.61.3（依頼者「種えらびにも反映して」）：種えらびも .sheet.full。つめる CSS は .seeds ぜんぶ（種えらびの 2列の 札も）。にっき・なごみ度・行事を見る は 前のまま（景色の 枠の 中） */
+.sheet.full{position:fixed;border-radius:0;padding:max(10px,env(safe-area-inset-top)) 10px max(10px,env(safe-area-inset-bottom))}
+.seeds.menu{gap:6px;margin:8px 0 4px}
+.seeds.menu .seed{min-height:48px;padding:5px 10px}
+.card.tight .fitSub{display:none}
+.card.tight .fridgeNow{margin-top:2px}
+.card.tight .seeds{gap:4px;margin:6px 0 2px}
+.card.tight .seeds .seed{min-height:42px;padding:3px 8px;border-radius:12px}
+.card.tight .seeds .seed>svg{width:30px;height:30px}
+.card.tight .seeds .seed b{font-size:13px}
+.card.tight .seeds .seed b.long{font-size:11px}
+.card.tight .seeds .seed span{font-size:11px}
+.card.tight .seeds .seed .icons svg.dishArt{width:40px;height:40px;margin:-4px 0 -3px}
+.card.tighter .cardHead{padding:6px 10px 5px 14px;margin-bottom:6px}
+.card.tighter .cardHead h2{font-size:15px}
+.card.tighter .seeds{gap:3px}
+.card.tighter .seeds .seed{min-height:38px;padding:2px 8px}
+.card.tighter .seeds .seed>svg{width:26px;height:26px}
+.card.tighter .seeds .seed .icons svg.dishArt{width:36px;height:36px;margin:-4px 0 -3px}
+.card.tighter .seeds .seed em{font-size:10px;padding:0 5px}
 .card{width:min(520px,100%);max-height:100%;overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:14px}
 .card h2{font-size:16px;margin:0 0 4px}
 /* かさなる画面の見出し：スクロールしても上に残り、いつでも右上の「とじる」が押せる */
@@ -1333,7 +1355,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.61.1</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.61.4</span></span>
   </div>
 
   <div class="hud">
@@ -1690,7 +1712,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
             <ellipse cx="262" cy="355" rx="90" ry="33" fill="#a87c4e"/>
             <ellipse cx="262" cy="351" rx="90" ry="33" fill="#c99a68"/>
             <ellipse cx="262" cy="351" rx="80" ry="27.5" fill="none" stroke="#d6ad7e" stroke-width="1.6" opacity=".55"/>
-            <g id="mikanPos"><ellipse id="mikanShadow" cx="202" cy="370" rx="16" ry="3.4" fill="rgba(60,44,24,.16)" style="display:none"/><g id="g-mikan"><ellipse cx="202" cy="365" rx="13" ry="5" fill="#b98a58"/><circle cx="196.5" cy="360" r="5.2" fill="#f39a3a"/><circle cx="207" cy="360.5" r="5.2" fill="#f5a648"/><circle cx="201.6" cy="354.6" r="5.2" fill="#f39a3a"/><g fill="#6fae62"><circle cx="201.6" cy="350.6" r="1.2"/><circle cx="196.5" cy="356" r="1"/><circle cx="207" cy="356.5" r="1"/></g><path d="M189.4 365 C192 370.6 212 370.6 214.6 365" fill="none" stroke="#a87c4e" stroke-width="2.4" stroke-linecap="round"/></g></g>   <!-- v1.53.1：mikanPos＝みかんのかごの場所（左の器が出る夜は 床へ。mikanFit） -->
+            <g id="mikanPos"><ellipse id="mikanShadow" cx="202" cy="370" rx="16" ry="3.4" fill="rgba(60,44,24,.16)" style="display:none"/><g id="g-mikan"><ellipse cx="202" cy="365" rx="13" ry="5" fill="#b98a58"/><circle cx="196.5" cy="360" r="5.2" fill="#f39a3a"/><circle cx="207" cy="360.5" r="5.2" fill="#f5a648"/><circle cx="201.6" cy="354.6" r="5.2" fill="#f39a3a"/><g fill="#6fae62"><circle cx="201.6" cy="350.6" r="1.2"/><circle cx="196.5" cy="356" r="1"/><circle cx="207" cy="356.5" r="1"/></g><path d="M189.4 365 C192 370.6 212 370.6 214.6 365" fill="none" stroke="#a87c4e" stroke-width="2.4" stroke-linecap="round"/></g></g>   <!-- v1.53.1：mikanPos＝みかんのかごの場所（左の器が出る夜は 床へ。mikanFit）。v1.61.4：床には おろさず、左の器の 夜は かくす（transform・影は 使わない） -->
           </g>
           <g id="g-setting" style="display:none">
             <ellipse cx="209" cy="334" rx="11" ry="4" fill="#fffdf8" stroke="#d9d0c3" stroke-width="1.4"/>
@@ -7108,13 +7130,14 @@ function renderBooks(){ const n=(S.books==null)?9:S.books; document.querySelecto
 const mikanBowlOn=()=>kotatsuOn() && !!(S.mikan && S.mikan.picked>0 && syOf(S.mikan.picked)===syOf(S.day));
 /* v1.53.1（依頼者「テーブルに三品出すと、みかんと重なる」）：左の器（#hDish2＝ほまれくんの一品・干し大根）が出ている夜は、みかんのかごを こたつの左の床へ おろす。
    ふだん（器が出ていない・右の器だけ）は テーブルの上（前と同じ）。anim＝器が出た瞬間（ぽんと 床に出る） */
+/* v1.61.4（依頼者「みかんが出されていると床に押し出されてしまうので、床には置かずに片付けるように」）：左の器が 出ている あいだは みかんの かごを かくす（床には おろさない）。
+   器が 消えたら（次の 夕がた・朝の setupRoom、誕生日・じゃすたくんの 夜で 器を さげたとき）また こたつの 上。mikanPos の transform と 影は もう 使わない（のこしてある） */
 function mikanFit(anim){
   const p=document.getElementById('mikanPos'), mk=document.getElementById('g-mikan'), d2=document.getElementById('hDish2'), sh=document.getElementById('mikanShadow');
   if(!p || !mk) return;
-  const down=!!(d2 && d2.classList.contains('on')), was=p.hasAttribute('transform');
-  if(down) p.setAttribute('transform','translate(-68 30)'); else p.removeAttribute('transform');
-  if(sh) sh.style.display=down?'':'none';
-  if(anim && down && !was && mk.style.display!=='none' && !reduceMotion && !homeSkip){ mk.classList.remove('popIn'); void mk.getBoundingClientRect(); mk.classList.add('popIn'); }
+  const down=!!(d2 && d2.classList.contains('on'));
+  p.removeAttribute('transform'); if(sh) sh.style.display='none';
+  mk.style.display=(down || !S || !mikanBowlOn())?'none':'';
 }
 function seasonalShow(){
   const se=S.seasonal||{}, kt=kotatsuOn();
@@ -8663,7 +8686,7 @@ function chooseMenu(cands){
   if(homeSkip || cands.length===1 && false) return Promise.resolve(cands[0]);
   return new Promise(res=>{
     menuResolve=()=>{ menuResolve=null; if(modal) closeSheet(); res(cands[0]); };
-    let html='<div class="cardHead"><h2>今日の夕ごはん、なににする？</h2></div><p class="sub">畑の野菜と、冷蔵庫のもので作れるメニューです。</p>'
+    let html='<div class="cardHead"><h2>今日の夕ごはん、なににする？</h2></div><p class="sub fitSub">畑の野菜と、冷蔵庫のもので作れるメニューです。</p>'
       +'<div class="fridgeNow">きょうの冷蔵庫'+(S.fridge||[]).map(k=>'<span>'+icon(FRIDGE[k].icon)+esc(FRIDGE[k].name)+'</span>').join('')+(basilInFridge()?'<span>'+icon('c-basil')+'バジル</span>':'')+'</div><div class="seeds menu">';
     cands.forEach((r,i)=>{
       const f=r.fridge?FRIDGE[r.fridge]:null;
@@ -8671,7 +8694,7 @@ function chooseMenu(cands){
         +(S.recipes[r.name]?'':'<em class="tagNew">はじめて</em>')+(S.request&&r.need.indexOf(S.request.crop)>=0?'<em class="tagReq">リクエスト</em>':'')+'</span></span></button>';
     });
     html+='</div>';
-    openSheet(html,{center:true,locked:true,kind:'menu'});
+    openSheet(html,{center:true,locked:true,kind:'menu',full:true});   /* v1.61.2：画面ぜんたいに（スクロールなしで ぜんぶ 見える） */
     sheetCard.querySelectorAll('[data-dish]').forEach(b=>b.addEventListener('click',()=>{ Snd.play('pick'); const r=cands[+b.dataset.dish]; menuResolve=null; closeSheet(); res(r); }));
   });
 }
@@ -9248,7 +9271,7 @@ const SEASONAL_SCENE={
     hmood(D,'sleepy',2400);
     hsay(D,'ぬくぬくばう〜。');
     await hp(1800);
-    if(mikanBowlOn()){   /* v1.47.0：その冬に みかんをとっていたら */
+    if(mikanBowlOn() && !$('#hDish2').classList.contains('on')){   /* v1.47.0：その冬に みかんをとっていたら。v1.61.4：左の器（ほまれくんの一品など）が 出ている 夜は かたづけたまま（言わない） */
     hsay(E,'みかんも、あるよ。',{mood:'smile'});
     await hp(500);
     const mk=$('#g-mikan'); mk.style.display=''; if(!reduceMotion&&!homeSkip) mk.classList.add('popIn'); if(!homeSkip) Snd.play('spark');
@@ -11339,12 +11362,22 @@ function openSheet(html,opt){
   sheetCard.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',closeSheet));
   sheetKind=opt.kind||null;
   diaryBtn.textContent=sheetKind==='diary'?'にっきをとじる':'にっき';
-  sheet.className='sheet on'+(opt.center?' center':'')+(opt.night?' night':'');
+  sheet.className='sheet on'+(opt.center?' center':'')+(opt.night?' night':'')+(opt.full?' full':'');   /* v1.61.2：full＝画面ぜんたいに かさねる */
   sheetCard.scrollTop=0;
   const f=sheetCard.querySelector('button'); if(f) try{ f.focus({preventScroll:true}); }catch(e){}
+  fitSheet();
 }
+/* v1.61.2：画面ぜんたいの かさなる画面（.sheet.full）で、中身が 入りきらないときは つめる（.card.tight → .tighter。CSS が 見る）。向きが かわったときも */
+function fitSheet(){
+  const c=sheetCard; c.classList.remove('tight','tighter');
+  if(!modal || !sheet.classList.contains('full')) return;
+  const over=()=>c.scrollHeight>c.clientHeight+1;
+  if(!over()) return; c.classList.add('tight');
+  if(!over()) return; c.classList.add('tighter');
+}
+window.addEventListener('resize',()=>{ if(modal) fitSheet(); });
 function closeSheet(){
-  modal=false; sheetLocked=false; sheetKind=null; sheet.className='sheet'; sheetCard.innerHTML='';
+  modal=false; sheetLocked=false; sheetKind=null; sheet.className='sheet'; sheetCard.innerHTML=''; sheetCard.classList.remove('tight','tighter');   /* v1.61.3：つめた しるしも もどす */
   diaryBtn.textContent='にっき';
   if(sheetReturn && sheetReturn.focus) try{ sheetReturn.focus({preventScroll:true}); }catch(e){}
 }
@@ -11355,13 +11388,13 @@ function openSeeds(i){
   if(busy) return;
   const gh=i!=null && isGH(i);
   const keys=Object.keys(CROPS).filter(k=>(gh || CROPS[k].season===season()) && seedOK(k));
-  let html=sheetHead('どの種をまく？')+'<p class="sub">'+(gh?'温室は、どの季節の種でも育ちます。':SEASONS[season()]+'にまける種です。えらんだ種は持ったままになり、あいたマスをタップするだけで続けてまけます。')+'</p><div class="seeds">';
+  let html=sheetHead('どの種をまく？')+'<p class="sub fitSub">'+(gh?'温室は、どの季節の種でも育ちます。':SEASONS[season()]+'にまける種です。えらんだ種は持ったままになり、あいたマスをタップするだけで続けてまけます。')+'</p><div class="seeds">';   /* gh の 文は いまは 出ない（温室の 2マスは バジルと ぶどう。v1.21.0・v1.23.0 から） */
   keys.forEach(k=>{
     const c=CROPS[k];
     html+='<button class="seed'+(S.lastSeed===k?' last':'')+'" type="button" data-seed="'+k+'">'+icon('c-'+k)+'<span><b'+(c.name.length>=8?' class="long"':'')+'>'+esc(c.name)+'</b>'+(c.y2?'<em class="tagReq">2年目の種</em>':c.y3?'<em class="tagReq">3年目の種</em>':'')+'<span>'+(gh?SEASONS[c.season]+'の野菜・'+SPEED[c.speed].short:SPEED[c.speed].label)+'</span></span></button>';
   });
   html+='</div>';
-  openSheet(html,{kind:'seeds'});
+  openSheet(html,{kind:'seeds',center:true,full:true});   /* v1.61.3：画面ぜんたいに・まんなか（メニューと 同じ。依頼者の希望） */
   sheetCard.querySelectorAll('[data-seed]').forEach(b=>b.addEventListener('click',()=>{ Snd.play('pick');
     const k=b.dataset.seed;
     if(!gh) S.held=k;
