@@ -1,4 +1,4 @@
-# えりとしゃだはるの ちいさな畑
+# ちいさな畑
 
 — Days on a Tiny Garden —
 
