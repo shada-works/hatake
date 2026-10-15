@@ -6,7 +6,7 @@
 
 ## あそぶ
 
-https://yamaoka1973-gif.github.io/hatake/
+https://shada-works.github.io/hatake/
 
 ホーム画面に追加しておくと、アプリのように すぐ開けます。
 
