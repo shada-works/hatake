@@ -1357,7 +1357,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.62.0</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.62.1</span></span>
   </div>
 
   <div class="hud">
@@ -5450,8 +5450,8 @@ function basketPlace(){
   }catch(e){}
 }
 /* ===== v1.59.1：かごを 運ぶ（依頼者「1日を終えておうちに帰る時に、野菜のかごを、えりちゃんとしゃだはる君で運んで帰るように。稲刈りの日は変更しなくてよい」） =====
-   夕がた（ふだんの日）：じょうろを もどしたあと、ふたりで かごの 両わき（えりちゃん 左下・しゃだはる君 右下）に 立つ →「よいしょ」と 持ちあげて（少し うかせて、ふたりより 手前に）→ 玄関の前まで 運んで おろす（えりちゃんと しゃだはる君の あいだ）
-   → おすそわけ・おかえり → おうちへ。おうちが 出たら かごも 中へ（.vp.basketIn＝畑から 消える）。稲刈りの日は 前のまま（かごは 畑に。ほまれくんと 3人で 帰る）。
+   夕がた（ふだんの日）：じょうろを もどしたあと（たくさんとれた日は、先に 畑から おじさんへ おすそわけ して もどってから＝v1.62.1）、ふたりで かごの 両わき（えりちゃん 左下・しゃだはる君 右下）に 立つ →「よいしょ」と 持ちあげて（少し うかせて、ふたりより 手前に）→ 玄関の前まで 運んで おろす（えりちゃんと しゃだはる君の あいだ）
+   → おかえり → おうちへ。おうちが 出たら かごも 中へ（.vp.basketIn＝畑から 消える）。稲刈りの日は 前のまま（かごは 畑に。ほまれくんと 3人で 帰る）。
    朝：かごは 玄関の前（からっぽ）。「いってきます！」→ しゃだはる君が 先に 畑へ → えりちゃんが ひとりで 持って、もとの場所に おいてから 畑へ。
    basketAtDoor は セーブに 入れない（ひらきなおしたら、かごは もとの場所に ある＝朝の 運びは なし）。
    かごの 3つの 部品は left/top で 動かす（BK_HOME から (dx,dy)）。運んでいるあいだは #actors の 中で z330〜（ふたりより 手前）、おろしたら もとの 層へ */
@@ -10936,11 +10936,11 @@ function plateSVG(ids){
   ids.slice(0,2).forEach((id,j)=>{ const x=n===1?54:(j?74:34); items+='<use href="#'+id+'" x="'+x+'" y="16" width="42" height="42"/>'; });
   return '<svg class="plate" viewBox="0 0 150 84" aria-hidden="true"><ellipse cx="75" cy="64" rx="62" ry="15" fill="#e9dfcd"/><ellipse cx="75" cy="60" rx="62" ry="15" fill="#fffdf8" stroke="#d9d0c3" stroke-width="2"/><ellipse cx="75" cy="60" rx="44" ry="9" fill="#f4ecdd"/>'+items+'<g fill="none" stroke="#cfc6b9" stroke-width="2.4" stroke-linecap="round"><path d="M38 22 q-5 -4.5 0 -9"/><path d="M112 22 q5 -4.5 0 -9"/></g></svg>';
 }
-/* たくさんとれた日（v1.24.0。依頼者の指定）：きのうまで3日間の平均とくらべる。ア＝1.5倍以上（かつ5こ以上）→ 帰り道に おじさんへ おすそわけ、
+/* たくさんとれた日（v1.24.0。依頼者の指定）：きのうまで3日間の平均とくらべる。ア＝1.4倍以上（かつ5こ以上。v1.62.1。前は 1.5倍）→ 帰り道に おじさんへ おすそわけ、
    イ＝1.3倍以上（かつ4こ以上）→ ほまれくんも一品（ア の日は両方）。3日ぶんの記録がない日は、あるぶんだけで平均する（記録がなければ出ない）。
    S.harvHist＝きのうまでの収穫数（さいご3日）、S.bigDay＝{a,b,veg,n}（その夜のぶん。朝に消す） */
-const BIG_A=1.5, BIG_B=1.3, BIG_MIN_A=5, BIG_MIN_B=4;
-const BIG_TWO=1.25, BIG_MIN_TWO=4;   /* v1.49.0：えりちゃんが2品（4こ以上で1.25倍）。3品（ほまれくんも）は 5こ以上で1.3倍（BIG_B・BIG_MIN_B を 4→5 に）。おすそわけ（a）は 5こ以上で1.5倍のまま */
+const BIG_A=1.4, BIG_B=1.3, BIG_MIN_A=5, BIG_MIN_B=4;   /* v1.62.1：おすそわけは 1.4倍（依頼者「ア」。前は 1.5倍。5こ以上は そのまま） */
+const BIG_TWO=1.25, BIG_MIN_TWO=4;   /* v1.49.0：えりちゃんが2品（4こ以上で1.25倍）。3品（ほまれくんも）は 5こ以上で1.3倍（BIG_B・BIG_MIN_B を 4→5 に）。おすそわけ（a）は 5こ以上で1.5倍のまま → v1.62.1 で 1.4倍 */
 function judgeBigDay(){
   const keys=Object.keys(S.today||{}), n=keys.reduce((t,k)=>t+S.today[k],0);
   const h=S.harvHist||[], avg=h.length?h.reduce((a,b)=>a+b,0)/h.length:null;
@@ -10949,7 +10949,7 @@ function judgeBigDay(){
   S.bigDay=(a||b||two)?{a,b,two,veg,n}:null;
   S.harvHist=h.concat([n]).slice(-3);
 }
-/* ア：帰り道に、おじさんの家（左の道の先）へ おすそわけ。時間は進まない。セリフは依頼者の確認まち（v1.24.0） */
+/* ア：帰り道に、おじさんの家（左の道の先）へ おすそわけ。時間は進まない。セリフは依頼者の確認まち（v1.24.0）。v1.62.1：かごを 運ぶ 前に 畑から（endDayBody）。出る 日は 1.4倍（BIG_A） */
 async function giftDetour(){
   const bd=S.bigDay; if(!bd||!bd.a||!bd.veg) return;
   const nm=vegName(bd.veg), withS=A.shada.mode==='follow';
@@ -10995,8 +10995,8 @@ async function endDayBody(){
   await returnCan();   /* v1.22.0：じょうろを小屋へ */
   await returnBigCan();   /* v1.41.0：日照りの日は、3代目を小屋へ */
   const riceDay=hakobiDue();   /* v1.59.1：稲刈りの日は かごは 運ばない（前のまま。依頼者「稲刈りの日は変更しなくてよいです」） */
-  const carried=!riceDay && await carryBasketHome();   /* v1.59.1：ふたりで かごを 玄関の前へ（おすそわけは そのあと、玄関から） */
-  await giftDetour();   /* v1.24.0：たくさんとれた日は、おじさんへ おすそわけ */
+  await giftDetour();   /* v1.24.0：たくさんとれた日は、おじさんへ おすそわけ。v1.62.1（依頼者「イ」）：かごを 運ぶ 前に＝畑から 道へ 行って、もどってから ふたりで かごを 運ぶ（v1.59.1〜v1.62.0 は かごを 玄関へ 運んだ あとに 玄関から 行っていた） */
+  const carried=!riceDay && await carryBasketHome();   /* v1.59.1：ふたりで かごを 玄関の前へ */
   /* v1.52.0：稲刈りの日の夕方、ほまれくんが はざかけの お米を おうちに運ぶ（依頼者の希望）。
      v1.54.2（依頼者の希望）：帰る前に 田んぼへ寄って、ほまれくんと 3人で いっしょに帰る（前は 先に田んぼ → ほまれくんは ひとりで先に帰って、玄関で「おかえり！」）。
      じょうろ・3代目・おすそわけは 田んぼの前に（田んぼからは まっすぐ おうちへ） */
