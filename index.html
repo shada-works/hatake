@@ -1357,7 +1357,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.62.1</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.62.2</span></span>
   </div>
 
   <div class="hud">
@@ -10949,7 +10949,7 @@ function judgeBigDay(){
   S.bigDay=(a||b||two)?{a,b,two,veg,n}:null;
   S.harvHist=h.concat([n]).slice(-3);
 }
-/* ア：帰り道に、おじさんの家（左の道の先）へ おすそわけ。時間は進まない。セリフは依頼者の確認まち（v1.24.0）。v1.62.1：かごを 運ぶ 前に 畑から（endDayBody）。出る 日は 1.4倍（BIG_A） */
+/* ア：帰り道に、おじさんの家（左の道の先）へ おすそわけ。時間は進まない。セリフは依頼者の確認まち（v1.24.0）。v1.62.1：かごを 運ぶ 前に 畑から（endDayBody）。出る 日は 1.4倍（BIG_A）。v1.62.2：かごから 1つ 取ってから */
 async function giftDetour(){
   const bd=S.bigDay; if(!bd||!bd.a||!bd.veg) return;
   const nm=vegName(bd.veg), withS=A.shada.mode==='follow';
@@ -10957,6 +10957,15 @@ async function giftDetour(){
   await pause(1900);
   if(withS){ setMood('shada','happy',1600); say('shada','おじさん、よろこぶばう！',2200); }
   await pause(1500); hush();
+  /* v1.62.2（依頼者「かごから1つ取ってから」）：かごの 左下（運ぶときと 同じ 場所 BK.eriL）へ 行って、かごから 1つ 取る（かごの 中から 手もとへ 飛ぶ）。しゃだはる君は 右下（BK.shadaR）。かごが 畑に ないとき（夕がたは ないはず）は 前のまま 手もとに 出す */
+  if(!vp.classList.contains('basketIn')){
+    focusRange(60,370);   /* かごと ふたりが 入る（carryBasketHome と 同じ） */
+    await Promise.all([moveTo(A.eri,BK.eriL), withS?sleep(reduceMotion?0:150).then(()=>moveShada(BK.shadaR)):Promise.resolve()]);
+    await pause(150);
+    await eriWorkAt({x:290,y:243});   /* かごの ほうを 向いて、かがむ */
+    Snd.play('pick');
+    await flyIcon('c-'+bd.veg,{x:290,y:241},{x:A.eri.x,y:A.eri.y+8});   /* かごの 中（flyToBasket の 行き先）から 手もとへ */
+  }
   A.eri.el.querySelector('.carry').innerHTML=icon('c-'+bd.veg); A.eri.el.classList.add('carrying');
   focusRange(0,330);
   const road={x:70,y:412}, away={x:-40,y:414};
