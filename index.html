@@ -370,6 +370,14 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 .actor.uke .hold svg{width:34px;height:34px;transform:rotate(25deg) scaleX(-1)}   /* 大きく（19px → 34px）。ネックは 右上（ひく人の 左手がわ）へ */
 .actor.uke.strum .hold .hand.hl{animation:strumHand .24s ease-in-out infinite alternate}
 @keyframes strumHand{0%{transform:translate(-.6px,-1.6px)}100%{transform:translate(.6px,1.8px)}}
+/* v1.66.0：手の 形を 足した（依頼者「手の動きをつけられるものには、手の絵を加えてみたい」）。
+   carry＝両手で 持つ（お皿の 束・できあがった 料理・おみやげ・ケーキ・くだもの・すいか・石・絵本）／reachL・reachR＝片手を 左・右へ のばす（さし出す・受けとる。もう片方は おろした うで）／wipe＝ふきんで 食卓を ふく（wiping の あいだ 手と ふきんが 左右に 動く） */
+.actor.posed .hold{display:block}   /* 持ちものが なくても、手（受けとる 手）は 見える */
+.actor.carry .holdIn{max-width:48px}
+.actor .hold svg.mid{width:24px;height:24px;margin:0 -1px}   /* お皿の 束・ふきん・おはし */
+.actor .hold svg.dishArt{width:30px;height:30px;margin:0;overflow:visible}   /* できあがった 料理（DISH.icon） */
+.actor.wipe.wiping .holdIn,.actor.wipe.wiping .hold .hand{animation:wipeHand .5s ease-in-out infinite alternate}
+@keyframes wipeHand{0%{transform:translateX(-4px)}100%{transform:translateX(4px)}}
 .actor.offer.offerR .hold{transform:translate(calc(-50% + 23px),-42px)}   /* v1.61.0：右どなりへ さし出す（えりちゃん → じゃすたくん。すいかの おみやげ） */
 .actor.jasta.offer.offerR .hold{transform:translate(calc(-50% + 16px),-52px)}   /* v1.51.0：となりの しゃだはる君の顔にかくれないよう、頭の上（少し右）にかかげる（armsUp と組で使う） */
 .actor .holdIn{display:flex;flex-wrap:wrap-reverse;align-items:center;justify-content:center;width:max-content;max-width:40px}
@@ -1186,6 +1194,10 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
   <symbol id="i-cake" viewBox="0 0 40 40"><path d="M5 19 V29 C5 34 35 34 35 29 V19Z" fill="#f6dfb6"/><path d="M5 24.5 C5 28.8 35 28.8 35 24.5" fill="none" stroke="#ef9a9a" stroke-width="2.4"/><ellipse cx="20" cy="19" rx="15" ry="5.6" fill="#fffdf8" stroke="#eadfce" stroke-width="1"/><g fill="#e0524f"><path d="M10.5 17.6 c0 -5 6.4 -5 6.4 0 c0 3 -6.4 3 -6.4 0Z"/><path d="M17 14.2 c0 -5 6.4 -5 6.4 0 c0 3 -6.4 3 -6.4 0Z"/><path d="M23.4 17.8 c0 -5 6.4 -5 6.4 0 c0 3 -6.4 3 -6.4 0Z"/></g><g fill="#7fb069"><circle cx="13.7" cy="13.6" r="1.3"/><circle cx="20.2" cy="10.2" r="1.3"/><circle cx="26.6" cy="13.8" r="1.3"/></g><path d="M8 27 V31" stroke="#fbeccd" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-ball" viewBox="0 0 40 40"><circle cx="20" cy="22" r="12.5" fill="#e8786d"/><path d="M8.3 18.6 C14 24.4 26 24.4 31.7 18.6" fill="none" stroke="#fffdf8" stroke-width="3.6" stroke-linecap="round"/><path d="M12.8 14.4 q3 -3.6 7 -3.9" fill="none" stroke="#f5b3ab" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-camera" viewBox="0 0 40 40"><rect x="12" y="8.5" width="10" height="7" rx="2" fill="#5b5b63"/><rect x="5" y="13" width="30" height="20" rx="4.5" fill="#6a6a73"/><rect x="5" y="17" width="30" height="4" fill="#5b5b63"/><circle cx="20" cy="23" r="7" fill="#d9e6ee" stroke="#3d3d44" stroke-width="2.6"/><circle cx="17.8" cy="20.8" r="1.9" fill="#fff"/><circle cx="30" cy="17" r="1.7" fill="#f2c14e"/></symbol>
+  <!-- v1.66.0：お皿の 束（食卓の お皿と 同じ 色）・ふきん（水色の チェック）・おはし（2ぜん） -->
+  <symbol id="i-plates" viewBox="0 0 40 40"><ellipse cx="20" cy="31.5" rx="16" ry="5.2" fill="#e9dfcd"/><ellipse cx="20" cy="29.5" rx="16" ry="5.2" fill="#fffdf8" stroke="#d9d0c3" stroke-width="1.4"/><ellipse cx="20" cy="25" rx="16" ry="5.2" fill="#fffdf8" stroke="#d9d0c3" stroke-width="1.4"/><ellipse cx="20" cy="20.5" rx="16" ry="5.2" fill="#fffdf8" stroke="#d9d0c3" stroke-width="1.4"/><ellipse cx="20" cy="20.5" rx="10.5" ry="2.9" fill="#f4ecdd"/></symbol>
+  <symbol id="i-cloth" viewBox="0 0 40 40"><path d="M6 14 Q20 10 34 14 L33 29 Q20 33 7 29Z" fill="#f3f0e6" stroke="#cfc6b9" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 15 L12.6 30.2 M20 13.2 L20.3 31 M28 15 L28.4 30.2 M7.4 19.6 Q20 16.2 33.6 19.6 M7.2 24.6 Q20 21.2 33.4 24.6" fill="none" stroke="#9cc3d6" stroke-width="1.3" opacity=".9"/></symbol>
+  <symbol id="i-hashiset" viewBox="0 0 40 40"><g stroke="#b9823f" stroke-width="2.3" stroke-linecap="round"><path d="M8 31 L31 8"/><path d="M11.5 33.5 L34.5 10.5"/></g><g stroke="#c96a4a" stroke-width="2.3" stroke-linecap="round"><path d="M5 26.5 L28 3.5"/><path d="M15.5 36 L38.5 13"/></g></symbol>
   <symbol id="i-cup" viewBox="0 0 40 40"><path d="M9 17 H29 V25 C29 31 25 34 19 34 C13 34 9 31 9 25Z" fill="#fffdf8" stroke="#cfc6b9" stroke-width="2"/><path d="M29 19 C35 19 35 28 28.5 28" fill="none" stroke="#cfc6b9" stroke-width="2.4"/><path d="M11 19 H27" stroke="#9cc36b" stroke-width="3" stroke-linecap="round"/><g fill="none" stroke="#cfc6b9" stroke-width="2" stroke-linecap="round"><path d="M15 12 q-3 -4 0 -8"/><path d="M22 12 q-3 -4 0 -8"/></g></symbol>
   <!-- 季節のしるし -->
   <symbol id="i-bcake" viewBox="0 0 40 40"><path d="M5 22 V31 C5 36 35 36 35 31 V22Z" fill="#f6dfb6"/><path d="M5 27 C5 31.5 35 31.5 35 27" fill="none" stroke="#ef9a9a" stroke-width="2.4"/><ellipse cx="20" cy="22" rx="15" ry="5.4" fill="#fffdf8" stroke="#eadfce" stroke-width="1"/><g fill="#e0524f"><path d="M8.8 21 c0 -4.4 5.6 -4.4 5.6 0 c0 2.6 -5.6 2.6 -5.6 0Z"/><path d="M25.6 21 c0 -4.4 5.6 -4.4 5.6 0 c0 2.6 -5.6 2.6 -5.6 0Z"/></g><rect x="12.8" y="8" width="2.8" height="11" rx="1" fill="#f7c9d4"/><rect x="18.6" y="7" width="2.8" height="12" rx="1" fill="#cfe3f5"/><rect x="24.4" y="8" width="2.8" height="11" rx="1" fill="#f9e5a8"/><path d="M14.2 2.5 C16.3 4.7 16.1 7 14.2 7.4 C12.3 7 12.1 4.7 14.2 2.5Z M20 1.5 C22.1 3.7 21.9 6 20 6.4 C18.1 6 17.9 3.7 20 1.5Z M25.8 2.5 C27.9 4.7 27.7 7 25.8 7.4 C23.9 7 23.7 4.7 25.8 2.5Z" fill="#ffb347"/></symbol>
@@ -1384,7 +1396,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.65.2</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.66.0</span></span>
   </div>
 
   <div class="hud">
@@ -6132,7 +6144,7 @@ async function jastaSuikaNight(E,D,H,preview,pat){
     hhush();
     await hmove(E,HSPOT.counterEnd);
     { const at={x:E.x+26,y:E.y-34}; if(!homeSkip) Snd.play('chop'); hfxText('とんとん',at); await w(900); if(!homeSkip) Snd.play('chop'); await w(500); }
-    hhold(E,['c-suika']); await w(300);
+    hhold(E,['c-suika'],'carry'); await w(300);   /* v1.66.0：両手で */
     await hmove(E,seat.E); hhold(E,null);
     ['#hDish2','#hDish3'].forEach(q=>{ const d=$(q); if(d && d.classList.contains('on')){ d.classList.remove('on','eaten','eating'); d.innerHTML=''; } });   /* 一品・もう一品は さげる（左の器が じゃすたくんの お皿と かさなる） */
     mikanFit();
@@ -6174,12 +6186,14 @@ async function jastaSuikaNight(E,D,H,preview,pat){
     hhush();
     await hmove(E,HSPOT.basketLook);
     { const bi=$('#hBasketItems'), u=bi&&bi.querySelector('use[href="#c-suika"]'); if(u && u.parentNode) u.parentNode.style.visibility='hidden'; }   /* かごの すいかを 1つ 取る */
-    hhold(E,['c-suika']); if(!homeSkip) Snd.play('pick'); await w(500);
+    hhold(E,['c-suika'],'carry'); if(!homeSkip) Snd.play('pick'); await w(500);   /* v1.66.0：両手で 持って 行く */
     await hmove(E,seat.giveE);
-    E.el.classList.add('offer','offerR');
+    const rJ={ax:46.5,ay:16};   /* v1.66.0：右の じゃすたくんへ 片手で さし出す（前は 持ちものだけを 右へ ずらしていた） */
+    hhold(E,['c-suika'],'reachR',rJ);
     say(E,'はい、どうぞ。',{mood:'smile'}); await w(1300);
-    hhold(E,null); E.el.classList.remove('offer','offerR');
-    held=await hpass('c-suika',{x:E.x+23,y:E.y-8},{x:JA.x,y:JA.y+22});
+    const fromE=holdCenter(E); hhold(E,null,'reachR',rJ);
+    held=await hpass('c-suika',fromE,{x:JA.x,y:JA.y+22});
+    hhold(E,null);
     hhold(JA,['c-suika']); if(held){ held.remove(); held=null; }
     hmood(JA,'smile',2600); say(JA,'……ありがとうございます。'); await bow(JA); await w(1300);
     if(pt===1){ say(D,'じゃすたくん、よかったばう！',{mood:'happy'}); await wag(2200); }
@@ -7862,7 +7876,7 @@ const LOOP_SCENE={
   /* 9 新しい絵本：2周め＝しろい いぬの おはなし。しゃだはる君が はじめて さいごまで聞ける／3周め＝また ねちゃう（1周めの流れ） */
   async bookshelf(E,D,H,n){
     const alt=n%2===0;
-    hhold(H,[alt?'i-book3':'i-book2']);
+    hhold(H,[alt?'i-book3':'i-book2'],'carry');   /* v1.66.0：両手で ひらいて */
     hsay(H,'そうだ。新しい絵本、買ってきたよ。');
     await hp(1900);
     if(alt){
@@ -8141,7 +8155,7 @@ Object.assign(LOOP_SCENE,{
     hsay(E,'じゃあ、金魚ばちに 入れてあげようか。',{mood:'smile'});
     await hp(1800);
     await hwalkAll([[D,HSPOT.fishD],[E,FISH_E],[H,FISH_H]]); D.el.classList.add('lookupR');   /* ほまれくんは 左へ よける（しゃだはる君が かくれないように） */
-    D.el.classList.remove('carrying'); car.innerHTML=''; hhold(E,['i-stone']);   /* えりちゃんが うけとって */
+    D.el.classList.remove('carrying'); car.innerHTML=''; hhold(E,['i-stone'],'carry');   /* えりちゃんが うけとって（v1.66.0：両手で） */
     await hp(700);
     hhold(E,null); showLook('fishbowl',n); hfxText('ぽちゃん',{x:262,y:104});   /* 金魚ばちへ */
     { const gb=document.getElementById('g-fishbowl'); if(gb && !reduceMotion && !homeSkip){ gb.classList.add('eat'); setTimeout(()=>gb.classList.remove('eat'),1700); } }
@@ -8689,13 +8703,14 @@ async function hfly(id,from,to){
 async function hwork(a){ if(reduceMotion||homeSkip) return; a.el.classList.add('working'); await sleep(440); a.el.classList.remove('working'); }
 /* v1.59.2：手を合わせる（えりちゃん・ほまれくん。しゃだはる君は 体に うでが ないので そのまま＝依頼者）。on＝胸の前で 合わせる／off＝もどす */
 function hgassho(list,on){ list.forEach(a=>{ if(a&&a.el) a.el.classList.toggle('gassho',!!on); }); }
-/* 手に持つ（ids＝しるしのid、3つまで。null で手をからにする） */
-function hhold(a,ids,pose){
+/* 手に持つ（ids＝しるしのid、3つまで。null で手をからにする）。
+   v1.66.0：ids の 要素は '<' で はじまる 生の HTML でも よい（できあがった 料理の 絵 DISH.icon など）。ids が なくても pose が あれば 手だけ 出す（受けとる 手）。opt＝pose の 細かい 指定（reach の ax・ay＝手の 位置、体の 座標） */
+function hhold(a,ids,pose,opt){
   const box=a.el.querySelector('.holdIn'); if(!box) return;
   a.el.classList.remove('offer','show');
-  box.innerHTML=(ids||[]).slice(0,3).map(id=>icon(id)).join('');
+  box.innerHTML=(ids||[]).slice(0,3).map(id=>id.charAt(0)==='<'?id:icon(id)).join('');
   a.el.classList.toggle('holding',!!(ids&&ids.length));
-  poseArms(a,(ids&&ids.length)?pose:null);   /* v1.65.0：pose＝'show'／'cam'／'uke' なら 手と うでも */
+  poseArms(a,pose,opt);   /* v1.65.0：pose＝'show'／'cam'／'uke' なら 手と うでも。v1.66.0：carry／reachL／reachR／wipe */
 }
 /* v1.65.0：持っている ものに 合わせて、手と うでを 描く。手（.hand）は .hold の中＝持ちものの 手前。うで（.poseArm）は 体の SVG に、合掌の そで（.gassho .gL の path）を 写して 肩（9.5,18.5）/（34.5,18.5）から 手まで。
    .holdIn の 左上は、コマの 座標で（23－幅/2＋tx, 47.84＋ty）。体の SVG は コマの（1,34.96）から。手の 位置は .holdIn の 左上から（px） */
@@ -8703,18 +8718,30 @@ function hhold(a,ids,pose){
 const POSE={
   show:(w,h)=>({tx:-w/2,ty:-4,hands:[{x:-1,y:h-7,s:[9.5,18.5]},{x:w+1,y:h-7,s:[34.5,18.5]}]}),                   /* 胸の 前で 両手（野菜の 両はし、下のほう）。3つは 1列（.actor.show .holdIn の max-width） */
   cam:(w,h)=>({tx:-w/2,ty:-15,hands:[{x:2,y:16,s:[9.5,18.5]},{x:w-2,y:16,s:[34.5,18.5]}]}),                    /* カメラの 両わき（あごの 前） */
-  uke:(w,h)=>({tx:-w/2+3,ty:-14,hands:[{x:10,y:20.5,s:[9.5,18.5]},{x:20.5,y:12.5,s:[34.5,18.5]}]})             /* 左＝弦の上（ひく人の 右手）・右＝ネック（左手）。34px の 絵（rotate(25deg) scaleX(-1)）の 位置から */
+  uke:(w,h)=>({tx:-w/2+3,ty:-14,hands:[{x:10,y:20.5,s:[9.5,18.5]},{x:20.5,y:12.5,s:[34.5,18.5]}]}),            /* 左＝弦の上（ひく人の 右手）・右＝ネック（左手）。34px の 絵（rotate(25deg) scaleX(-1)）の 位置から */
+  /* v1.66.0：carry＝両手で 持つ（show と ほぼ 同じ。手は 持ちものの 両はし、高さの 6割の ところ）。reachL／reachR＝片手を 左／右へ のばす（手の 位置は opt の ax・ay＝体の 座標。持ちものは 手の 上に、手は 持ちものの 下の まんなか）。wipe＝右手に ふきん（体の (30,26.5)） */
+  carry:(w,h)=>{ const y=Math.min(h-6,Math.round(h*.62)+2); return {tx:-w/2,ty:-6,hands:[{x:-1,y,s:[9.5,18.5]},{x:w+1,y,s:[34.5,18.5]}]}; },
+  reachL:(w,h,n,o)=>reachPose(w,h,o,-1),
+  reachR:(w,h,n,o)=>reachPose(w,h,o,1),
+  wipe:(w,h)=>({tx:-w/2+8,ty:15.62-h/2,hands:[{x:w/2,y:h/2-2,s:[34.5,18.5]}],rest:[[9.5,18.5]]})
 };
-function poseArms(a,pose){
+function reachPose(w,h,o,side){
+  const ax=(o&&o.ax!=null)?o.ax:(side<0?-2.5:46.5), ay=(o&&o.ay!=null)?o.ay:15.5;   /* 手の 中心（体の 座標。肩（9.5,18.5）／（34.5,18.5）から 12〜13px） */
+  return {tx:ax+1-23-w/2, ty:ay+34.96+4-47.84-h, hands:[{x:w/2,y:h-4,s:side<0?[9.5,18.5]:[34.5,18.5]}], rest:[side<0?[34.5,18.5]:[9.5,18.5]]};
+}
+function poseArms(a,pose,opt){
   const svg=a.el.querySelector('.bob > .hbody'), hold=a.el.querySelector('.hold'), box=a.el.querySelector('.holdIn');
   if(svg){ const old=svg.querySelector('.poseArm'); if(old) old.remove(); }
   if(hold){ hold.querySelectorAll('.hand').forEach(h=>h.remove()); hold.style.transform=''; }
-  a.el.classList.remove('posed','show','cam','uke','strum');
+  a.el.classList.remove('posed','show','cam','uke','strum','carry','reachL','reachR','wipe','wiping');   /* v1.66.0：carry・reachL・reachR・wipe・wiping も */
+  a.pose=null;
   if(!pose || !POSE[pose] || !svg || !hold || !box) return;
   a.el.classList.add(pose);
-  const n=box.children.length||1, w=box.offsetWidth||(pose==='show'?15*n:pose==='cam'?20:30), h=box.offsetHeight||(pose==='show'?19:pose==='cam'?24:34);
-  const P=POSE[pose](w,h,n);
-  hold.style.transform='translate('+P.tx.toFixed(1)+'px,'+P.ty+'px)';   /* v1.65.2：置き場所は ここで（CSS の .show/.cam/.uke には 書かない） */
+  const has=box.children.length>0, n=box.children.length||1;
+  const w=has?(box.offsetWidth||(pose==='show'?15*n:pose==='cam'?20:pose==='uke'?30:15*n)):0, h=has?(box.offsetHeight||(pose==='show'?19:pose==='cam'?24:pose==='uke'?34:19)):0;   /* v1.66.0：持ちものが なければ 0（手だけ） */
+  const P=POSE[pose](w,h,n,opt);
+  a.pose={name:pose,tx:P.tx,ty:P.ty,w,h};   /* v1.66.0：holdCenter が 見る */
+  hold.style.transform='translate('+P.tx.toFixed(1)+'px,'+P.ty.toFixed(1)+'px)';   /* v1.65.2：置き場所は ここで（CSS の .show/.cam/.uke には 書かない） */
   P.hands.forEach((q,i)=>{ const e=document.createElement('i'); e.className='hand '+(i?'hr':'hl'); e.style.left=q.x+'px'; e.style.top=q.y+'px'; hold.appendChild(e); });
   const bx=23+P.tx-1, by=47.84+P.ty-34.96;
   const src=svg.querySelectorAll('.gassho .gL > path'); if(!src.length) return;
@@ -8724,9 +8751,14 @@ function poseArms(a,pose){
     const [sx,sy]=q.s, hx=bx+q.x, hy=by+q.y, cx=sx+(hx-sx)*.25, cy=Math.max(sy,hy)+3.5;   /* ひじは 下がわに */
     sleeve('M'+sx+' '+sy+' Q'+cx.toFixed(1)+' '+cy.toFixed(1)+' '+hx.toFixed(1)+' '+hy.toFixed(1));
   });
+  (P.rest||[]).forEach(([sx,sy])=>{ const k=sx<22?-1:1; sleeve('M'+sx+' '+sy+' Q'+(sx+k*2.4).toFixed(1)+' '+(sy+4.5).toFixed(1)+' '+(sx+k*2.8).toFixed(1)+' '+(sy+9.5).toFixed(1)); });   /* v1.66.0：おろした うで（片手の ポーズの もう一方。ふだんの うでと 同じ 向きに 少し 外へ） */
   svg.appendChild(g);
   a.el.classList.add('posed');
 }
+/* v1.66.0：いま 手に 持っている ものの まんなか（部屋の 座標）。手から 手へ わたす（hpass）・手から なべへ（hfly）の 出発点 */
+function holdCenter(a){ const p=a.pose; if(!p) return {x:a.x,y:a.y+20}; return {x:a.x+p.tx+p.w/2, y:a.y+24.84+p.ty+p.h/2}; }
+/* v1.66.0：その ポーズで w×h の ものを 持ったときの まんなか（まだ 持っていなくても 計れる＝わたす 先。しるし 1つは 15×19） */
+function poseSpot(a,pose,opt,w,h){ const P=POSE[pose](w,h,1,opt); return {x:a.x+P.tx+w/2, y:a.y+24.84+P.ty+h/2}; }
 /* v1.65.0：ウクレレを ひく 右手を 動かす（ms のあいだ） */
 function strumHand(H,ms){ if(reduceMotion||homeSkip||!H) return; H.el.classList.add('strum'); clearTimeout(H.strumT); H.strumT=setTimeout(()=>H.el.classList.remove('strum'),ms); }
 /* 手から手へ：投げずに、まっすぐゆっくり動かす。わたしたものは、そのまま相手の手もとに残る（あとで remove する） */
@@ -8817,7 +8849,7 @@ function setupRoom(){
     ['eri','homare'].forEach(w=>HA[w].el.querySelector('.bob').insertAdjacentHTML('beforeend','<div class="hold"><div class="holdIn"></div></div>'));
   }
   dressHome();   /* v1.58.0：おうちの服を 季節で */
-  Object.values(HA).forEach(a=>{ a.el.classList.remove('sleeping','walking','working','tumble','carrying','wobble','holding','offer','show','jumping','wag','scarf','lookupR','rocking','lookupL','tugL','tugR','nobi','posed','cam','uke','strum');   /* v1.65.0：posed・cam・uke・strum も */ a.el.dataset.mood='normal'; a.bub.classList.remove('on'); const cr=a.el.querySelector('.carry'); if(cr){ cr.style.color=''; cr.classList.remove('mouth'); } });
+  Object.values(HA).forEach(a=>{ a.el.classList.remove('sleeping','walking','working','tumble','carrying','wobble','holding','offer','show','jumping','wag','scarf','lookupR','rocking','lookupL','tugL','tugR','nobi','posed','cam','uke','strum','carry','reachL','reachR','wipe','wiping');   /* v1.65.0：posed・cam・uke・strum も。v1.66.0：carry・reachL・reachR・wipe・wiping も */ a.el.dataset.mood='normal'; a.bub.classList.remove('on'); const cr=a.el.querySelector('.carry'); if(cr){ cr.style.color=''; cr.classList.remove('mouth'); } });
   homeStage.querySelectorAll('.tugRope').forEach(x=>x.remove());   /* v1.53.0 */
   shadaAcc(null); lapBlanket(0); { const gc=document.getElementById('g-clock'); if(gc) gc.classList.remove('wound'); }   /* v1.54.0：おめかしは その夜だけ（つぎの朝・つぎの夜は はずす） */
   bdayCleanup();
@@ -9317,7 +9349,7 @@ const REWARD_NIGHT={
     await hmove(H,HSPOT.fridgeH);
     openFridge(true); if(!homeSkip) Snd.play('fridge');
     await hp(600);
-    hhold(H,['i-cake']);
+    hhold(H,['i-cake'],'carry');   /* v1.66.0：両手で */
     await hp(300);
     openFridge(false);
     await hmove(H,HSPOT.tableHomare);
@@ -9360,7 +9392,7 @@ async function sweetsNight(E,D,H,kind){
   hbubOff(H);
   await hmove(H,HSPOT[w.from]);
   if(w.from==='fridgeH'){ openFridge(true); if(!homeSkip) Snd.play('fridge'); await hp(600); }
-  hhold(H,[w.icon]);
+  hhold(H,[w.icon],'carry');   /* v1.66.0：両手で */
   await hp(300);
   if(w.from==='fridgeH') openFridge(false);
   await hmove(H,HSPOT.tableHomare);
@@ -9391,7 +9423,7 @@ async function dessertNight(E,D,H,kind,preview){
   else if(kind==='sakuranbo'){ if(!homeSkip) Snd.play('water'); hfxText('じゃー',{x:E.x+26,y:E.y-34}); await hp(1300); }   /* v1.35.0：さくらんぼは あらう */
   else if(kind==='mikan'){ hfxText('むきむき',{x:E.x+26,y:E.y-34}); await hp(900); hfxText('むきむき',{x:E.x+26,y:E.y-34}); await hp(700); }   /* v1.35.0：みかんは むく */
   else { if(!homeSkip) Snd.play('chop'); hfxText('とんとん',{x:E.x+26,y:E.y-34}); await hp(900); if(!homeSkip) Snd.play('chop'); await hp(500); }
-  hhold(E,[f.icon]);
+  hhold(E,[f.icon],'carry');   /* v1.66.0：両手で */
   await hp(300);
   if(kind==='budou') openFridge(false);
   await hmove(E,HSPOT.tableEri);
@@ -9456,7 +9488,7 @@ async function fieldDessertNight(E,D,H,kind,form,preview){
   else if(act==='fry'){ if(!homeSkip) Snd.play('sizzle'); hfxText('じゅわー',at); await hp(1300); }
   else if(act==='mix'){ if(!homeSkip) Snd.play('chop'); hfxText('まぜまぜ',at); await hp(1100); }
   else { if(!homeSkip) Snd.play('chop'); hfxText('とんとん',at); await hp(900); if(!homeSkip) Snd.play('chop'); await hp(500); }
-  hhold(E,['c-'+kind]);
+  hhold(E,['c-'+kind],'carry');   /* v1.66.0：両手で */
   await hp(300);
   if(fr) openFridge(false);
   await hmove(E,HSPOT.tableEri);
@@ -9769,20 +9801,26 @@ async function homeEvening(cands){
       await hp(650);
       const inFridge=$('#hFridgeItems').children[(S.fridge||[]).indexOf(dish.fridge)];
       if(inFridge) inFridge.style.visibility='hidden';
-      hhold(H,[fItem.icon]);
+      hhold(H,[fItem.icon],'carry');   /* v1.66.0：両手で 持って 行く */
       await hwork(H);
       await hp(250);
       openFridge(false);
       await hp(200);
       await hmove(H,HSPOT.handH,{ms:760});
       await hp(150);
-      H.el.classList.add('offer');
+      /* v1.66.0：ほまれくんは 左上（台所の えりちゃん）へ 片手で さし出し、えりちゃんは 右下へ 片手を のばして 受けとる。受けとった ものは、なべに 入れるまで えりちゃんの 手に（前は ほまれくんの 横に うかせて、えりちゃんの そばに 置いていた） */
+      const rH={ax:-3,ay:14}, rE={ax:46.5,ay:23};
+      hhold(H,[fItem.icon],'reachL',rH);
       hsay(H,pickV(['はい、'+fItem.name+'。',fItem.name+'、どうぞ。']),{dir:'toR'});
       await hp(1000);
       hsay(E,pickV(['ありがとう。','ありがと。','たすかる。']),{mood:'smile'});
+      hhold(E,null,'reachR',rE);   /* 受けとる 手 */
+      await hp(300);
+      const fromH=holdCenter(H); hhold(H,null,'reachL',rH);   /* ほまれくんの 手から はなれる（うでは のばしたまま） */
+      passAt=poseSpot(E,'reachR',rE,15,19);
+      [passed]=await Promise.all([hpass(fItem.icon,fromH,passAt), hwork(E)]);
+      hhold(E,[fItem.icon],'reachR',rE); if(passed){ passed.remove(); passed=null; }   /* えりちゃんの 手に */
       hhold(H,null);
-      passAt={x:E.x+12,y:E.y+27};
-      [passed]=await Promise.all([hpass(fItem.icon,{x:H.x-23,y:H.y-8},passAt), hwork(E)]);
       await hp(700);
     }
     /* ③ えりちゃんが料理。ほまれくんは食卓の準備。声のかけかたは、日によって2とおり */
@@ -9790,6 +9828,13 @@ async function homeEvening(cands){
     /* v1.55.0：たのみかた・返事を 3とおりずつ（いまの1つに 2つ足した） */
     const plA=askPlates?vary('platesA',[['ほまれくん、お皿おねがい。','うん、まかせて。'],['ほまれくん、お皿、出してくれる？','いいよ。3まいだね。'],['ほまれくん、おはし、おねがいね。','うん。ならべておくね。']]):null;
     const plB=askPlates?null:vary('platesB',['お皿、ならべとくね。','ぼく、お皿 出しておくね。','テーブル、ふいておくね。']);
+    let laid=false;   /* v1.66.0：お皿（おはし・ふきん）を 置いたか */
+    const layTable=async()=>{   /* v1.66.0：運んできた お皿を 食卓に（ふきんなら、ふいてから）。2回 呼ばれても 1回だけ */
+      if(laid) return; laid=true;
+      if(H.el.classList.contains('wipe')){ const c=holdCenter(H); H.el.classList.add('wiping'); hfxText('ふきふき',{x:c.x+20,y:c.y-6}); await hp(1100); H.el.classList.remove('wiping'); }   /* 「ふきふき」は ふきんの そば（吹き出しに かさならない） */
+      hhold(H,null);
+      $('#g-setting').style.display=''; riceShow(true);   /* v1.52.0：お皿と いっしょに お茶碗も */
+    };
     const setting=(async()=>{
       if(askPlates){
         /* たのまれた日は、ほまれくんが まず返事をしてから、お皿をとりに行って並べる（v1.12.1。依頼者の希望） */
@@ -9800,14 +9845,19 @@ async function homeEvening(cands){
         await hp(1400);
         hbubOff(H);   /* 返事を言いおわってから、お皿をとりに歩きだす */
         await hmove(H,HSPOT.counterEnd);
-        await hp(450);
+        await hp(300);
+        hhold(H,[icon(plA[0].indexOf('おはし')>=0?'i-hashiset':'i-plates','mid')],'carry');   /* v1.66.0：お皿の 束（おはしの 日は おはし）を 両手で 運ぶ */
+        await hp(400);
       }else{
         await hmove(H,HSPOT.counterEnd);
         hsay(H,plB);
         await hp(900);
+        const wipe=plB.indexOf('ふいて')>=0;
+        hhold(H,[icon(wipe?'i-cloth':'i-plates','mid')],wipe?'wipe':'carry');   /* v1.66.0：「テーブル、ふいておくね」の 日は ふきん */
+        await hp(400);
       }
       if(sideDish){   /* ほまれくんの一品（v1.24.0）。v1.26.0（依頼者の希望）：お皿をならべてから、ほまれくんも台所まで行って作る。えりちゃんは なべのうしろへ少しずれて、となりをあける */
-        await hmove(H,HSPOT.tableHomare); $('#g-setting').style.display=''; riceShow(true);
+        await hmove(H,HSPOT.tableHomare); await layTable();
         await hp(350);
         await hmove(E,HSPOT.cookPot,{ms:460});
         await hmove(H,HSPOT.cookH);
@@ -9817,7 +9867,7 @@ async function homeEvening(cands){
         await hp(250);
       }
       await hmove(H,HSPOT.tableHomare);
-      $('#g-setting').style.display=''; riceShow(true);   /* v1.52.0：お皿と いっしょに お茶碗も */
+      await layTable();
       if(sideDish) await hmove(E,HSPOT.cook,{ms:460});
     })();
     $('#hSteam').classList.add('on');
@@ -9827,7 +9877,7 @@ async function homeEvening(cands){
       await hfly('c-'+flyNeed[j],{x:30,y:178},{x:80,y:170});
       await hwork(E);
     }
-    if(fItem){ if(passed){ passed.remove(); passed=null; } await hfly(fItem.icon,passAt||{x:E.x+12,y:E.y+27},{x:80,y:170}); await hwork(E); }
+    if(fItem){ if(passed){ passed.remove(); passed=null; } const fromE=E.pose?holdCenter(E):(passAt||{x:E.x+12,y:E.y+27}); hhold(E,null); await hfly(fItem.icon,fromE,{x:80,y:170}); await hwork(E); }   /* v1.66.0：手に 持っていた ものを なべへ */
     if(hoshiDish){ await hfly('c-hoshidaikon',{x:30,y:178},{x:80,y:170}); await hwork(E); }
     if(dish2){ for(const k of dish2.need.slice(0,2)){ await hfly('c-'+k,{x:30,y:178},{x:80,y:170}); await hwork(E); } }   /* v1.49.0：もう一品の材料も かごから */
     if(fridgeDish){ await hfly(FRIDGE[fridgeDish.fridge].icon,{x:200,y:250},{x:80,y:170}); await hwork(E); }   /* v1.49.0：冷蔵庫から */
@@ -9846,7 +9896,10 @@ async function homeEvening(cands){
       hsay(H,vary('doneH',['ありがとう、えりちゃん。','いいにおいだね。','まってました。','わあ、おいしそう。','おなか、ぺこぺこだよ。'],saidOK));   /* v1.55.0：2つ足した */
       await hp(1500);
     }
+    hhold(E,[DISH.icon(shown)],'carry');   /* v1.66.0：できあがった 料理を 両手で 食卓へ 運ぶ（前は 食卓に ぱっと 出ていた）。もう一品・ほまれくんの 一品は これまでどおり 食卓に 出る */
+    await hp(250);
     await hwalkAll([[E,HSPOT.tableEri],[D,HSPOT.tableShada],[H,HSPOT.tableHomare]]);
+    hhold(E,null);
     if(decorShown('clock') && !cuckooTonight && !lapTonight('clock')) cuckoo();   /* v1.54.0：はと時計の しゅうりの夜は 鳴らない（こわれている／とまっている） */   /* v1.32.0：食卓につくと、はと時計が「ぽっぽー」（その夜「はと時計を待つ」が出ていれば、もう鳴らさない） */
     $('#g-setting').style.display=''; riceShow(true);
     $('#hDish').classList.add('on');
@@ -10329,7 +10382,7 @@ function pickPre(quiet,ctx){   /* v1.55.0：ctx＝{need:その夜の料理の野
     await hp(1600);
     hbubOff(D);
     await hmove(H,HSPOT.bookH);
-    hhold(H,['i-book']);
+    hhold(H,['i-book'],'carry');   /* v1.66.0：両手で ひらいて */
     await hp(350);
     await hmove(H,HSPOT.tableHomare);
     hsay(H,'いいよ。むかしむかし、あるところに……');
@@ -12077,7 +12130,7 @@ if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitleEn)
 { const v=document.querySelector('.ver'); let taps=[];
   if(v) v.addEventListener('click',e=>{ e.stopPropagation(); const t=Date.now(); taps=taps.filter(x=>t-x<3000); taps.push(t); if(taps.length>=5){ taps=[]; openGyojiMenu(); } }); }
 if(location.hash.indexOf('debug')>=0){
-  window.__hatake={ hhold, ukeTake, hbubOff, poseArms, strumHand, POSE, PLAY_SETS, THUNDER_SETS, HIDE_LINES, thunderScene, SHELTER, SHELTER_FREE, resumeEveningEnd, saveData, get eveSnap(){return eveSnap;}, goHidden, goVisible, jastaSuikaNight, jastaSuikaDue, jastaSuikaPreview, jportion, getJasta, get JA(){return JA;}, hgassho, carryBasketHome, carryBasketOut, basketTo, basketFrontOf, BK, BK_HOME, get basketAtDoor(){return basketAtDoor;}, set basketAtDoor(v){basketAtDoor=!!v;}, fitTop, renderNagomi, addNagomi, hNagomi, dressHome, HFUKU, renderPaddyLife, paddyLifeKind, paddyFrogTap, tonboFlyTo, tonboNose, paddyLifePreview, PADDY_FROGS, TONBO_ZONE, get plTonbo(){return plTonbo;}, riceBagLevel, renderRiceBag, gyojiLog, get hanamiRice(){return hanamiRice;}, tipOK, GIFT_TALK, VISIT_SETS, VISIT_CALL, visitScene, vary, saidOK, get SAID(){return SAID;}, ERI_TALK, OKAWARI, eriTalk, etSlot, MORN_X, mornExtra, reportLine, svgPop, liftOffFaces, walkHomeTogether, camGlide, bplates, bslice, bcakeSVG, get cameWithH(){return cameWithH;}, TANBO, tanboDue, hakobiDue, shinmaiDue, tanboScene, hakobiScene, shinmaiTalk, shinmaiPreview, tanboPreview, tanboState, renderPaddy, paddyArt, paddyHint, paddyTap, giftTonight, giftServed, giftPick, moreServe, moreEaten, giftRiceTalk, dessertAdd, dessertDue, dessertTime, dessertForm, fieldDessertNight, gourmetPreview, FIELD_DESSERT, DESSERT_LINES, GIFT_BY_SEASON, GIFT_EAT, RICE_DISHES, RICE_TALK, menuOK, riceShow, riceFill, get riceMix(){return riceMix;}, set riceMix(v){riceMix=v||'';}, RICE_MIX, openSeeds, chooseMenu, closeSheet, get tanboView(){return tanboView;}, sayTest:say, focusRange, seedOK, recipeOK, hsay, bubbleHTML, TSUKIMI, hotDry, returnBigCan, eriReturnBigCan, eriCarry, DRY_RUN, spOf, spKeys, spEmpty, HOT_AT, get bigCanCarry(){return bigCanCarry;}, get wxQueue(){return wxQueue;}, weatherScenes, askScene, askLeft, renderAsk, compostTap, ASK_MAX, COMPOST_MAX, place, moveTo, moveShada, shadaCanDown, shadaCarry, shadaMode, afterAction, returnCan, shadaSelfWater, get canDownScene(){return canDownScene;}, rollBig, spawnBug, startRain, yearReview, yearReviewScene, yearSnap, yearLines, openZukan, openDiary, dayStr, get sheetKind(){return sheetKind;}, get bg(){return bg;}, bgWait, set forceWait(v){forceWait=v;}, gyojiPat, GYOJI_LEAD, birthdayNight, get gyojiStep(){return gyojiStep;}, rollWeather, pickPre, gyojiNightDue, nightOn, nightOff, nightOuting, fwLaunch, senkoOn, HANABI, hangCan, hangScene, hangMorning, renderShed, shedTap, nextHoshiDish, hoshiReady, morningPlan, morning, GYOJI, GYOJI_SCENE, gyojiDue, gyojiScene, hRoute, hCross, hInB, HTABLE, HSPOT, hmove, get S(){return S;}, get busy(){return busy;}, get hiddenNow(){return hiddenNow;}, get pausedMs(){return pausedMs;}, gnow, shadaAcc, lapBlanket, heightArt, plantArt, pawArt, fishbowlArt, BLANKET, ACC, SONGS, playSong, homeMorning, get sceneDepth(){return sceneDepth;}, pumpTimers, mikanFit, basketPlace, get lastErr(){return lastErr;}, get stall(){return {n:stallN,max:stallMax};}, saveDiag, saveNow, get saveOK(){return saveOK;}, A, homeEvening, pickPre, dishCandidates, makeRequest, get HA(){return HA;}, advance, maybeEvent, renderAll, addHarvest, checkUnlocks, nextMorning, Store, CROPS, RECIPES, UNLOCKS, EVENTS, FRIDGE, rollFridge, rollWeather, placeFrost, weatherScenes, importSave, exportSave, normalize, Snd, GIFTS, planVisit, visitDue, fitVisit, DISH, setPortions, shelterAtShed, restAtHome, placeTreasure, rest, FRUITS, plantTree, plantVine, pickFruit, TREES, treeTap, dessertNight, fruitMorning, renderTree, moveShada, shadaSelfWater, selfWaterTarget, returnCan, playerAction, endDay, plantBasil, pickBasil, pickV, judgeBigDay, giftDetour, basilInFridge, SLOT_MAX, makeRoomFor, seasonSwap, fixup, workLeft, decorShown, closetTalk, openFridge, cuckoo, feedFish, mirrorReflect, strum, playUke, sitRock, seasonalDue, seasonalShow, SEASONAL, SEASONAL_SCENE, setupRoom, REWARD_NIGHT, DECOR, REWARDS, rewardSetup, LOOP, LOOP_SCENE, lapNext, lapReward, lapReady, lapPreview, renderLooks, showLook, bringOut, tugGame, tugRope, paintArt, LOOK_ART, lookN, lookV, nextReward, dueReward, renderNagomi, openNagomi, rewardCard, sweetsNight, updatePhoto, get SW(){return {n:S.swN,day:S.swDay,can:S.canOut};},
+  window.__hatake={ hhold, ukeTake, hbubOff, poseArms, strumHand, POSE, holdCenter, poseSpot, PLAY_SETS, THUNDER_SETS, HIDE_LINES, thunderScene, SHELTER, SHELTER_FREE, resumeEveningEnd, saveData, get eveSnap(){return eveSnap;}, goHidden, goVisible, jastaSuikaNight, jastaSuikaDue, jastaSuikaPreview, jportion, getJasta, get JA(){return JA;}, hgassho, carryBasketHome, carryBasketOut, basketTo, basketFrontOf, BK, BK_HOME, get basketAtDoor(){return basketAtDoor;}, set basketAtDoor(v){basketAtDoor=!!v;}, fitTop, renderNagomi, addNagomi, hNagomi, dressHome, HFUKU, renderPaddyLife, paddyLifeKind, paddyFrogTap, tonboFlyTo, tonboNose, paddyLifePreview, PADDY_FROGS, TONBO_ZONE, get plTonbo(){return plTonbo;}, riceBagLevel, renderRiceBag, gyojiLog, get hanamiRice(){return hanamiRice;}, tipOK, GIFT_TALK, VISIT_SETS, VISIT_CALL, visitScene, vary, saidOK, get SAID(){return SAID;}, ERI_TALK, OKAWARI, eriTalk, etSlot, MORN_X, mornExtra, reportLine, svgPop, liftOffFaces, walkHomeTogether, camGlide, bplates, bslice, bcakeSVG, get cameWithH(){return cameWithH;}, TANBO, tanboDue, hakobiDue, shinmaiDue, tanboScene, hakobiScene, shinmaiTalk, shinmaiPreview, tanboPreview, tanboState, renderPaddy, paddyArt, paddyHint, paddyTap, giftTonight, giftServed, giftPick, moreServe, moreEaten, giftRiceTalk, dessertAdd, dessertDue, dessertTime, dessertForm, fieldDessertNight, gourmetPreview, FIELD_DESSERT, DESSERT_LINES, GIFT_BY_SEASON, GIFT_EAT, RICE_DISHES, RICE_TALK, menuOK, riceShow, riceFill, get riceMix(){return riceMix;}, set riceMix(v){riceMix=v||'';}, RICE_MIX, openSeeds, chooseMenu, closeSheet, get tanboView(){return tanboView;}, sayTest:say, focusRange, seedOK, recipeOK, hsay, bubbleHTML, TSUKIMI, hotDry, returnBigCan, eriReturnBigCan, eriCarry, DRY_RUN, spOf, spKeys, spEmpty, HOT_AT, get bigCanCarry(){return bigCanCarry;}, get wxQueue(){return wxQueue;}, weatherScenes, askScene, askLeft, renderAsk, compostTap, ASK_MAX, COMPOST_MAX, place, moveTo, moveShada, shadaCanDown, shadaCarry, shadaMode, afterAction, returnCan, shadaSelfWater, get canDownScene(){return canDownScene;}, rollBig, spawnBug, startRain, yearReview, yearReviewScene, yearSnap, yearLines, openZukan, openDiary, dayStr, get sheetKind(){return sheetKind;}, get bg(){return bg;}, bgWait, set forceWait(v){forceWait=v;}, gyojiPat, GYOJI_LEAD, birthdayNight, get gyojiStep(){return gyojiStep;}, rollWeather, pickPre, gyojiNightDue, nightOn, nightOff, nightOuting, fwLaunch, senkoOn, HANABI, hangCan, hangScene, hangMorning, renderShed, shedTap, nextHoshiDish, hoshiReady, morningPlan, morning, GYOJI, GYOJI_SCENE, gyojiDue, gyojiScene, hRoute, hCross, hInB, HTABLE, HSPOT, hmove, get S(){return S;}, get busy(){return busy;}, get hiddenNow(){return hiddenNow;}, get pausedMs(){return pausedMs;}, gnow, shadaAcc, lapBlanket, heightArt, plantArt, pawArt, fishbowlArt, BLANKET, ACC, SONGS, playSong, homeMorning, get sceneDepth(){return sceneDepth;}, pumpTimers, mikanFit, basketPlace, get lastErr(){return lastErr;}, get stall(){return {n:stallN,max:stallMax};}, saveDiag, saveNow, get saveOK(){return saveOK;}, A, homeEvening, pickPre, dishCandidates, makeRequest, get HA(){return HA;}, advance, maybeEvent, renderAll, addHarvest, checkUnlocks, nextMorning, Store, CROPS, RECIPES, UNLOCKS, EVENTS, FRIDGE, rollFridge, rollWeather, placeFrost, weatherScenes, importSave, exportSave, normalize, Snd, GIFTS, planVisit, visitDue, fitVisit, DISH, setPortions, shelterAtShed, restAtHome, placeTreasure, rest, FRUITS, plantTree, plantVine, pickFruit, TREES, treeTap, dessertNight, fruitMorning, renderTree, moveShada, shadaSelfWater, selfWaterTarget, returnCan, playerAction, endDay, plantBasil, pickBasil, pickV, judgeBigDay, giftDetour, basilInFridge, SLOT_MAX, makeRoomFor, seasonSwap, fixup, workLeft, decorShown, closetTalk, openFridge, cuckoo, feedFish, mirrorReflect, strum, playUke, sitRock, seasonalDue, seasonalShow, SEASONAL, SEASONAL_SCENE, setupRoom, REWARD_NIGHT, DECOR, REWARDS, rewardSetup, LOOP, LOOP_SCENE, lapNext, lapReward, lapReady, lapPreview, renderLooks, showLook, bringOut, tugGame, tugRope, paintArt, LOOK_ART, lookN, lookV, nextReward, dueReward, renderNagomi, openNagomi, rewardCard, sweetsNight, updatePhoto, get SW(){return {n:S.swN,day:S.swDay,can:S.canOut};},
     visit:async()=>{ if(busy) return false; busy=true; renderButtons(); S.oji={sy:Math.floor((S.day-1)/SEASON_DAYS),day:S.day,at:S.clock,done:false}; await visitScene(); busy=false; renderButtons(); return true; },
     force:async id=>{ if(busy) return false; busy=true; renderButtons(); S.sinceEvent=9; const r=await maybeEvent(false,id); await checkUnlocks(); busy=false; renderButtons(); return r; } };
 }
