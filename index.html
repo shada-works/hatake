@@ -1386,7 +1386,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.65.0</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.65.1</span></span>
   </div>
 
   <div class="hud">
@@ -3784,8 +3784,11 @@ async function thunderScene(){
   if(A.shada.mode==='nap') wakeShada(false);
   stopWatch(); cancelErrand();
   setMood('shada','scared');
-  say('shada','ひゃっ！かみなりばう！');
-  await pause(1100);
+  /* v1.65.1：セリフは THUNDER_SETS の 4とおりを 順ぐりに（4つめは 2回めの 雷から）。間は 字数で */
+  S.thunderN=(S.thunderN||0)+1;
+  const th=vary('thunder',THUNDER_SETS,x=>!(x.later && S.thunderN<2)).l, tms=t=>900+String(t).replace(/[、。！？…\s]/g,'').length*65;
+  say('shada',th[0]);
+  await pause(tms(th[0]));
   shadaMode('hide');
   focusRange(40,330);
   place(A.homare,SPOT.doorHomare.x,SPOT.doorHomare.y,0);
@@ -3793,21 +3796,21 @@ async function thunderScene(){
   const dist=Math.hypot(SPOT.hideShada.x-A.shada.x,SPOT.hideShada.y-A.shada.y);
   await moveTo(A.shada,SPOT.hideShada,{ms:Math.round(clamp(dist*1.3,320,1100))});
   /* 玄関ではふたりがくっついているので、吹き出しは1つずつ出す */
-  say('shada','ほまれくーん！');
-  await pause(1200);
+  say('shada',th[1]);
+  await pause(tms(th[1]));
   hush();
-  say('homare','しゃだはる、だいじょうぶだよ。');
-  await pause(1900);
+  say('homare',th[2]);
+  await pause(tms(th[2])+300);
   hush();
-  say('shada','こわかったばう……');
-  await pause(1500);
+  say('shada',th[3]);
+  await pause(tms(th[3]));
   hush();
   focus(A.eri.x);
   await pause(500);
   setMood('eri','happy',1800);
-  say('eri','しゃだはる、かみなり苦手だもんね。');
+  say('eri',th[4]);
   log('雷が鳴って、しゃだはる君は家まで走って逃げました。雨があがるまで、ほまれくんのそばにいるようです。');
-  await pause(1300);
+  await pause(tms(th[4]));
 }
 async function stormReturn(){
   shadaMode('follow'); setMood('shada','normal');
@@ -6890,13 +6893,31 @@ async function walkTo(x,y){
   busy=false; runQueued();
 }
 /* 天気のわるいとき（雨・夕立・雪）のひとやすみ：おうちの前に帰って、ほまれくんと話す */
+/* v1.65.1（依頼者「セリフにパターンを持たせて」）：ふたりが 遊んで 寝落ちする 夜の セリフ 4とおり＝[しゃだはる, ほまれ, しゃだはる, えり]。1つめは v1.17.0 からの もの。2〜4つめは 依頼者の確認まち */
+const PLAY_SETS=[
+  ['ほまれくん、あそぶばう！','しゃだはる、それっ！','もういっかいばう！','ふたりとも、ねちゃった。毛布かけとこう。'],
+  ['ほまれくん、おいかけっこ ばう！','よーし、まてまてー。','つかまらないばう！','あらあら、ふたりとも ねちゃった。毛布、かけておこう。'],
+  ['ほまれくん、ボール ばう！','いくよ、しゃだはる。','とったばう！もういっかい！','遊びつかれて、ねちゃったね。かぜ ひかないように、毛布。'],
+  ['ほまれくん、あそぼうばう！','いいよ。じゃあ、よーい、どん。','まけないばう！','ふふ、ふたりとも おやすみ。毛布かけとこう。']
+];
+/* v1.65.1（依頼者「雷の時のしゃだはる君の台詞もワンパターン」）：雷の 場面の セリフ＝[しゃだはる（ピカッ）, しゃだはる（玄関で）, ほまれ, しゃだはる, えり]。1つめは v1.26.0 からの もの。2〜4つめは 依頼者の確認まち。
+   4つめ（「こわくないばう……ひゃっ！」）は 2回めの 雷から（S.thunderN） */
+const THUNDER_SETS=[
+  {l:['ひゃっ！かみなりばう！','ほまれくーん！','しゃだはる、だいじょうぶだよ。','こわかったばう……','しゃだはる、かみなり苦手だもんね。']},
+  {l:['ゴロゴロ、きたばう！','ほまれくん、いるばう？','いるよ。おいで、しゃだはる。','ここなら、へいきばう……','ふふ、ほまれくんのところへ 一目散だね。']},
+  {l:['わっ！おなかに ひびくばう！','ほまれくーん、かみなりばう！','うん、聞こえたよ。もう だいじょうぶ。','……しっぽが、ぶるぶるするばう。','しゃだはる、しっぽまで こわがってる。']},
+  {l:['……こわくないばう。こわくない……ひゃっ！','ほまれくーん！','ははは。おいで、しゃだはる。','ちょっとだけ、こわかったばう。','ちょっとだけ、ね。'],later:true}
+];
+/* 雷で かくれている あいだに なでたとき（pet）の ひとこと（1つめは 前からの もの。2・3つめは 依頼者の確認まち） */
+const HIDE_LINES=['かみなり、こわいばう……','まだ、ゴロゴロ してるばう……','えりちゃんも、ここに いてばう……'];
 const SHELTER={
   rain:[
     [['homare','えりちゃん、雨やどりしていきなよ。'],['eri','うん。ちょっと休んでいくね。','smile'],['shada','ぬれたばう。ぶるぶるばう。'],['homare','あったかいお茶、いれたよ。']],
     [['homare','よくふるなあ。ぬれなかった？'],['eri','だいじょうぶ。畑はよろこんでるよ。','smile'],['shada','あめのにおい、するばう。'],['homare','お茶にしようか。']]
   ],
   storm:[
-    [['homare','すごい雷だね。ここで休んでいきなよ。'],['eri','うん。しゃだはる、ずっとここにいたの？','smile'],['shada','ここが、あんしんばう……'],['homare','お茶、いれたよ。']]
+    [['homare','すごい雷だね。ここで休んでいきなよ。'],['eri','うん。しゃだはる、ずっとここにいたの？','smile'],['shada','ここが、あんしんばう……'],['homare','お茶、いれたよ。']],
+    [['homare','えりちゃんも、ぬれなかった？'],['eri','だいじょうぶ。しゃだはる、おとなしくしてた？','smile'],['shada','ほまれくんの そばに いたばう。'],['homare','えらかったね。お茶、どうぞ。']]   /* v1.65.1：依頼者の確認まち */
   ],
   snow:[
     [['homare','えりちゃん、さむかったでしょ。'],['eri','うん。でも、雪きれいだよ。','happy'],['shada','ゆき、たのしいばう！'],['homare','あったかいお茶、どうぞ。']],
@@ -6908,7 +6929,8 @@ const SHELTER={
 const SHELTER_LEAD={rain:'ふってきたね。ちょっと、ひとやすみしよっか。', snow:'雪だね。おうちで、あったまろっか。', storm:'わたしも、雨やどりしようかな。'};
 const SHELTER_FREE={
   rain:[SHELTER.rain[0]], snow:SHELTER.snow,
-  storm:[[['homare','すごい雷だね。ここで休んでいきなよ。'],['eri','うん。ちょっと休んでいくね。','smile'],['shada','ここが、あんしんばう……'],['homare','お茶、いれたよ。']]]
+  storm:[[['homare','すごい雷だね。ここで休んでいきなよ。'],['eri','うん。ちょっと休んでいくね。','smile'],['shada','ここが、あんしんばう……'],['homare','お茶、いれたよ。']],
+         [['homare','えりちゃんも、ぬれなかった？'],['eri','だいじょうぶ。わたしも、休んでいくね。','smile'],['shada','ほまれくんの そばに いたばう。'],['homare','えらかったね。お茶、どうぞ。']]]   /* v1.65.1：依頼者の確認まち */
 };
 /* 物置のひさしで雨やどり（v1.20.0。依頼者の希望「農機具のある小屋はひさし付きにして、雨宿りも出来るように」）。
    えりちゃんが自分から雨やどりに行くとき、物置があって、畑の右半分より右にいれば（A.eri.x>460）、おうちではなく物置へ。
@@ -7133,7 +7155,7 @@ function pet(){
   if(A.shada.mode==='nap'){ fxText('すやすや…',{x:A.shada.x,y:A.shada.y-30}); return; }
   if(A.shada.mode==='watch'){ say('shada','いま見張ってるばう。'); return; }
   if(A.shada.mode==='errand'){ say('shada','いま運んでるばう。'); return; }
-  if(A.shada.mode==='hide'){ say('shada','かみなり、こわいばう……'); return; }
+  if(A.shada.mode==='hide'){ say('shada',pickV(HIDE_LINES)); return; }   /* v1.65.1：3とおり */
   if(A.shada.mode==='event'){ if(!reduceMotion){ A.shada.el.classList.add('jumping'); setTimeout(()=>A.shada.el.classList.remove('jumping'),920); } return; }   /* v1.37.2：出来事のあいだ */
   setMood('shada','happy',1500); setMood('eri','smile',1500);
   Snd.play('pet');
@@ -10023,26 +10045,27 @@ async function homeEvening(cands){
   }
   /* v1.63.2（依頼者「なごみ度のごほうびの夜の条件を外す」）：ごほうびの夜にも、ごほうびの あとに 出る（夕ごはんの前の おめかしの夜も）。v1.17.0〜v1.63.1 は ごほうびの夜は 出なかった（else if）。
      出ない夜は いままでどおり：季節のもの（風鈴・こたつ）・行事・じゃすたくんの すいかの夜・夕ごはんの ない夜 */
-  if(!sz && !jsuikaDone && dish && !nightG && rnd()<.28){
-    /* ほまれくんとしゃだはる君が遊んで、ふたりとも寝落ち */
+  if(!sz && !jsuikaDone && dish && !nightG && rnd()<.18){   /* v1.65.1：28％ → 18％（依頼者「15〜20パーセントぐらいまでに」。v1.63.2 で ごほうびの夜にも 出るように したので） */
+    /* ほまれくんとしゃだはる君が遊んで、ふたりとも寝落ち。v1.65.1：セリフは PLAY_SETS の 4とおりを 順ぐりに（さいきん出た組は しばらく出さない） */
     noteHappen('play');
     hhush();   /* v1.63.2：ごほうびの 吹き出しが のこっていたら しまう */
+    const ps=vary('play',PLAY_SETS), pms=t=>900+String(t).replace(/[、。！？…\s]/g,'').length*65;
     await Promise.all([hmove(H,HSPOT.playH), hmove(D,HSPOT.playD)]);
-    hsay(D,'ほまれくん、あそぶばう！');
-    await hp(1300);
-    hsay(H,'しゃだはる、それっ！');
+    hsay(D,ps[0]);
+    await hp(pms(ps[0]));
+    hsay(H,ps[1]);
     await hp(500);
     await hmove(D,{x:HSPOT.playD.x+52,y:HSPOT.playD.y-6}); await hmove(D,HSPOT.playD);
     await hp(350);
     hmood(D,'happy',1500);
-    hsay(D,'もういっかいばう！');
-    await hp(1400);
+    hsay(D,ps[2]);
+    await hp(pms(ps[2]));
     [H,D].forEach(a=>{ a.el.classList.add('sleeping'); hmood(a,'sleepy'); });
     hhush();
     await hp(1600);
     $('#hBlanket').classList.add('on');
-    hsay(E,'ふたりとも、ねちゃった。毛布かけとこう。',{mood:'smile'});
-    await hp(1900);
+    hsay(E,ps[3],{mood:'smile'});
+    await hp(pms(ps[3])+300);
     asleep=true; hNagomi(2,{x:(H.x+D.x)/2,y:H.y-34});
   }
 
@@ -12054,7 +12077,7 @@ if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitleEn)
 { const v=document.querySelector('.ver'); let taps=[];
   if(v) v.addEventListener('click',e=>{ e.stopPropagation(); const t=Date.now(); taps=taps.filter(x=>t-x<3000); taps.push(t); if(taps.length>=5){ taps=[]; openGyojiMenu(); } }); }
 if(location.hash.indexOf('debug')>=0){
-  window.__hatake={ hhold, ukeTake, hbubOff, poseArms, strumHand, POSE, resumeEveningEnd, saveData, get eveSnap(){return eveSnap;}, goHidden, goVisible, jastaSuikaNight, jastaSuikaDue, jastaSuikaPreview, jportion, getJasta, get JA(){return JA;}, hgassho, carryBasketHome, carryBasketOut, basketTo, basketFrontOf, BK, BK_HOME, get basketAtDoor(){return basketAtDoor;}, set basketAtDoor(v){basketAtDoor=!!v;}, fitTop, renderNagomi, addNagomi, hNagomi, dressHome, HFUKU, renderPaddyLife, paddyLifeKind, paddyFrogTap, tonboFlyTo, tonboNose, paddyLifePreview, PADDY_FROGS, TONBO_ZONE, get plTonbo(){return plTonbo;}, riceBagLevel, renderRiceBag, gyojiLog, get hanamiRice(){return hanamiRice;}, tipOK, GIFT_TALK, VISIT_SETS, VISIT_CALL, visitScene, vary, saidOK, get SAID(){return SAID;}, ERI_TALK, OKAWARI, eriTalk, etSlot, MORN_X, mornExtra, reportLine, svgPop, liftOffFaces, walkHomeTogether, camGlide, bplates, bslice, bcakeSVG, get cameWithH(){return cameWithH;}, TANBO, tanboDue, hakobiDue, shinmaiDue, tanboScene, hakobiScene, shinmaiTalk, shinmaiPreview, tanboPreview, tanboState, renderPaddy, paddyArt, paddyHint, paddyTap, giftTonight, giftServed, giftPick, moreServe, moreEaten, giftRiceTalk, dessertAdd, dessertDue, dessertTime, dessertForm, fieldDessertNight, gourmetPreview, FIELD_DESSERT, DESSERT_LINES, GIFT_BY_SEASON, GIFT_EAT, RICE_DISHES, RICE_TALK, menuOK, riceShow, riceFill, get riceMix(){return riceMix;}, set riceMix(v){riceMix=v||'';}, RICE_MIX, openSeeds, chooseMenu, closeSheet, get tanboView(){return tanboView;}, sayTest:say, focusRange, seedOK, recipeOK, hsay, bubbleHTML, TSUKIMI, hotDry, returnBigCan, eriReturnBigCan, eriCarry, DRY_RUN, spOf, spKeys, spEmpty, HOT_AT, get bigCanCarry(){return bigCanCarry;}, get wxQueue(){return wxQueue;}, weatherScenes, askScene, askLeft, renderAsk, compostTap, ASK_MAX, COMPOST_MAX, place, moveTo, moveShada, shadaCanDown, shadaCarry, shadaMode, afterAction, returnCan, shadaSelfWater, get canDownScene(){return canDownScene;}, rollBig, spawnBug, startRain, yearReview, yearReviewScene, yearSnap, yearLines, openZukan, openDiary, dayStr, get sheetKind(){return sheetKind;}, get bg(){return bg;}, bgWait, set forceWait(v){forceWait=v;}, gyojiPat, GYOJI_LEAD, birthdayNight, get gyojiStep(){return gyojiStep;}, rollWeather, pickPre, gyojiNightDue, nightOn, nightOff, nightOuting, fwLaunch, senkoOn, HANABI, hangCan, hangScene, hangMorning, renderShed, shedTap, nextHoshiDish, hoshiReady, morningPlan, morning, GYOJI, GYOJI_SCENE, gyojiDue, gyojiScene, hRoute, hCross, hInB, HTABLE, HSPOT, hmove, get S(){return S;}, get busy(){return busy;}, get hiddenNow(){return hiddenNow;}, get pausedMs(){return pausedMs;}, gnow, shadaAcc, lapBlanket, heightArt, plantArt, pawArt, fishbowlArt, BLANKET, ACC, SONGS, playSong, homeMorning, get sceneDepth(){return sceneDepth;}, pumpTimers, mikanFit, basketPlace, get lastErr(){return lastErr;}, get stall(){return {n:stallN,max:stallMax};}, saveDiag, saveNow, get saveOK(){return saveOK;}, A, homeEvening, pickPre, dishCandidates, makeRequest, get HA(){return HA;}, advance, maybeEvent, renderAll, addHarvest, checkUnlocks, nextMorning, Store, CROPS, RECIPES, UNLOCKS, EVENTS, FRIDGE, rollFridge, rollWeather, placeFrost, weatherScenes, importSave, exportSave, normalize, Snd, GIFTS, planVisit, visitDue, fitVisit, DISH, setPortions, shelterAtShed, restAtHome, placeTreasure, rest, FRUITS, plantTree, plantVine, pickFruit, TREES, treeTap, dessertNight, fruitMorning, renderTree, moveShada, shadaSelfWater, selfWaterTarget, returnCan, playerAction, endDay, plantBasil, pickBasil, pickV, judgeBigDay, giftDetour, basilInFridge, SLOT_MAX, makeRoomFor, seasonSwap, fixup, workLeft, decorShown, closetTalk, openFridge, cuckoo, feedFish, mirrorReflect, strum, playUke, sitRock, seasonalDue, seasonalShow, SEASONAL, SEASONAL_SCENE, setupRoom, REWARD_NIGHT, DECOR, REWARDS, rewardSetup, LOOP, LOOP_SCENE, lapNext, lapReward, lapReady, lapPreview, renderLooks, showLook, bringOut, tugGame, tugRope, paintArt, LOOK_ART, lookN, lookV, nextReward, dueReward, renderNagomi, openNagomi, rewardCard, sweetsNight, updatePhoto, get SW(){return {n:S.swN,day:S.swDay,can:S.canOut};},
+  window.__hatake={ hhold, ukeTake, hbubOff, poseArms, strumHand, POSE, PLAY_SETS, THUNDER_SETS, HIDE_LINES, thunderScene, SHELTER, SHELTER_FREE, resumeEveningEnd, saveData, get eveSnap(){return eveSnap;}, goHidden, goVisible, jastaSuikaNight, jastaSuikaDue, jastaSuikaPreview, jportion, getJasta, get JA(){return JA;}, hgassho, carryBasketHome, carryBasketOut, basketTo, basketFrontOf, BK, BK_HOME, get basketAtDoor(){return basketAtDoor;}, set basketAtDoor(v){basketAtDoor=!!v;}, fitTop, renderNagomi, addNagomi, hNagomi, dressHome, HFUKU, renderPaddyLife, paddyLifeKind, paddyFrogTap, tonboFlyTo, tonboNose, paddyLifePreview, PADDY_FROGS, TONBO_ZONE, get plTonbo(){return plTonbo;}, riceBagLevel, renderRiceBag, gyojiLog, get hanamiRice(){return hanamiRice;}, tipOK, GIFT_TALK, VISIT_SETS, VISIT_CALL, visitScene, vary, saidOK, get SAID(){return SAID;}, ERI_TALK, OKAWARI, eriTalk, etSlot, MORN_X, mornExtra, reportLine, svgPop, liftOffFaces, walkHomeTogether, camGlide, bplates, bslice, bcakeSVG, get cameWithH(){return cameWithH;}, TANBO, tanboDue, hakobiDue, shinmaiDue, tanboScene, hakobiScene, shinmaiTalk, shinmaiPreview, tanboPreview, tanboState, renderPaddy, paddyArt, paddyHint, paddyTap, giftTonight, giftServed, giftPick, moreServe, moreEaten, giftRiceTalk, dessertAdd, dessertDue, dessertTime, dessertForm, fieldDessertNight, gourmetPreview, FIELD_DESSERT, DESSERT_LINES, GIFT_BY_SEASON, GIFT_EAT, RICE_DISHES, RICE_TALK, menuOK, riceShow, riceFill, get riceMix(){return riceMix;}, set riceMix(v){riceMix=v||'';}, RICE_MIX, openSeeds, chooseMenu, closeSheet, get tanboView(){return tanboView;}, sayTest:say, focusRange, seedOK, recipeOK, hsay, bubbleHTML, TSUKIMI, hotDry, returnBigCan, eriReturnBigCan, eriCarry, DRY_RUN, spOf, spKeys, spEmpty, HOT_AT, get bigCanCarry(){return bigCanCarry;}, get wxQueue(){return wxQueue;}, weatherScenes, askScene, askLeft, renderAsk, compostTap, ASK_MAX, COMPOST_MAX, place, moveTo, moveShada, shadaCanDown, shadaCarry, shadaMode, afterAction, returnCan, shadaSelfWater, get canDownScene(){return canDownScene;}, rollBig, spawnBug, startRain, yearReview, yearReviewScene, yearSnap, yearLines, openZukan, openDiary, dayStr, get sheetKind(){return sheetKind;}, get bg(){return bg;}, bgWait, set forceWait(v){forceWait=v;}, gyojiPat, GYOJI_LEAD, birthdayNight, get gyojiStep(){return gyojiStep;}, rollWeather, pickPre, gyojiNightDue, nightOn, nightOff, nightOuting, fwLaunch, senkoOn, HANABI, hangCan, hangScene, hangMorning, renderShed, shedTap, nextHoshiDish, hoshiReady, morningPlan, morning, GYOJI, GYOJI_SCENE, gyojiDue, gyojiScene, hRoute, hCross, hInB, HTABLE, HSPOT, hmove, get S(){return S;}, get busy(){return busy;}, get hiddenNow(){return hiddenNow;}, get pausedMs(){return pausedMs;}, gnow, shadaAcc, lapBlanket, heightArt, plantArt, pawArt, fishbowlArt, BLANKET, ACC, SONGS, playSong, homeMorning, get sceneDepth(){return sceneDepth;}, pumpTimers, mikanFit, basketPlace, get lastErr(){return lastErr;}, get stall(){return {n:stallN,max:stallMax};}, saveDiag, saveNow, get saveOK(){return saveOK;}, A, homeEvening, pickPre, dishCandidates, makeRequest, get HA(){return HA;}, advance, maybeEvent, renderAll, addHarvest, checkUnlocks, nextMorning, Store, CROPS, RECIPES, UNLOCKS, EVENTS, FRIDGE, rollFridge, rollWeather, placeFrost, weatherScenes, importSave, exportSave, normalize, Snd, GIFTS, planVisit, visitDue, fitVisit, DISH, setPortions, shelterAtShed, restAtHome, placeTreasure, rest, FRUITS, plantTree, plantVine, pickFruit, TREES, treeTap, dessertNight, fruitMorning, renderTree, moveShada, shadaSelfWater, selfWaterTarget, returnCan, playerAction, endDay, plantBasil, pickBasil, pickV, judgeBigDay, giftDetour, basilInFridge, SLOT_MAX, makeRoomFor, seasonSwap, fixup, workLeft, decorShown, closetTalk, openFridge, cuckoo, feedFish, mirrorReflect, strum, playUke, sitRock, seasonalDue, seasonalShow, SEASONAL, SEASONAL_SCENE, setupRoom, REWARD_NIGHT, DECOR, REWARDS, rewardSetup, LOOP, LOOP_SCENE, lapNext, lapReward, lapReady, lapPreview, renderLooks, showLook, bringOut, tugGame, tugRope, paintArt, LOOK_ART, lookN, lookV, nextReward, dueReward, renderNagomi, openNagomi, rewardCard, sweetsNight, updatePhoto, get SW(){return {n:S.swN,day:S.swDay,can:S.canOut};},
     visit:async()=>{ if(busy) return false; busy=true; renderButtons(); S.oji={sy:Math.floor((S.day-1)/SEASON_DAYS),day:S.day,at:S.clock,done:false}; await visitScene(); busy=false; renderButtons(); return true; },
     force:async id=>{ if(busy) return false; busy=true; renderButtons(); S.sinceEvent=9; const r=await maybeEvent(false,id); await checkUnlocks(); busy=false; renderButtons(); return r; } };
 }
