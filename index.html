@@ -1371,7 +1371,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.64.2</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.64.3</span></span>
   </div>
 
   <div class="hud">
@@ -8445,6 +8445,8 @@ async function hwalkPath(a,pts,opt){
   const lens=pts.map(q=>{ const d=Math.hypot(q.x-p.x,q.y-p.y); p=q; return d; }), tot=Math.max(1,lens.reduce((m,d)=>m+d,0));
   const ms=(opt&&opt.ms) ? Math.round(opt.ms*(pts.length>1?tot/Math.max(1,Math.hypot(p.x-a.x,p.y-a.y)):1)) : homeMs(tot,pts.length>1?2900:2000);   /* v1.64.0：1px 3.0ms（前は 2.1）。v1.64.1（依頼者「おうちの中の速度を、もうすこしだけ落としたい」）：おうちは 1px 3.6ms・最短 0.4秒・いちばん長い時間は まわり道 2.9秒・まっすぐ 2.0秒 */
   const token=a.pathId=(a.pathId||0)+1;
+  a.moving=true;   /* v1.64.3：すべりでも 動いている あいだ（hPos） */
+  try{
   for(let i=0;i<pts.length;i++){
     if(a.pathId!==token) return;
     a.legIdx=i;   /* v1.64.2 */
@@ -8457,6 +8459,7 @@ async function hwalkPath(a,pts,opt){
       await sleep(legMs);
     }
   }
+  } finally { if(a.pathId===token) a.moving=false; }
 }
 /* v1.64.2（依頼者「動線が重ならないようにするのを、おうちの中でも」）：おうちの動線。
    立っている人は hRoute が よける（前から）。歩いている人どうしは、道（まわり道も）が まじわる（36px 以内）とき、あとから 歩きだす人が 先の人が 通りすぎるのを 待ってから（最長 0.8秒。hWaitCross）。
@@ -8488,12 +8491,12 @@ function hmove(a,spot,opt){
     if(a.bub.classList.contains('on') && Object.values(HA).some(x=>hBubClash(a,x))) hbubOff(a);
   });
 }
-/* v1.64.2：おうちの吹き出しは、だれかが 歩いているあいだ 0.12秒ごとに 置きなおす（歩いている人の 顔を かくさないように） */
+/* v1.64.2：おうちの吹き出しは、出ているあいだ 0.12秒ごとに 置きなおす（歩いている人・動いた人の 顔を かくさないように）。
+   v1.64.3（依頼者「はじめの位置はよくても、動いたとこで台詞が相手の顔を隠してしまう」）：歩いているときだけでなく いつも（すべり・その場の 動き・place で 動いた人も）。場所が かわらなければ 同じ 置き場所に なるので、ちらつかない */
 setInterval(()=>{
   try{
     if(!HA || homeSkip || !home.classList.contains('on')) return;
-    const all=Object.values(HA); if(!all.some(x=>x.el.classList.contains('walking'))) return;
-    all.forEach(x=>{ if(x.bub.classList.contains('on')) hLayout(x); });
+    Object.values(HA).forEach(x=>{ if(x.bub.classList.contains('on')) hLayout(x); });
   }catch(e){}
 },120);
 function hmood(a,mood,ms){ clearTimeout(a.moodT); a.el.dataset.mood=mood; if(ms) a.moodT=setTimeout(()=>{ a.el.dataset.mood='normal'; },ms); }
@@ -8525,7 +8528,7 @@ function hsay(a,text,opt){
    ・向き（左／右）×（顔をよけて持ち上げる／顔は気にしない）の4つの候補から、減点のいちばん少ないものをえらぶ。
    ・「しっぽの先が、ほかの人の頭のほうに近い」置きかたは、大きく減点する（＝だれのセリフか、まぎらわしい）。 */
 const HB_BASE=TOK*1.12;
-const hPos=x=>x.el.classList.contains('walking')?shownPos(x):{x:x.x,y:x.y};   /* v1.64.2：歩いている人は 画面に 見えている 場所（a.x・a.y は 行き先） */
+const hPos=x=>(x.el.classList.contains('walking')||x.moving)?shownPos(x):{x:x.x,y:x.y};   /* v1.64.2：歩いている人は 画面に 見えている 場所（a.x・a.y は 行き先）。v1.64.3：すべり（slide）で 動いている人も */
 function hBox(a,dir,bottom,side,dim){
   const P=hPos(a), w=dim?dim.w:a.bub.offsetWidth, h=dim?dim.h:a.bub.offsetHeight;
   if(side){   /* v1.64.2：横に出す形（顔の よこ・頭の高さ。CSS の .bubble.side と 同じ 置きかた） */
