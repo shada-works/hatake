@@ -1371,7 +1371,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.64.3</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.64.4</span></span>
   </div>
 
   <div class="hud">
@@ -8438,12 +8438,14 @@ function hzTrack(a,y0,y1,ms){
     if(k>=1){ clearInterval(a.zT); a.zT=null; }
   },40);
 }
-const HOME_PX=3.6, HOME_MIN=400;   /* v1.64.1：おうちの中の 歩く速さ（畑の 3.0 より 少し ゆっくり） */
-const homeMs=(dist,maxMs)=>Math.round(clamp(dist*HOME_PX,HOME_MIN,maxMs||2000));
+/* おうちの中の 歩く速さ。v1.64.1：1px 3.6ms（畑の 3.0 より 少し ゆっくり）。
+   v1.64.4（依頼者「もうすこしだけ下げましょう」「遠い距離の移動と近い距離の速度を変えなくてもよい」）：1px 4.2ms で、道のりによらず 同じ速さ（いちばん長い時間の 上限は なし。いちばん短い時間だけ 0.25秒＝ほんの数歩でも ひと足の 動きに 見えるように） */
+const HOME_PX=4.2, HOME_MIN=250;
+const homeMs=(dist,maxMs)=>Math.round(clamp(dist*HOME_PX,HOME_MIN,maxMs||9000));
 async function hwalkPath(a,pts,opt){
   let p={x:a.x,y:a.y};
   const lens=pts.map(q=>{ const d=Math.hypot(q.x-p.x,q.y-p.y); p=q; return d; }), tot=Math.max(1,lens.reduce((m,d)=>m+d,0));
-  const ms=(opt&&opt.ms) ? Math.round(opt.ms*(pts.length>1?tot/Math.max(1,Math.hypot(p.x-a.x,p.y-a.y)):1)) : homeMs(tot,pts.length>1?2900:2000);   /* v1.64.0：1px 3.0ms（前は 2.1）。v1.64.1（依頼者「おうちの中の速度を、もうすこしだけ落としたい」）：おうちは 1px 3.6ms・最短 0.4秒・いちばん長い時間は まわり道 2.9秒・まっすぐ 2.0秒 */
+  const ms=(opt&&opt.ms) ? Math.round(opt.ms*(pts.length>1?tot/Math.max(1,Math.hypot(p.x-a.x,p.y-a.y)):1)) : homeMs(tot);   /* v1.64.4：道のりによらず 同じ速さ（上限なし）。v1.64.0：1px 3.0ms（前は 2.1）。v1.64.1（依頼者「おうちの中の速度を、もうすこしだけ落としたい」）：おうちは 1px 3.6ms・最短 0.4秒・いちばん長い時間は まわり道 2.9秒・まっすぐ 2.0秒 */
   const token=a.pathId=(a.pathId||0)+1;
   a.moving=true;   /* v1.64.3：すべりでも 動いている あいだ（hPos） */
   try{
@@ -8452,7 +8454,7 @@ async function hwalkPath(a,pts,opt){
     a.legIdx=i;   /* v1.64.2 */
     const q=pts[i], y0=a.y, last=i===pts.length-1, legMs=Math.max(last?120:60,Math.round(ms*lens[i]/tot));
     const tf=pts.length===1?'ease-in-out':i===0?'ease-in':last?'ease-out':'linear';   /* v1.64.0：まわり道の とちゅうは 等速 */
-    if(last){ const done=moveTo(a,q,Object.assign({},opt||{},{ms:pts.length>1?legMs:((opt&&opt.ms)||0),direct:true,tf})); hzTrack(a,y0,q.y,pts.length>1?legMs:((opt&&opt.ms)||homeMs(lens[i],2000))); await done; }
+    if(last){ const done=moveTo(a,q,Object.assign({},opt||{},{ms:pts.length>1?legMs:((opt&&opt.ms)||0),direct:true,tf})); hzTrack(a,y0,q.y,pts.length>1?legMs:((opt&&opt.ms)||homeMs(lens[i]))); await done; }
     else{
       a.moveId++; a.el.style.setProperty('--lean',(q.x>=a.x?5:-5)+'deg'); if(!(opt&&opt.slide)) a.el.classList.add('walking');
       place(a,q.x,q.y,legMs,tf); hzTrack(a,y0,q.y,legMs);
