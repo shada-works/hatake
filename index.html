@@ -384,6 +384,12 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 /* --bs＝吹き出しを横へずらす量（おうちの hsay の fit。しっぽは、話している人の上にのこす）。ふだんは 0 */
 .bubble.toL{right:calc(28% - var(--bs,0px))}.bubble.toL::after{right:calc(12px + var(--bs,0px))}
 .bubble.toR{left:calc(28% + var(--bs,0px))}.bubble.toR::after{left:calc(12px - var(--bs,0px))}
+/* v1.64.2：横に出す形（side）。相手の 顔が 頭の上に あって、上に 出すと かくれるとき（layoutBubbles）。顔の よこ・頭の高さに 出し、しっぽは 横向き */
+.bubble.side{bottom:-18%;max-width:min(150px,40vw)}   /* 横は 少し せまく（画面に 入りやすいように。行は ふえる）。下は 足もとより 少し 下まで（うしろの人の 顔に かからないように） */
+.bubble.side.toL{right:104%;left:auto}.bubble.side.toR{left:104%;right:auto}
+.bubble.side::after{bottom:26px}   /* しっぽは 頭の高さ */
+.bubble.side.toL::after{right:-6px;left:auto;transform:rotate(-45deg)}
+.bubble.side.toR::after{left:-6px;right:auto;transform:rotate(135deg)}
 /* 3人そろって言うセリフ（ごちそうさまでした。）の、ひとつにまとめた吹き出し。しっぽ（i）は人数ぶん（v1.18.0） */
 .bubble.chorus{left:0;top:0;bottom:auto;z-index:520;text-align:center}
 .bubble.chorus::after{display:none}
@@ -634,6 +640,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 .fanBlades{transform-box:fill-box;transform-origin:50% 72%;animation:spin 1.1s linear infinite}
 #homeActors .actor{pointer-events:none}
 .home .bubble{max-width:214px}
+.home .bubble.side{max-width:150px}   /* v1.64.2：横に出す形は せまく（部屋の 中に 入るように） */
 .hTreasures{position:absolute;left:22px;top:94px;width:80px;height:18px;z-index:1}
 .hTreasures svg{position:absolute;top:1px;width:16px;height:16px}
 /* 冷蔵庫：とびらが開いているあいだだけ、中のものが見える */
@@ -1364,7 +1371,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.64.1</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.64.2</span></span>
   </div>
 
   <div class="hud">
@@ -3380,7 +3387,7 @@ function say(who,text,ms,mood,keep){
   const sx=a.x-scroller.scrollLeft, vw=scroller.clientWidth, need=Math.min(190,vw*.48)+8;
   if(dir==='toL' && sx<need && vw-sx>sx) dir='toR';
   if(dir==='toR' && vw-sx<need && sx>vw-sx) dir='toL';
-  b.classList.remove('toL','toR');
+  b.classList.remove('toL','toR','side'); b.style.setProperty('--bs','0px');   /* v1.64.2：side */
   b.classList.add(dir);
   b.classList.add('on');
   if(a!==A.eri && a!==A.shada) b.style.bottom='';   /* ほまれくん・おじさん（えり・しゃだは layoutBubbles が もどす） */
@@ -3404,23 +3411,55 @@ function liftOffFaces(a){
   const lift=Math.round((a.y+(a.el.offsetHeight||TOK)/2)-(top-8)), cur=parseFloat(b.style.bottom)||0;
   if(lift>Math.max(cur,TOK*1.12)) b.style.bottom=lift+'px';
 }
-/* 吹き出しが、相手の吹き出しや相手の顔にかぶるときは、かぶらない高さまで持ち上げる */
+/* 吹き出しが、相手の吹き出しや相手の顔にかぶるときは、かぶらない高さまで持ち上げる。
+   v1.64.2（依頼者「台詞がお互いの顔を隠してしまう」）：
+   ・まず 向きと 形を かえてみる：上に 出す（今の向き → 反対の向き）、それでも 顔に かぶるなら 横に出す形（side。顔の よこ・頭の高さ。今の向き → 反対の向き）。
+     かぶらず・画面に 入り・相手の 吹き出しとも 重ならない はじめのものを えらぶ（今の向きから しらべるので、一度 きまった向きは その ことばの あいだ そのまま）
+   ・どれも だめなら 持ち上げる（前からの 作り。しっぽが 相手の 頭を さすことが あるので さいご）
+   ・場所は 画面に 見えている 場所（getBoundingClientRect）で はかる＝歩いている とちゅうも 正しい。0.1秒ごとに 置きなおす（下の setInterval）ので、相手が 吹き出しの下に 歩いてきても かくれない */
 function layoutBubbles(e,s,box,scale){
-  e.bub.style.bottom=''; s.bub.style.bottom='';
   const wr=box.getBoundingClientRect(), k=scale||1;
   const R=el=>{ const r=el.getBoundingClientRect(); return {l:(r.left-wr.left)/k,t:(r.top-wr.top)/k,r:(r.right-wr.left)/k,b:(r.bottom-wr.top)/k}; };
   const hit=(p,q)=>p.l<q.r+6 && q.l<p.r+6 && p.t<q.b+6 && q.t<p.b+6;
   const on=a=>a.bub.classList.contains('on');
-  const liftAbove=(a,topY)=>{ const lift=(a.y+TOK/2)-(topY-8); if(lift>TOK*1.12) a.bub.style.bottom=Math.round(lift)+'px'; };
-  if(on(e) && on(s) && hit(R(e.bub),R(s.bub))){
+  const face=o=>{ const r=R(o.el), m=(r.r-r.l)*.12; return {l:r.l+m,r:r.r-m,t:r.t+m,b:r.b-m*1.5}; };   /* 顔の ふちに 少し かかるくらいは かまわない（下は あごの下の 余白ぶん 広め） */
+  const covers=(a,o)=>{ const bb=R(a.bub), f=face(o); return Math.min(bb.r,f.r)-Math.max(bb.l,f.l)>0 && Math.min(bb.b,f.b)-Math.max(bb.t,f.t)>0; };
+  const fits=a=>{ const r=R(a.bub), l=scroller.scrollLeft, vw=scroller.clientWidth; return r.l>=l+2 && r.r<=l+vw-2 && r.t>=0; };
+  const set=(a,dir,side)=>{ a.bub.classList.remove('toL','toR','side'); a.bub.classList.add(dir); if(side) a.bub.classList.add('side'); };
+  [e,s].forEach(a=>{ if(on(a)){ a.bub.style.bottom=''; a.bub.style.setProperty('--bs','0px'); } });
+  const liftAbove=(a,topY)=>{ const lift=R(a.el).b-(topY-8); if(lift>TOK*1.12) a.bub.style.bottom=Math.round(lift)+'px'; };
+  /* 1) 向きと 形 */
+  [[e,s],[s,e]].forEach(([a,o])=>{
+    if(!on(a)) return;
+    const cur=a.bub.classList.contains('toL')?'toL':'toR', alt=cur==='toL'?'toR':'toL';
+    set(a,cur,false);
+    if(!covers(a,o)) return;
+    const ok=()=>!covers(a,o) && fits(a) && !(on(o) && hit(R(a.bub),R(o.bub)));
+    for(const [dir,side] of [[alt,false],[cur,true],[alt,true]]){ set(a,dir,side); if(ok()) return; }
+    set(a,cur,false);
+  });
+  const side=a=>a.bub.classList.contains('side');
+  /* 2) 吹き出しどうし（上に 出している ものだけ） */
+  if(on(e) && on(s) && !side(e) && !side(s) && hit(R(e.bub),R(s.bub))){
     const up=e.y<=s.y?e:s, base=up===e?s:e;
     liftAbove(up,R(base.bub).t);
   }
+  /* 3) それでも 顔に かぶるなら 持ち上げる */
   [[e,s],[s,e]].forEach(([a,o])=>{
-    if(!on(a) || !hit(R(a.bub),R(o.el))) return;
-    liftAbove(a, on(o) ? Math.min(R(o.bub).t, o.y-TOK/2) : o.y-TOK/2);
+    if(!on(a) || side(a) || !covers(a,o)) return;
+    liftAbove(a, on(o) ? Math.min(R(o.bub).t, R(o.el).t) : R(o.el).t);
   });
 }
+/* v1.64.2：畑の吹き出しは 出ているあいだ 0.1秒ごとに 置きなおす（歩いている 相手の 顔を かくさないように） */
+setInterval(()=>{
+  try{
+    if(!A || !A.eri || home.classList.contains('on')) return;
+    const list=[A.eri,A.shada,A.homare,A.oji].filter(x=>x && x.bub.classList.contains('on'));
+    if(!list.length) return;
+    layoutBubbles(A.eri,A.shada,world,1);
+    if([A.homare,A.oji].some(x=>x && x.el.classList.contains('on'))) [A.eri,A.shada,A.homare,A.oji].forEach(x=>{ if(x) liftOffFaces(x); });
+  }catch(e){}
+},100);
 /* v1.64.0（依頼者「台詞が多く重なり、矢継ぎ早に言葉が流れては消える」）：セリフの間。
    readMs(文)＝読める時間＝1.4秒＋1文字 0.08秒（句読点は数えない。10文字なら 2.2秒、15文字なら 2.6秒）。
    tell(who,文,表情,keep)＝前の ことばが 読めるまで 待ってから 言う。keep＝前の ことばを 残したまま（ふたりの掛け合い）。keep でないときは ふたりの 吹き出しを しまい、ひと呼吸（0.25秒）おく。
@@ -8360,13 +8399,29 @@ function hRoute(a,to){
     });
     pts=best.p.slice(1); a.laneBusy=best.id;
   }
-  /* ほかの人（立ち止まっている人）の上を横ぎらない */
+  /* ほかの人（立ち止まっている人）の上を横ぎらない。
+     v1.64.2（依頼者「動線が重ならないようにするのを、おうちの中でも」）：よけ道は 2つの角（相手の 手前 28px → むこう 28px を、道と 平行に 42px はなれて）。
+     前は 相手の 真上（真下）の 1点だけだったので、ななめの道では 相手の そばを 通っていた（いちばん近くて 29px）。2つの角が 置けないときは 前のとおり 1点 */
   const out=[]; let p=from;
   pts.forEach(q=>{
     const dx=q.x-p.x, dy=q.y-p.y, L2=dx*dx+dy*dy, p0=p;
     if(L2>900) others.map(o=>{ const t=((o.x-p0.x)*dx+(o.y-p0.y)*dy)/L2; return {o,t,d:Math.hypot(o.x-(p0.x+t*dx),o.y-(p0.y+t*dy))}; })
       .filter(h=>h.t>.12 && h.t<.88 && h.d<30).sort((m,n)=>m.t-n.t)
-      .forEach(h=>{ const v={x:h.o.x,y:h.o.y>=344?Math.min(406,h.o.y+40):Math.max(238,h.o.y-40)}; if(!hInB(v) && !hCross(out.length?out[out.length-1]:from,v) && !hCross(v,q)) out.push(v); });
+      .forEach(h=>{
+        const L=Math.sqrt(L2), ux=dx/L, uy=dy/L, prev=out.length?out[out.length-1]:from;
+        const okp=v=>v.y>=238 && v.y<=406 && v.x>=20 && v.x<=340 && !hInB(v);
+        const cl=v=>({x:clamp(v.x,20,340),y:clamp(v.y,238,406)});
+        const lane=(nx,ny,off)=>{ const v1=cl({x:h.o.x-ux*24+nx*off,y:h.o.y-uy*24+ny*off}), v2=cl({x:h.o.x+ux*24+nx*off,y:h.o.y+uy*24+ny*off}); return (okp(v1) && okp(v2) && !hCross(prev,v1) && !hCross(v1,v2) && !hCross(v2,q)) ? [v1,v2] : null; };
+        let w=null;
+        if(Math.abs(dx)>=Math.abs(dy)){   /* 横の道：上（うしろ）か 下（手前）へ。かべ（y238）・手前（y406）までの あきが 30px より せまければ 反対がわ */
+          const up=Math.min(42,h.o.y-238), dn=Math.min(42,406-h.o.y), first=h.o.y>=344?'dn':'up';
+          for(const k of (first==='up'?['up','dn']:['dn','up'])){ const off=k==='up'?up:dn; if(off>=30){ w=lane(0,k==='up'?-1:1,off); if(w) break; } }
+        }else{   /* たての道：左右（部屋の まん中がわが 先） */
+          for(const nx of (h.o.x>=180?[-1,1]:[1,-1])){ w=lane(nx,0,42); if(w) break; }
+        }
+        if(w){ out.push(w[0]); out.push(w[1]); return; }
+        const v={x:h.o.x,y:h.o.y>=344?Math.min(406,h.o.y+40):Math.max(238,h.o.y-40)}; if(!hInB(v) && !hCross(prev,v) && !hCross(v,q)) out.push(v);
+      });
     out.push(q); p=q;
   });
   return out;
@@ -8392,6 +8447,7 @@ async function hwalkPath(a,pts,opt){
   const token=a.pathId=(a.pathId||0)+1;
   for(let i=0;i<pts.length;i++){
     if(a.pathId!==token) return;
+    a.legIdx=i;   /* v1.64.2 */
     const q=pts[i], y0=a.y, last=i===pts.length-1, legMs=Math.max(last?120:60,Math.round(ms*lens[i]/tot));
     const tf=pts.length===1?'ease-in-out':i===0?'ease-in':last?'ease-out':'linear';   /* v1.64.0：まわり道の とちゅうは 等速 */
     if(last){ const done=moveTo(a,q,Object.assign({},opt||{},{ms:pts.length>1?legMs:((opt&&opt.ms)||0),direct:true,tf})); hzTrack(a,y0,q.y,pts.length>1?legMs:((opt&&opt.ms)||homeMs(lens[i],2000))); await done; }
@@ -8402,16 +8458,44 @@ async function hwalkPath(a,pts,opt){
     }
   }
 }
+/* v1.64.2（依頼者「動線が重ならないようにするのを、おうちの中でも」）：おうちの動線。
+   立っている人は hRoute が よける（前から）。歩いている人どうしは、道（まわり道も）が まじわる（36px 以内）とき、あとから 歩きだす人が 先の人が 通りすぎるのを 待ってから（最長 0.8秒。hWaitCross）。
+   待ちを 決めるのは ひとつ あと（マイクロタスク）＝同時に 歩きだす人の 道が そろってから（はじめに 呼ばれた人が 先）。a.goal＝行き先、a.path＝道（今の場所から）、a.legIdx＝今 歩いている 区間 */
+function hPathsCross(path,o){
+  const q=shownPos(o), rem=[q].concat((o.path||[]).slice((o.legIdx||0)+1));
+  for(let i=1;i<path.length;i++) for(let j=1;j<rem.length;j++) if(segDist(path[i-1],path[i],rem[j-1],rem[j])<36) return true;
+  return false;
+}
+async function hWaitCross(a,tok){
+  const t0=gnow();
+  while(gnow()-t0<800){
+    if(homeSkip || a.moveTok!==tok) return;
+    const o=Object.values(HA||{}).find(o=>o!==a && o.path && o.el.classList.contains('walking') && hPathsCross(a.path,o));
+    if(!o) return;
+    await sleep(60);
+  }
+}
 function hmove(a,spot,opt){
-  if(homeSkip){ place(a,spot.x,spot.y,0); a.el.classList.remove('walking'); return Promise.resolve(); }
+  if(homeSkip){ place(a,spot.x,spot.y,0); a.el.classList.remove('walking'); a.goal=null; a.path=null; return Promise.resolve(); }
   const pts=reduceMotion ? [spot] : hRoute(a,spot);   /* v1.26.1：すべり（slide）も、まわり道をする */
-  return hwalkPath(a,pts,opt).then(()=>{
+  const tok=a.moveTok=(a.moveTok||0)+1;
+  a.goal={x:spot.x,y:spot.y}; a.path=[{x:a.x,y:a.y}].concat(pts); a.legIdx=0;
+  return Promise.resolve().then(()=>hWaitCross(a,tok)).then(()=>{ if(a.moveTok!==tok || homeSkip) return; return hwalkPath(a,pts,opt); }).then(()=>{
+    if(a.moveTok===tok){ a.goal=null; a.path=null; }
     if(!a.el.classList.contains('walking')) a.laneBusy=null;
-    if(!HA || !a.bub.classList.contains('on')) return;
-    hLayout(a);
-    if(Object.values(HA).some(x=>hBubClash(a,x))) hbubOff(a);
+    if(!HA) return;
+    Object.values(HA).forEach(x=>{ if(x.bub.classList.contains('on')) hLayout(x); });   /* v1.64.2：歩きおわった人の 顔を よけて、みんなの 吹き出しを 置きなおす */
+    if(a.bub.classList.contains('on') && Object.values(HA).some(x=>hBubClash(a,x))) hbubOff(a);
   });
 }
+/* v1.64.2：おうちの吹き出しは、だれかが 歩いているあいだ 0.12秒ごとに 置きなおす（歩いている人の 顔を かくさないように） */
+setInterval(()=>{
+  try{
+    if(!HA || homeSkip || !home.classList.contains('on')) return;
+    const all=Object.values(HA); if(!all.some(x=>x.el.classList.contains('walking'))) return;
+    all.forEach(x=>{ if(x.bub.classList.contains('on')) hLayout(x); });
+  }catch(e){}
+},120);
 function hmood(a,mood,ms){ clearTimeout(a.moodT); a.el.dataset.mood=mood; if(ms) a.moodT=setTimeout(()=>{ a.el.dataset.mood='normal'; },ms); }
 /* opt は、数字（表示時間）か {ms, mood, dir}。mood＝そのセリフのあいだの表情、dir＝吹き出しの向き（'toL'／'toR'） */
 function hsay(a,text,opt){
@@ -8427,7 +8511,7 @@ function hsay(a,text,opt){
   a.bubAt=now; a.bubFit=!!o.fit;
   b.style.maxWidth=o.maxW?o.maxW+'px':''; b.style.setProperty('--bs','0px');
   b.innerHTML=bubbleHTML(text);
-  b.classList.remove('toL','toR'); b.classList.add(o.dir || (a.x<170?'toR':'toL')); b.classList.add('on');
+  b.classList.remove('toL','toR','side'); b.classList.add(o.dir || (a.x<170?'toR':'toL')); b.classList.add('on');   /* v1.64.2：side */
   hLayout(a);
   /* 持ち上げても まだ重なる相手の吹き出しは、しまう */
   Object.values(HA).forEach(x=>{ if(hBubClash(a,x)) hbubOff(x); });
@@ -8441,9 +8525,15 @@ function hsay(a,text,opt){
    ・向き（左／右）×（顔をよけて持ち上げる／顔は気にしない）の4つの候補から、減点のいちばん少ないものをえらぶ。
    ・「しっぽの先が、ほかの人の頭のほうに近い」置きかたは、大きく減点する（＝だれのセリフか、まぎらわしい）。 */
 const HB_BASE=TOK*1.12;
-function hBox(a,dir,bottom){
-  const w=a.bub.offsetWidth, h=a.bub.offsetHeight, b=(a.y+TOK/2)-bottom;
-  let l=dir==='toL' ? a.x+TOK*.22-w : a.x-TOK*.22, shift=0;
+const hPos=x=>x.el.classList.contains('walking')?shownPos(x):{x:x.x,y:x.y};   /* v1.64.2：歩いている人は 画面に 見えている 場所（a.x・a.y は 行き先） */
+function hBox(a,dir,bottom,side,dim){
+  const P=hPos(a), w=dim?dim.w:a.bub.offsetWidth, h=dim?dim.h:a.bub.offsetHeight;
+  if(side){   /* v1.64.2：横に出す形（顔の よこ・頭の高さ。CSS の .bubble.side と 同じ 置きかた） */
+    const bb=P.y+TOK/2+TOK*.18, l=dir==='toL' ? P.x-TOK*.54-w : P.x+TOK*.54;
+    return {l, r:l+w, t:bb-h, b:bb, dir, bottom:HB_BASE, shift:0, side:true};
+  }
+  const b=(P.y+TOK/2)-bottom;
+  let l=dir==='toL' ? P.x+TOK*.22-w : P.x-TOK*.22, shift=0;
   if(a.bubFit){   /* 部屋のはしをこえるぶんだけ、内がわへ（しっぽが吹き出しの外へ出ないところまで） */
     const lim=Math.max(0,w-40);
     if(l+w>356) shift=-Math.min(l+w-356,lim); else if(l<4) shift=Math.min(4-l,lim);
@@ -8451,7 +8541,7 @@ function hBox(a,dir,bottom){
   }
   return {l, r:l+w, t:b-h, b, dir, bottom, shift};
 }
-const hFace=o=>({l:o.x-TOK/2, r:o.x+TOK/2, t:o.y-TOK/2, b:o.y+TOK/2});
+const hFace=o=>{ const P=hPos(o); return {l:P.x-TOK/2, r:P.x+TOK/2, t:P.y-TOK/2, b:P.y+TOK/2}; };   /* v1.64.2：歩いている人は 今の場所 */
 const hOv=(p,q,m)=>Math.min(p.r,q.r)-Math.max(p.l,q.l)>-m && Math.min(p.b,q.b)-Math.max(p.t,q.t)>-m;
 function hLayout(a){
   const others=Object.values(HA).filter(o=>o!==a);
@@ -8459,16 +8549,20 @@ function hLayout(a){
   const faces=others.map(hFace);
   /* 顔にかぶる深さ（px）。顔の四角の下4pxは、あごの下の余白なので数えない */
   const cover=(bx,f)=>{ const x=Math.min(bx.r,f.r)-Math.max(bx.l,f.l), y=Math.min(bx.b,f.b-4)-Math.max(bx.t,f.t); return (x>3 && y>0) ? y : 0; };
+  /* v1.64.2：上に出す形と 横に出す形の 大きさ（横は max-width が せまいので 行が ふえる）を はかる。class を 一度 切りかえて はかり、もどす（画面は かわらない） */
+  const dimOf=side=>{ const had=a.bub.classList.contains('side'); a.bub.classList.toggle('side',side); const d={w:a.bub.offsetWidth,h:a.bub.offsetHeight}; a.bub.classList.toggle('side',had); return d; };
+  const dimN=dimOf(false), dimS=dimOf(true), ay=hPos(a).y;
   const solve=(dir,avoidFaces)=>{
-    let bottom=HB_BASE, bx=hBox(a,dir,bottom);
+    if(avoidFaces==='side') return hBox(a,dir,HB_BASE,true,dimS);
+    let bottom=HB_BASE, bx=hBox(a,dir,bottom,false,dimN);
     for(let n=0;n<5;n++){
       let top=null;
       bubs.forEach(q=>{ if(hOv(bx,q,6)) top=top==null?q.t:Math.min(top,q.t); });
       if(avoidFaces) faces.forEach(f=>{ if(cover(bx,f)>0) top=top==null?f.t:Math.min(top,f.t); });
       if(top==null) break;
-      const lift=(a.y+TOK/2)-(top-8);
+      const lift=(ay+TOK/2)-(top-8);
       if(lift<=bottom) break;
-      bottom=lift; bx=hBox(a,dir,bottom);
+      bottom=lift; bx=hBox(a,dir,bottom,false,dimN);
     }
     return bx;
   };
@@ -8479,21 +8573,22 @@ function hLayout(a){
     if(bx.r>358) p+=1000+(bx.r-358)*5;
     bubs.forEach(q=>{ if(hOv(bx,q,0)) p+=600; });
     faces.forEach(f=>{ const c=cover(bx,f); if(c>0) p+=60+c*7; });
-    const tx=bx.dir==='toL'?bx.r-17:bx.l+17, ty=bx.b+6, d=o=>Math.hypot(o.x-tx,(o.y-TOK/2)-ty);
+    const tx=bx.side?(bx.dir==='toL'?bx.r+5:bx.l-5):(bx.dir==='toL'?bx.r-17:bx.l+17), ty=bx.side?bx.b-31:bx.b+6, d=o=>{ const P=hPos(o); return Math.hypot(P.x-tx,(P.y-TOK/2)-ty); };   /* v1.64.2：hPos・横に出す形の しっぽ */
     if(others.some(o=>d(o)<d(a)-4)) p+=450;
     return p;
   };
   const def=a.bub.classList.contains('toR')?'toR':'toL', alt=def==='toL'?'toR':'toL';
   let best=null;
-  [[def,true,0],[alt,true,5],[def,false,2],[alt,false,7]].forEach(([dir,av,pen])=>{
+  /* v1.64.2：横に出す形も 候補に（減点 20。上に出して 顔に かぶる（60〜）・大きく 持ち上がる（40px より）ときに えらばれる） */
+  [[def,true,0],[alt,true,5],[def,false,2],[alt,false,7],[def,'side',20],[alt,'side',24]].forEach(([dir,av,pen])=>{
     const bx=solve(dir,av), sc=score(bx)+pen;
     if(!best || sc<best.sc) best={bx,sc};
   });
   let bx=best.bx;
   /* どうしても上にはみ出すときは、画面の上ぎりぎりで止める */
-  if(bx.t<2 && bx.bottom>HB_BASE) bx=hBox(a,bx.dir,Math.max(HB_BASE,bx.bottom-(2-bx.t)));
-  a.bub.classList.toggle('toL',bx.dir==='toL'); a.bub.classList.toggle('toR',bx.dir==='toR');
-  a.bub.style.bottom=bx.bottom>HB_BASE+.5 ? Math.round(bx.bottom)+'px' : '';
+  if(!bx.side && bx.t<2 && bx.bottom>HB_BASE) bx=hBox(a,bx.dir,Math.max(HB_BASE,bx.bottom-(2-bx.t)),false,dimN);
+  a.bub.classList.toggle('toL',bx.dir==='toL'); a.bub.classList.toggle('toR',bx.dir==='toR'); a.bub.classList.toggle('side',!!bx.side);
+  a.bub.style.bottom=(!bx.side && bx.bottom>HB_BASE+.5) ? Math.round(bx.bottom)+'px' : '';
   a.bub.style.setProperty('--bs',Math.round(bx.shift||0)+'px');
   a.bubBox=bx;
 }
