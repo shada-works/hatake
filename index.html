@@ -1364,7 +1364,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.63.1</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.63.2</span></span>
   </div>
 
   <div class="hud">
@@ -9776,9 +9776,13 @@ async function homeEvening(cands){
     }
     renderNagomi();
     if(closetOut.length){ await closetTalk(E,D,H,closetOut); closetOut=[]; }   /* v1.32.0：古いものを おしいれへ しまった夜 */
-  }else if(!sz && !earlyDone && !jsuikaDone && dish && !nightG && rnd()<.28){
+  }
+  /* v1.63.2（依頼者「なごみ度のごほうびの夜の条件を外す」）：ごほうびの夜にも、ごほうびの あとに 出る（夕ごはんの前の おめかしの夜も）。v1.17.0〜v1.63.1 は ごほうびの夜は 出なかった（else if）。
+     出ない夜は いままでどおり：季節のもの（風鈴・こたつ）・行事・じゃすたくんの すいかの夜・夕ごはんの ない夜 */
+  if(!sz && !jsuikaDone && dish && !nightG && rnd()<.28){
     /* ほまれくんとしゃだはる君が遊んで、ふたりとも寝落ち */
     noteHappen('play');
+    hhush();   /* v1.63.2：ごほうびの 吹き出しが のこっていたら しまう */
     await Promise.all([hmove(H,HSPOT.playH), hmove(D,HSPOT.playD)]);
     hsay(D,'ほまれくん、あそぶばう！');
     await hp(1300);
