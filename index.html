@@ -1364,7 +1364,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.63.0</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.63.1</span></span>
   </div>
 
   <div class="hud">
@@ -11121,13 +11121,13 @@ function rollWeather(){
   S.wx=w;
   S.weather=(w&&isWet(w.kind))?'rain':'sun';
   S.rainAt=w?w.from:0;
-  S.hotDay=(!(w && isWet(w.kind)) && (sn===1 || (sn!==3 && (S.fineRun||0)>=DRY_RUN-1)))?S.day:0;   /* v1.41.0：夏の晴れの日は 日照り（夕立の日はなし）。v1.63.0（依頼者「D」）：春・秋も、雨・雪の ない 日が DRY_RUN 日 つづいたら（きょうを 入れて。風の 日も 晴れ。冬は なし） */
+  S.hotDay=(!(w && isWet(w.kind)) && (sn===1 || (sn!==3 && (S.fineRun||0)>=DRY_RUN-1)))?S.day:0;   /* v1.41.0：夏の晴れの日は 日照り（夕立の日はなし）。v1.63.0（依頼者「D」）：春・秋も、雨・雪の ない 日が DRY_RUN 日 つづいたら（きょうを 入れて。風の 日も 晴れ。冬は なし。v1.63.1：DRY_RUN 3 → 2） */
 }
 /* 日照り（v1.41.0。依頼者が了解ずみ）：夏の晴れの日、12:00 に 畑の土がかわく（温室はかわかない）。午後にもう一度 水をやれば また育つ（夕方まで1.5倍）。かわいたまま夜をこすと 水切れ。
    3代目のじょうろ：小屋（50こ）があれば、しゃだはる君が 小屋から かごのそばへ運ぶ → えりちゃんの午後の水やりは 十字5マス（上下左右）。夕方、帰る前に 小屋へもどす。しゃだはる君の自分の水やりは 1マスのまま
-   v1.63.0（依頼者「A」「D」）：えりちゃんが 3代目を 手に 持って 午後を すごす（夕がた かごの そばへ もどし、しゃだはる君が 小屋へ）。春・秋も、雨・雪の ない 日が DRY_RUN 日 つづいたら 日照り（きょうを 入れて 3日め から。依頼者「お天気が3日以上続いた時」）
-   （季節は 2日。「季節に 1回は かならず」は 夏の 夕立と 冬の 雪だけなので、晴れは 最長 4日 つづく（冬 2日め → 春 1・2日め → 夏 1日め など）。3日めに なりうるのは 春の 2日め（冬の 2日めから 晴れ）と 秋の 2日め（夏の 2日めから 晴れ）＝年に 0.2日くらい。DRY_RUN を 2 に すると 春・秋の 1日めも 入って 年に 1.2日くらい） */
-const HOT_AT=720, DRY_RUN=3;   /* DRY_RUN＝晴れが つづく 日数（きょうを 入れて）。v1.63.0 */
+   v1.63.0（依頼者「A」「D」）：えりちゃんが 3代目を 手に 持って 午後を すごす（夕がた かごの そばへ もどし、しゃだはる君が 小屋へ）。春・秋も、雨・雪の ない 日が DRY_RUN 日 つづいたら 日照り（きょうを 入れて。v1.63.0 は 3日め から＝依頼者「お天気が3日以上続いた時」→ v1.63.1 で 2日め から＝依頼者の えらび）
+   （季節は 2日。「季節に 1回は かならず」は 夏の 夕立と 冬の 雪だけなので、晴れは 最長 4日 つづく（冬 2日め → 春 1・2日め → 夏 1日め など）。3日めに なりうるのは 春の 2日め（冬の 2日めから 晴れ）と 秋の 2日め（夏の 2日めから 晴れ）＝年に 0.2日くらい。DRY_RUN＝2（v1.63.1）は 春・秋の 1日めも 入って 年に 1.2日くらい） */
+const HOT_AT=720, DRY_RUN=2;   /* DRY_RUN＝晴れが つづく 日数（きょうを 入れて）。v1.63.0 は 3（年 0.2日）→ v1.63.1 で 2（依頼者「2日に すると 年 1.2日くらい。こちらにします」） */
 function hotDry(){
   let n=0;
   S.plots.forEach((p,i)=>{ if(!isGH(i) && p.unlocked && p.crop && !isRipe(p) && p.watered){ p.watered=false; n++; } });
