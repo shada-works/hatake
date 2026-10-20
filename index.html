@@ -356,7 +356,8 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 .actor .hold{position:absolute;left:50%;top:104%;display:none;transform:translate(-50%,0);transition:transform .34s ease-out;z-index:3}
 .actor.holding .hold{display:block}
 .actor.offer .hold{transform:translate(calc(-50% - 23px),-42px)}
-.actor.show .hold{transform:translate(-50%,-4px)}   /* v1.65.0：胸の前で 両手で 持つ（前は 頭の横に うかせていた。依頼者「えりちゃんが手で野菜を持つ（ように見える）かたちに」） */
+/* v1.65.0：show（野菜を 見せる）は 胸の 前で 両手（前は 頭の 横に うかせていた）。v1.65.2：.hold の 位置（transform）は poseArms が インラインで 置く（show・cam・uke）。玄関では 3人とも 同じ 高さ（HSPOT.doorEri/greet/doorShada）に したので、手が ちゃぶ台に かくれない */
+.actor.show .holdIn{max-width:48px}   /* 3つでも 1列に（2列だと 下の列が 足もとまで 下がる） */
 /* v1.65.0：手に持つ ポーズ（poseArms）。.hold の中に 手（.hand）を 2つ＝持ちものの 手前。うでは 体の SVG（.hbody）に そのつど 描く（.poseArm。合掌の そでと 同じ 色・太さ）。
    show＝えりちゃんが 野菜を 胸の前で 両手で／cam＝ほまれくんが カメラを 顔の 前に かまえる／uke＝ウクレレ（左手で ネック・右手で 弦。strum の あいだ 右手が 上下に 動く） */
 .actor .hold .hand{position:absolute;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--skin,#f5dfcd);box-shadow:0 0 0 1px var(--skinLine,#d9b9a0);z-index:2;pointer-events:none}
@@ -365,10 +366,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 .home .actor.posed .hbody .arm{opacity:0}
 .hbody .poseArm{opacity:0;transition:opacity .22s}
 .home .actor.posed .hbody .poseArm{opacity:1}
-.actor.show .holdIn{max-width:48px}   /* 3つでも 1列に（2列だと 下の列が 足もとまで 下がる） */
-.actor.cam .hold{transform:translate(-50%,-15px)}   /* あごの 前に かまえる */
-.actor.cam .hold svg{width:24px;height:24px}
-.actor.uke .hold{transform:translate(calc(-50% + 3px),-14px)}
+.actor.cam .hold svg{width:24px;height:24px}   /* カメラは あごの 前（位置は poseArms） */
 .actor.uke .hold svg{width:34px;height:34px;transform:rotate(25deg) scaleX(-1)}   /* 大きく（19px → 34px）。ネックは 右上（ひく人の 左手がわ）へ */
 .actor.uke.strum .hold .hand.hl{animation:strumHand .24s ease-in-out infinite alternate}
 @keyframes strumHand{0%{transform:translate(-.6px,-1.6px)}100%{transform:translate(.6px,1.8px)}}
@@ -1386,7 +1384,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.65.1</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.65.2</span></span>
   </div>
 
   <div class="hud">
@@ -8296,7 +8294,7 @@ const TAG_LINES={sweet:'あまくて、しあわせばう。',hot:'あつあつ�
 const HSPOT={
   cook:{x:132,y:168}, fridgeH:{x:252,y:258}, handH:{x:169,y:228},   /* v1.34.1：冷蔵庫が x182〜220 になったので、fridgeH は 232→252。handH は 台所と冷蔵庫のあいだの すきま（x156〜182）に立つ */
   cookPot:{x:90,y:146}, cookH:{x:138,y:170},   /* v1.26.0：ほまれくんも一品作る夜。えりちゃんは なべのうしろへ少しずれ、ほまれくんが となり（カウンターの右はし）に入る */
-  doorEri:{x:284,y:280}, doorShada:{x:332,y:314}, greet:{x:204,y:302},   /* v1.54.2（依頼者の希望）：doorEri y306 → 296（夕がたの はじめ、えりちゃんの顔が テーブルに かくれていた）。v1.65.0：296 → 280（野菜を 胸の前で 持って 見せるので、手も テーブルに かくれないように。テーブルの 天板は y318 から） */
+  doorEri:{x:284,y:280}, doorShada:{x:332,y:292}, greet:{x:204,y:280},   /* v1.54.2（依頼者の希望）：doorEri y306 → 296（夕がたの はじめ、えりちゃんの顔が テーブルに かくれていた）。v1.65.0：えりちゃんだけ 280（野菜を 胸の前で 持つ 手が ちゃぶ台に かくれないように）。v1.65.2（依頼者「えりちゃんだけがテーブルの高さから全身が見えてしまいます。皆を同じ高さに変えるか…」）：3人とも 22px 奥へ＝同じ 高さ（greet 302 → 280・doorShada 314 → 292）。野菜を 顔の 横に 持つ 形も ためしたが、体が ちゃぶ台に かくれると うでが 不自然に なるので、胸の前で 両手の まま */
   basketLook:{x:60,y:274}, counterEnd:{x:152,y:262}, otetsuD:{x:64,y:296},   /* v1.55.0：おてつだい（かごの前） */   /* v1.34.1：台所のはし（前は178＝いまは冷蔵庫の前になる） */
   tableEri:{x:208,y:280}, tableHomare:{x:262,y:276}, tableShada:{x:316,y:288},
   sneak:{x:150,y:259}, sneakH:{x:198,y:258},
@@ -8701,28 +8699,30 @@ function hhold(a,ids,pose){
 }
 /* v1.65.0：持っている ものに 合わせて、手と うでを 描く。手（.hand）は .hold の中＝持ちものの 手前。うで（.poseArm）は 体の SVG に、合掌の そで（.gassho .gL の path）を 写して 肩（9.5,18.5）/（34.5,18.5）から 手まで。
    .holdIn の 左上は、コマの 座標で（23－幅/2＋tx, 47.84＋ty）。体の SVG は コマの（1,34.96）から。手の 位置は .holdIn の 左上から（px） */
+/* v1.65.2：tx・ty＝.holdIn の 左上の 置き場所（コマの 座標で（23＋tx, 47.84＋ty）＝.hold の translate を インラインで）。hands＝手の 中心（.holdIn の 左上から）と その うでの 肩（s） */
 const POSE={
-  show:(w,h)=>({tx:0,ty:-4,hands:[{x:-1,y:h-7},{x:w+1,y:h-7}]}),                 /* 野菜の 両はし、下のほう */
-  cam:(w,h)=>({tx:0,ty:-15,hands:[{x:2,y:16},{x:w-2,y:16}]}),                    /* カメラの 両わき */
-  uke:(w,h)=>({tx:3,ty:-14,hands:[{x:10,y:20.5},{x:20.5,y:12.5}]})               /* 左＝弦の上（ひく人の 右手）・右＝ネック（左手）。34px の 絵（rotate(25deg) scaleX(-1)）の 位置から */
+  show:(w,h)=>({tx:-w/2,ty:-4,hands:[{x:-1,y:h-7,s:[9.5,18.5]},{x:w+1,y:h-7,s:[34.5,18.5]}]}),                   /* 胸の 前で 両手（野菜の 両はし、下のほう）。3つは 1列（.actor.show .holdIn の max-width） */
+  cam:(w,h)=>({tx:-w/2,ty:-15,hands:[{x:2,y:16,s:[9.5,18.5]},{x:w-2,y:16,s:[34.5,18.5]}]}),                    /* カメラの 両わき（あごの 前） */
+  uke:(w,h)=>({tx:-w/2+3,ty:-14,hands:[{x:10,y:20.5,s:[9.5,18.5]},{x:20.5,y:12.5,s:[34.5,18.5]}]})             /* 左＝弦の上（ひく人の 右手）・右＝ネック（左手）。34px の 絵（rotate(25deg) scaleX(-1)）の 位置から */
 };
 function poseArms(a,pose){
   const svg=a.el.querySelector('.bob > .hbody'), hold=a.el.querySelector('.hold'), box=a.el.querySelector('.holdIn');
   if(svg){ const old=svg.querySelector('.poseArm'); if(old) old.remove(); }
-  if(hold) hold.querySelectorAll('.hand').forEach(h=>h.remove());
+  if(hold){ hold.querySelectorAll('.hand').forEach(h=>h.remove()); hold.style.transform=''; }
   a.el.classList.remove('posed','show','cam','uke','strum');
   if(!pose || !POSE[pose] || !svg || !hold || !box) return;
   a.el.classList.add(pose);
   const n=box.children.length||1, w=box.offsetWidth||(pose==='show'?15*n:pose==='cam'?20:30), h=box.offsetHeight||(pose==='show'?19:pose==='cam'?24:34);
   const P=POSE[pose](w,h,n);
+  hold.style.transform='translate('+P.tx.toFixed(1)+'px,'+P.ty+'px)';   /* v1.65.2：置き場所は ここで（CSS の .show/.cam/.uke には 書かない） */
   P.hands.forEach((q,i)=>{ const e=document.createElement('i'); e.className='hand '+(i?'hr':'hl'); e.style.left=q.x+'px'; e.style.top=q.y+'px'; hold.appendChild(e); });
-  const bx=23-w/2+P.tx-1, by=47.84+P.ty-34.96;
+  const bx=23+P.tx-1, by=47.84+P.ty-34.96;
   const src=svg.querySelectorAll('.gassho .gL > path'); if(!src.length) return;
   const g=document.createElementNS('http://www.w3.org/2000/svg','g'); g.setAttribute('class','poseArm');
-  [[9.5,18.5,P.hands[0]],[34.5,18.5,P.hands[1]]].forEach(([sx,sy,q])=>{
-    const hx=bx+q.x, hy=by+q.y, cx=sx+(hx-sx)*.25, cy=Math.max(sy,hy)+3.5;   /* ひじは 下がわに */
-    const d='M'+sx+' '+sy+' Q'+cx.toFixed(1)+' '+cy.toFixed(1)+' '+hx.toFixed(1)+' '+hy.toFixed(1);
-    for(let i=0;i<Math.min(2,src.length);i++){ const e=src[i].cloneNode(false); e.setAttribute('d',d); e.removeAttribute('class'); g.appendChild(e); }
+  const sleeve=d=>{ for(let i=0;i<Math.min(2,src.length);i++){ const e=src[i].cloneNode(false); e.setAttribute('d',d); e.removeAttribute('class'); g.appendChild(e); } };
+  P.hands.forEach(q=>{
+    const [sx,sy]=q.s, hx=bx+q.x, hy=by+q.y, cx=sx+(hx-sx)*.25, cy=Math.max(sy,hy)+3.5;   /* ひじは 下がわに */
+    sleeve('M'+sx+' '+sy+' Q'+cx.toFixed(1)+' '+cy.toFixed(1)+' '+hx.toFixed(1)+' '+hy.toFixed(1));
   });
   svg.appendChild(g);
   a.el.classList.add('posed');
