@@ -327,7 +327,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 #actors .actor.shada.gest-yawn .face .normal,#actors .actor.shada.gest-yawn .face .awake{display:none}
 #actors .actor.shada.gest-yawn .face g.sleepy{display:inline}
 #actors .actor.shada.gest-yawn .face ellipse.sleepy{display:none}
-#actors .actor.shada .face .yawnMouth{display:none;transform-box:fill-box;transform-origin:50% 0%}
+.face .yawnMouth{display:none;transform-box:fill-box;transform-origin:50% 0%}   /* v1.73.3：あくびの 口も どこでも かくす（v1.73.2 の しっぽと 同じ 直し。前は #actors だけ だったので おうち・小さな 顔で ピンクの 口が 出ていた） */
 #actors .actor.shada.gest-yawn .face .yawnMouth{display:inline;animation:yawnOpen 1.4s ease-in-out 1}
 @keyframes yawnOpen{0%,100%{transform:scale(.3)}30%,70%{transform:scale(1)}}
 /* v1.73.0（ロードマップ 畑④「季節の 演出」。依頼者「A ア」）：冬は 話すと 白い 息（breath()＝.bob の 中に <i class="breath"> を 1つ。口もと（えり・ほまれ 76%・しゃだはる 72%・おじさん 84%）から 上へ ふわっと のぼって 1.2秒で 消える）。畑の コマだけ */
@@ -1459,7 +1459,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
   <path class="happy" d="M46.5 73 Q50 83 53.5 73Z" fill="#e58b8b" stroke="#c96f72" stroke-width="1.4" stroke-linejoin="round"/>
   <ellipse class="nose" cx="50" cy="64" rx="4.8" ry="3.5" fill="#a5846f"/>   <!-- v1.69.0：.nose＝くんくんで ひくひく -->
   <path class="awake" d="M42 70.5 Q46 76 50 72 Q54 76 58 70.5" fill="none" stroke="#745d55" stroke-width="2.6" stroke-linecap="round"/>
-  <ellipse class="yawnMouth" cx="50" cy="71.5" rx="4" ry="5" fill="#e58b8b" stroke="#c96f72" stroke-width="1.4"/>   <!-- v1.69.0：あくびの 口（gest-yawn の あいだだけ） -->
+  <ellipse class="yawnMouth" cx="50" cy="71.5" rx="4" ry="5" fill="#e58b8b" stroke="#c96f72" stroke-width="1.4"/>   <!-- v1.69.0：あくびの 口（畑の gest-yawn の あいだだけ。v1.73.3：おうち・小さな 顔では かくす＝.face .yawnMouth） -->
   <ellipse class="sleepy" cx="50" cy="74" rx="2.4" ry="2" fill="#745d55"/>
   <path class="scared" d="M42.5 73.5 Q46.2 70.4 50 73.5 Q53.8 76.6 57.5 73.5" fill="none" stroke="#745d55" stroke-width="2.6" stroke-linecap="round"/>
   <!-- じゃすたくんにもらった マフラー（v1.31.0）。冬の畑と、誕生日の夜 -->
@@ -1549,7 +1549,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.2</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.3</span></span>
   </div>
 
   <div class="hud">
