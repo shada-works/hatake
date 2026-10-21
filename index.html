@@ -1498,7 +1498,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.71.0</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.71.1</span></span>
   </div>
 
   <div class="hud">
@@ -3644,7 +3644,11 @@ async function tell(who,text,mood,keep){
    しごと（playerAction）・地面の タップ（walkTo）・ひとやすみ（rest・restAtHome_）の 歩きだしで */
 async function eriLineDone(){
   const on=a=>a.bub.classList.contains('on');
-  if(on(A.eri)){ const left=(A.eri.lineUntil||0)-gnow(); if(left>0) await pause(left); }
+  let until=0;   /* v1.71.1：えりちゃんの ことばだけで なく、表に 出ている しゃだはる君の ことば（かざる・返事 など）も 読めるまで 待つ（前は すぐ しまっていた） */
+  if(on(A.eri)) until=Math.max(until,A.eri.lineUntil||0);
+  if(!bg && on(A.shada)) until=Math.max(until,A.shada.lineUntil||0);
+  if(!until) return;
+  const left=until-gnow(); if(left>0 && !hurry) await pause(left);
   if(on(A.eri) || (!bg && on(A.shada))){ hush(); await pause(200); }
 }
 /* v1.71.0：しごとの ひとこと。えりちゃんの ことば → 読めるまで 待って しゃだはる君の 返事（両方 残す＝掛け合い。朝の あいさつと 同じ 間）。返事は しゃだはる君が そばに 着いてから（follow）。
@@ -3654,10 +3658,10 @@ let lastJob=null, jobStreak=0;
 function jobQuiet(kind){ jobStreak=(lastJob===kind)?jobStreak+1:1; lastJob=kind; return jobStreak%2===0; }
 async function workTalk(eText,eMood,sText,sMood,follow){
   let said=false;
-  if(eText && !(bg && A.shada.bub.classList.contains('on'))){ await tell('eri',eText,eMood,false); said=true; }
+  if(eText){ await tellWait(); if(!(bg && A.shada.bub.classList.contains('on'))){ await tell('eri',eText,eMood,false); said=true; } }   /* v1.71.1：待ったあとで もう一度 見る（待っている あいだに うしろの 場面が 話しだす ことが ある） */
   if(sText && A.shada.mode==='follow'){
     if(follow) await follow;
-    if(A.shada.mode==='follow' && !bg){ if(sMood) setMood('shada',sMood,1600); await tell('shada',sText,null,said); said=true; }
+    if(A.shada.mode==='follow' && !bg){ await tellWait(); if(sMood) setMood('shada',sMood,1600); await tell('shada',sText,null,said); said=true; }   /* v1.71.1：顔は 待ったあとで 変える（前は 待つ前に 変えていたので、話すときには もどっていた） */
   }
   if(said) await tellWait();
 }
@@ -3921,7 +3925,7 @@ async function weatherScenes_(resting){   /* resting＝ひとやすみの直後�
       if(k==='storm') await thunderScene();
       else if(follow){
         /* v1.71.0：読める 間（tell。しごとの ひとことは 言いおわっている＝workTalk）。しゃだはる君 → えりちゃんの 返事は 掛け合い（両方 残す）。前は 0.8秒 待って 言い、返事は 0.8秒 あと */
-        if(k==='snow'){ setMood('shada','happy',1800); await tell('shada',pickV(['ゆき、ふってきたばう！','ゆきばう！'])); if(!goHome && rnd()<.6) await tell('eri',pickV(['つもるかな。','きれいだね。']),'smile',true); }
+        if(k==='snow'){ await tellWait(); setMood('shada','happy',1800); await tell('shada',pickV(['ゆき、ふってきたばう！','ゆきばう！'])); if(!goHome && rnd()<.6) await tell('eri',pickV(['つもるかな。','きれいだね。']),'smile',true); }
         else{ await tell('shada',pickV(['ふってきたばう。','ぽつぽつばう。'])); if(!goHome && rnd()<.6) await tell('eri',pickV(['畑がよろこぶね。','いいおしめりだね。']),'smile',true); }
         await tellWait();
         if(S.canOut) await returnCan();   /* v1.39.1：雨・雪が降ってきたら、じょうろを かごのそばへもどす（依頼者の希望） */
@@ -3934,7 +3938,7 @@ async function weatherScenes_(resting){   /* resting＝ひとやすみの直後�
       log(k==='leaves'?'風がふいて、落ち葉が舞っています。':'そよ風がふいてきました。花びらが、畑の上を流れていきます。'); Snd.play('wind');
       if(follow){
         /* v1.71.0：読める 間（tell）。返事は 掛け合い */
-        if(k==='leaves'){ setMood('shada','happy',1600); await tell('shada',pickV(['はっぱ、ひらひらばう！','はっぱ、おいかけるばう！'])); }
+        if(k==='leaves'){ await tellWait(); setMood('shada','happy',1600); await tell('shada',pickV(['はっぱ、ひらひらばう！','はっぱ、おいかけるばう！'])); }
         else{ await tell('shada',pickV(['いいかぜばう。','かぜ、きもちいいばう。'])); if(rnd()<.6) await tell('eri',pickV(['そよ風、気持ちいいね。','花びらが、とんでるね。']),'smile',true); }
         await tellWait();
       }
@@ -3943,7 +3947,7 @@ async function weatherScenes_(resting){   /* resting＝ひとやすみの直後�
       if(A.shada.mode==='nap') wakeShada(false); stopWatch(); cancelErrand();   /* 昼寝・見張り・おつかい中でも、起こして運んでもらう */
       await tell('eri',season()===1?'今日は暑いね。':'このところ、雨がふらないね。');   /* v1.63.0：春・秋は 晴れつづき（依頼者が了解ずみ）。v1.71.0：読める 間（前は hush して 言い、1.6秒） */
       if(S.unlocked.shed && A.shada.mode==='follow' && !S.raining){
-        setMood('shada','happy',1800); await tell('shada','おおきいじょうろ、もってくるばう！',null,true);   /* v1.71.0：返事（掛け合い） */
+        await tellWait(); setMood('shada','happy',1800); await tell('shada','おおきいじょうろ、もってくるばう！',null,true);   /* v1.71.0：返事（掛け合い） */
         await tellWait(); hush();
         const back={x:A.eri.x,y:A.eri.y};
         focusRange(600,792);
@@ -3953,7 +3957,7 @@ async function weatherScenes_(resting){   /* resting＝ひとやすみの直後�
         focusRange(150,340);
         await moveShada(SPOT.bigCanBasket,{ms:stepMs(Math.hypot(SPOT.bigCanBasket.x-A.shada.x,SPOT.bigCanBasket.y-A.shada.y),500,2300)});   /* v1.64.0 */
         bigCanCarry=false; S.bigCanDay=S.day; shadaCarry(); renderWorld(); Snd.play('spark'); fx('i-spark',{x:226,y:236});
-        setMood('shada','happy',1600); await tell('shada','はい、ばう！');   /* v1.71.0 */
+        await tellWait(); setMood('shada','happy',1600); await tell('shada','はい、ばう！');   /* v1.71.0 */
         await tellWait();
         /* v1.63.0（依頼者「A」）：えりちゃんが かごの そばへ 来て、3代目を 手に 持つ（しゃだはる君と 同じ 持ちかた）。午後は 持ったまま 水やり（かたむける）。夕がた、かごの そばへ もどす（eriReturnBigCan）。前は 置きっぱなしで、えりちゃんの 絵は かわらなかった */
         hush();
@@ -3966,7 +3970,7 @@ async function weatherScenes_(resting){   /* resting＝ひとやすみの直後�
         const goE=moveTo(A.eri,back);   /* ふたりで 畑へ もどる（えりちゃんは 持ったまま） */
         await pause(250); focus(back.x);   /* 少し 歩いてから 画面を 動かす（morning_ と 同じ） */
         await Promise.all([goE, shadaGo({x:clamp(back.x+48,30,W-30),y:clamp(back.y+6,196,H-22)},0)]);   /* v1.64.0：shadaGo・同時に */
-      }else if(A.shada.mode==='follow'){ setMood('shada','sleepy',2000); await tell('shada',season()===1?'あついばう……':'つち、からからばう……',null,true); await tellWait(); }   /* v1.63.0：春・秋（依頼者が了解ずみ）。v1.71.0：返事（掛け合い）・読める 間 */
+      }else if(A.shada.mode==='follow'){ await tellWait(); setMood('shada','sleepy',2000); await tell('shada',season()===1?'あついばう……':'つち、からからばう……',null,true); await tellWait(); }   /* v1.63.0：春・秋（依頼者が了解ずみ）。v1.71.0：返事（掛け合い）・読める 間 */
     }
   }
 }
@@ -4014,7 +4018,7 @@ async function stormReturn(){
   setTimeout(()=>A.homare.el.classList.remove('on'),500);
   if(S.canOut) await returnCan();   /* v1.39.1：雨のあいだに置いてきたじょうろを、かごのそばへ */
   await moveTo(A.shada,{x:clamp(A.eri.x+48,30,W-30),y:clamp(A.eri.y+6,196,H-22)});
-  setMood('shada','happy',1600);
+  await tellWait(); setMood('shada','happy',1600);
   await tell('shada',pickV(['もう、へいきばう。','はれたばう！']));   /* v1.71.0：読める 間。返事は 掛け合い（前は 0.8秒 あと） */
   log('雨があがって、しゃだはる君が畑にもどってきました。');
   await tell('eri',pickV(['おかえり、しゃだはる。','こわかったね。もうだいじょうぶ。']),'smile',true);
@@ -4026,7 +4030,7 @@ async function rainbowScene(){
   const follow=A.shada.mode==='follow';
   if(follow){
     A.shada.el.classList.add('lookup'); setTimeout(()=>A.shada.el.classList.remove('lookup'),1900);
-    setMood('shada','happy',1800);
+    await tellWait(); setMood('shada','happy',1800);
     await tell('shada',pickV(['にじばう！','そら、きれいばう！']));   /* v1.71.0：読める 間。返事は 掛け合い（前は 0.8秒 あと） */
     await tell('eri',pickV(['わあ、きれい。','虹だ。しゃだはる、見て。']),'happy',true);
   }else await tell('eri','わあ、虹だ。','happy');
@@ -4733,6 +4737,7 @@ async function visitScene_(){
   const key=giftPick(), g=GIFTS[key], O=A.oji, withS=A.shada.mode==='follow';   /* v1.60.0：季節ごとに 2つを こうたい */
   /* v1.61.1：記録（S.oji.done）は 場面の あと（finally）。とちゅうで ページが 消えて ひらきなおしたら、おじさんは もう一度 来る（野菜は 1回だけ）。問題が おきたときも くり返さない */
   try{
+  await tellWait(); hush();   /* v1.71.1：前の ことばを 読めてから しまう（しゃだはる君が いないときも） */
   shadaCanDown(true);   /* v1.39.1：おじさんのあいだ、じょうろは足もとに */
   if(withS){ await tell('shada',vary('ojiCall',VISIT_CALL)); await tellWait(); hush(); }   /* 歩きだす前にしまう（画面が左へ動くので、出したままだと右にはみ出す）。v1.71.0：読める 間（前は 1.6秒） */
   /* おじさんが、箱をかかえて、道をゆっくり歩いてくる。えりちゃんたちは、むかえに行く */
@@ -4779,7 +4784,7 @@ async function visitScene_(){
   let itsumo=false;
   if(gt.tip && tipOK(gt.tip)){ await tell('eri','わあ、今夜 作ってみます。','happy'); S.ojiTip={d:S.day,name:gt.tip}; }   /* S.ojiTip：その夜の もう一品（v1.60.0。前は メニューに かならず入れていた） */
   else if((S.gifts||0)>0 && rnd()<.5){ await tell('eri','いつも、ありがとうございます。','smile'); itsumo=true; }
-  if(withS && !itsumo){ setMood('shada','happy',1800); await tell('shada','おじさん、ありがとばう！'); }   /* v1.56.0：えりちゃんが「いつも、ありがとうございます。」と言ったときは なし（お礼が 3つ つづかないように） */
+  if(withS && !itsumo){ await tellWait(); setMood('shada','happy',1800); await tell('shada','おじさん、ありがとばう！'); }   /* v1.56.0：えりちゃんが「いつも、ありがとうございます。」と言ったときは なし（お礼が 3つ つづかないように） */
   await tellWait(); hush();
   if(withS){
     /* しゃだはる君が そばに来て、おじさんに なでてもらう */
@@ -4793,7 +4798,7 @@ async function visitScene_(){
     if(!reduceMotion){ A.shada.el.style.setProperty('--lean','0deg'); A.shada.el.classList.add('jumping'); setTimeout(()=>A.shada.el.classList.remove('jumping'),920); }
     await pause(1700);
     if(rnd()<.6){   /* v1.56.0：なでてもらって ひとこと。v1.71.0：字数の 間（前は 2.0秒・1.7秒） */
-      setMood('shada','happy',1800); await tell('shada','おじさんの て、あったかいばう。');
+      await tellWait(); setMood('shada','happy',1800); await tell('shada','おじさんの て、あったかいばう。');
       await tell('oji','ははは。いい子だね。','happy');
     }
   }else{
@@ -6991,6 +6996,7 @@ async function playerAction(kind,i,seed){
     S.plots[i]=Object.assign(p,{crop:null,growth:0,watered:false,dry:false,soggy:false,bug:false,frost:false,dried:false,big:null});   /* v1.50.0：big ももどす */
     Snd.play('harvest'); if(big) setTimeout(()=>Snd.play('spark'),260);
     /* v1.71.0：読める 間（workTalk）。野菜が かごへ 飛ぶ あいだに 言う。大きな 野菜（v1.39.0。依頼者が了解ずみ）は いつも、ふつうの 収穫は 2回に 1回 */
+    if(shadaNear) setMood('shada','happy',1600);   /* v1.71.1：だまって 働く 回も うれしい 顔（v1.70.1 までと 同じ） */
     const talk=(big||!quiet)?workTalk(big?'わあ、大きな'+c.name+'。':pickFresh('harvE',{n:c.name}),'happy',shadaNear?(big?'おおきいばう！':pickFresh('harvS',{n:c.name})):null,'happy',follow):Promise.resolve();
     renderPlots();
     addHarvest(key,big?2:1,big,true);   /* v1.61.1：記録は 飛ぶ前に（とちゅうで とじても 野菜が 消えない）。かごの絵は 飛んだあと */
@@ -7154,7 +7160,7 @@ async function shelterAtShed(){
   await pause(500);
   for(const [who,text,mood] of pick(SHED_TALK[k])){
     if(who==='shada' && !canFollow) continue;
-    if(who==='shada' && /！$/.test(text)) setMood('shada','happy',1500);
+    await tellWait(); if(who==='shada' && /！$/.test(text)) setMood('shada','happy',1500);   /* v1.71.1 */
     await tell(who,text,mood);   /* v1.71.0：読める 間。1つずつ（小屋の ひさしは せまいので 前の まま。前は hush して 1.5秒＋1字 0.045秒） */
   }
   await tellWait(); hush();
@@ -7189,7 +7195,7 @@ async function restAtHome_(free){
   /* 玄関先は3人がちかいので、吹き出しは1つずつ出す */
   for(const [who,text,mood] of pick((free?SHELTER_FREE:SHELTER)[k])){
     if(who==='shada' && !(hiding||canFollow)) continue;
-    if(who==='shada' && /！$/.test(text)) setMood('shada','happy',1500);
+    await tellWait(); if(who==='shada' && /！$/.test(text)) setMood('shada','happy',1500);   /* v1.71.1：待ってから 顔を 変える */
     await tell(who,text,mood);   /* v1.71.0：読める 間。1つずつ（前の ことばを しまってから。前は hush して 1.5秒＋1字 0.045秒） */
   }
   await tellWait(); hush();
@@ -7274,7 +7280,7 @@ async function rest(auto){
   await moveTo(A.eri,e);
   await follow;
   if(call && A.shada.mode==='follow' && rnd()<.6){   /* v1.56.0：よばれて となりに来た しゃだはる君（依頼者が了解ずみ）。v1.71.0：読める 間・返事は 掛け合い */
-    setMood('shada','happy',1900); await tell('shada','えりちゃんの となり、すきばう。');
+    await tellWait(); setMood('shada','happy',1900); await tell('shada','えりちゃんの となり、すきばう。');
     await tell('eri','ふふ。','happy',true); await tellWait(); hush(); await pause(200);
   }
   /* 季節のひとやすみ */
@@ -7285,7 +7291,7 @@ async function rest(auto){
   if(sc.amb) sc.amb(e,s);
   let first=true;   /* v1.71.0：読める 間（tell）。1つめは 前の ことばを しまってから、あとは 掛け合い（両方 残す）。前は 1.25秒＋1字 0.045秒 */
   for(const [who,text,mood] of sc.lines){
-    if(who==='shada'){ if(!withS) continue; if(sc.shada) sc.shada(s); }
+    if(who==='shada'){ if(!withS) continue; await tellWait(); if(sc.shada) sc.shada(s); }   /* v1.71.1：しぐさ・音（カラン・ほくほく など）は ことばの 直前に（前は 2〜3秒 早かった） */
     await tell(who,text,mood,!first); first=false;
   }
   await tellWait();
@@ -11011,7 +11017,7 @@ const EVENTS=[
       await moveShada(spot);
       await pause(400);
       fx('i-stone',{x:spot.x,y:spot.y-34},'pop',900); Snd.play('spark');
-      setMood('shada','happy',1600);
+      await tellWait(); setMood('shada','happy',1600);
       await tell('shada',pickV(['なんかあったばう！','みつけたばう！','きらきらばう！']));   /* v1.71.0：読める 間。返事は 掛け合い（前は 1.1秒 → 0.9秒 あと） */
       S.stones+=1; pendingStones+=1; addNagomi(1,A.shada);
       log('しゃだはる君が土のなかから、きれいな石を見つけました。家の前にかざりに行くようです。');
@@ -11052,7 +11058,7 @@ const EVENTS=[
       await Promise.all([work(A.eri,i,null,'harvest'),work(A.shada,i,null,'harvest')]);   /* v1.68.0：ふたりで ぐいっと */
       Object.assign(p,{crop:null,growth:0,watered:false,dry:false,soggy:false,dried:false,big:null});   /* v1.54.1：big も もどす */
       renderPlots();
-      setMood('shada','happy',1800); setMood('eri','happy',1800);
+      await tellWait(); setMood('shada','happy',1800); setMood('eri','happy',1800);   /* v1.71.1：待ってから 顔を 変える */
       Snd.play('harvest');
       await tell('shada','ぬけたばう！');   /* v1.71.0 */
       addHarvest(key,big?2:1,big,true);   /* v1.61.1：記録は 飛ぶ前に */
@@ -11093,7 +11099,7 @@ EVENTS.push(
         await moveShada(p);
       }
       if(bf){ bf.style.transition='transform 1000ms ease-in,opacity 1000ms'; bf.style.transform='translate('+(pts[2].x+130)+'px,'+(pts[2].y-190)+'px)'; bf.style.opacity='0'; setTimeout(()=>bf.remove(),1050); }
-      setMood('shada','happy',1600);
+      await tellWait(); setMood('shada','happy',1600);
       await tell('shada','いっちゃったばう。');   /* v1.71.0 */
       setMood('eri','smile',2000);
       addNagomi(1,A.shada);
@@ -11107,13 +11113,13 @@ EVENTS.push(
       if(atShed){ focusRange(600,792); moveTo(A.eri,SPOT.shedEri,{ms:1600}); }
       await moveShada(spot);
       if(atShed) await pause(500);
-      setMood('shada','sleepy',2600);
+      await tellWait(); setMood('shada','sleepy',2600);
       await tell('shada','あついばう……ひかげで休むばう。');   /* v1.71.0：読める 間。返事は 掛け合い（前は 1.3秒 あと） */
       await tell('eri','お水のもうね。','smile',true);
       await pause(700);
       fx('i-drop',{x:spot.x,y:spot.y-30},'pop',900);
       await tellWait();
-      setMood('shada','happy',1500);
+      await tellWait(); setMood('shada','happy',1500);
       await tell('shada','いきかえったばう！');
       addNagomi(1,A.shada);
       log('暑い日。しゃだはる君は木かげでひとやすみして、お水をもらいました。');
@@ -11139,12 +11145,12 @@ EVENTS.push(
       await pause(400);
       if(!S.compostTold){   /* はじめて：えりちゃんに教える（依頼者の希望） */
         S.compostTold=true; S.compostSaid=S.day;
-        setMood('shada','happy',1800); await tell('shada','たいひ、できたばう！えりちゃん、種まきに つかえるばう。');   /* v1.71.0：読める 間（前は 2.6秒 → 1.8秒） */
+        await tellWait(); setMood('shada','happy',1800); await tell('shada','たいひ、できたばう！えりちゃん、種まきに つかえるばう。');   /* v1.71.0：読める 間（前は 2.6秒 → 1.8秒） */
         await tell('eri','ありがとう。小屋から、持ってこようっと。','smile',true);
         await tellWait();
         log('しゃだはる君が'+(leaf?'落ち葉':'草')+'を たいひ箱に運びました。たいひは 種まきに使えると、教えてくれました（箱をタップすると持てます）。');
       }else{
-        setMood('shada','happy',1500); await tell('shada','たいひ、ふえたばう。');   /* v1.71.0（前は 1.3秒） */
+        await tellWait(); setMood('shada','happy',1500); await tell('shada','たいひ、ふえたばう。');   /* v1.71.0（前は 1.3秒） */
         await tellWait();
         log('しゃだはる君が'+(leaf?'落ち葉':'草')+'を たいひ箱に運びました（箱に '+S.compost+'こ）。');
       }
@@ -11156,7 +11162,7 @@ EVENTS.push(
       await moveShada(spot);
       await pause(400);
       fx('i-acorn',{x:spot.x,y:spot.y-34},'pop',900); Snd.play('spark');
-      setMood('shada','happy',1600);
+      await tellWait(); setMood('shada','happy',1600);
       await tell('shada',pickV(['どんぐり、あったばう！','どんぐり、みつけたばう！']));   /* v1.71.0：読める 間。返事は 掛け合い */
       S.acorns=(S.acorns||0)+1; pendingAcorns+=1; addNagomi(1,A.shada);
       log('しゃだはる君が木の下で、どんぐりを見つけました。家の前にかざりに行くようです。');
@@ -11177,7 +11183,7 @@ EVENTS.push(
       }
       if(ball) ball.remove();
       S.snowman=true; renderWorld();
-      setMood('shada','happy',1800);
+      await tellWait(); setMood('shada','happy',1800);
       await tell('shada','ゆきだるま、できたばう！');   /* v1.71.0：読める 間。返事は 掛け合い（前は 0.8秒 あと） */
       addNagomi(2,A.shada);
       log('しゃだはる君が雪玉をころがして、畑のよこに雪だるまを作りました。');
@@ -11573,7 +11579,7 @@ async function giftDetour(){
   const nm=vegName(bd.veg), withS=A.shada.mode==='follow';
   lineUntil=0;   /* v1.64.0：ことばは 読める長さ（tell）。歩きは 帰り道の速さ（slowMove。前は ふだんの速さで 0.23秒で 画面の外へ） */
   await tell('eri','たくさんとれたから、おじさんにも、おすそわけしていこっか。','smile',true);
-  if(withS){ setMood('shada','happy',1600); await tell('shada','おじさん、よろこぶばう！',null,true); }
+  if(withS){ await tellWait(); setMood('shada','happy',1600); await tell('shada','おじさん、よろこぶばう！',null,true); }
   await tellWait(); hush(); await pause(250);
   /* v1.62.2（依頼者「かごから1つ取ってから」）：かごの 左下（運ぶときと 同じ 場所 BK.eriL）へ 行って、かごから 1つ 取る（かごの 中から 手もとへ 飛ぶ）。しゃだはる君は 右下（BK.shadaR）。かごが 畑に ないとき（夕がたは ないはず）は 前のまま 手もとに 出す */
   if(!vp.classList.contains('basketIn')){
@@ -11598,7 +11604,7 @@ async function giftDetour(){
   await slowMove(A.eri,road); await s3;
   await pause(300);
   await tell('eri','よろこんでくれたね。','happy',true);
-  if(withS){ setMood('shada','happy',1600); await tell('shada','おじさん、にこにこだったばう。',null,true); }
+  if(withS){ await tellWait(); setMood('shada','happy',1600); await tell('shada','おじさん、にこにこだったばう。',null,true); }
   await tellWait();
   hush();
   log('たくさんとれたので、帰り道に おじさんへ '+nm+'をおすそわけしました。');
@@ -11849,7 +11855,7 @@ async function morning_(info){
     log(CROPS[S.plots[info.droopy].crop].name+'が少し元気がないみたい。お水をあげれば、また育ちます。');
   }else if(S.hotDay===S.day){   /* v1.41.0：日照りの日。v1.63.0：春・秋の 晴れつづきの 日も（空を 見あげて お日さま。ことばは 依頼者の確認まち） */
     await tellWait(); bubsOff(); await pause(250);
-    if(season()===1){ setMood('shada','sleepy',1800); await tell('shada','きょうは、あついばう。',null,true); }
+    if(season()===1){ await tellWait(); setMood('shada','sleepy',1800); await tell('shada','きょうは、あついばう。',null,true); }
     else{ A.shada.el.classList.add('lookup'); fx('i-sun',{x:A.shada.x+4,y:A.shada.y-44},'pop',1500); setTimeout(()=>A.shada.el.classList.remove('lookup'),1900); await tell('shada','ずっと、はれてるばう。',null,true); }
     log((season()===1?'今日は日照り。':'晴れの日がつづいています。')+'お昼に土がかわくので、午後にもう一度 水をあげましょう。'+(S.unlocked.shed?'しゃだはる君が、小屋から 大きいじょうろを持ってきてくれます。':''));
   }else{ const ml=pick(info.first?LINES.morningS:LINES.morningS2); await tell('shada',ml); askedWhat=/何するばう/.test(ml); }
@@ -11857,8 +11863,8 @@ async function morning_(info){
   const greetAndReply=async()=>{
     await tell('eri',info.changed?SEASONS[season()]+'だね。今日もよろしくね。':(info.first?'おはよう、しゃだはる。今日もよろしくね。':vary('fieldE',['しゃだはる、今日もよろしくね。','さあ、はじめよっか。','今日も、いい畑にしようね。','よーし、今日も 畑の じかんだよ。','今日も、のんびり やろうね。'])),'smile');   /* v1.37.2：keep（tell は いつも keep） */
     /* しゃだはる君のお返事（日によって2とおり。ねむい日は、あくびまじり）。えりちゃんの ことばは 残したまま（掛け合い） */
-    if(S.mood==='sleepy'){ setMood('shada','sleepy',2000); await tell('shada','ふわぁ……きょうも、いくばう。',null,true);   /* v1.56.0：「がんばる」を使わない */ }
-    else{ setMood('shada','happy',1600); await tell('shada',vary('mReply',LINES.morningReply,saidOK),null,true); }   /* v1.56.0：おふとんで「いっしょ」が もう出た朝は「いっしょ」の返事を さける */
+    if(S.mood==='sleepy'){ await tellWait(); setMood('shada','sleepy',2000); await tell('shada','ふわぁ……きょうも、いくばう。',null,true);   /* v1.56.0：「がんばる」を使わない */ }
+    else{ await tellWait(); setMood('shada','happy',1600); await tell('shada',vary('mReply',LINES.morningReply,saidOK),null,true); }   /* v1.56.0：おふとんで「いっしょ」が もう出た朝は「いっしょ」の返事を さける */
   };
   /* v1.37.2：畑に出たところで入力を開放し、あいさつ・返事・知らせ（芽・カエル・霜・木・実・バジル・干し大根）は うしろで流す（依頼者の希望：吹き出しは出るが、えりちゃんは行動できる）。
      はじめての朝と、えりちゃんが歩く こしかけの朝だけは いままでどおり止める */
@@ -11882,31 +11888,31 @@ async function morning_(info){
       log('畑に霜がおりています。こおったマスは、朝9時ごろにとけます。タップすると、霜柱をふんでとかせます。');
     }
     /* くだもの（v1.21.0）：木になった朝と、実がなった朝は、しゃだはる君が気づいて教える（依頼者の希望） */
-    for(const fk of (info.grown||[])){ await gap(); setMood('shada','happy',1600); await tell('shada',FRUITS[fk].grownS,null,true); log(TREES[fk].grownLog); }   /* v1.35.0：3本の木 */
+    for(const fk of (info.grown||[])){ await gap(); await tellWait(); setMood('shada','happy',1600); await tell('shada',FRUITS[fk].grownS,null,true); log(TREES[fk].grownLog); }   /* v1.35.0：3本の木 */
     if(info.vineGrown) log(FRUITS.budou.grownLog);
     if(info.fruit){
       const f=FRUITS[info.fruit];
-      await gap(); setMood('shada','happy',1600); await tell('shada',f.noticeS,null,true);
+      await gap(); await tellWait(); setMood('shada','happy',1600); await tell('shada',f.noticeS,null,true);
       await tell('eri',f.noticeE,'happy',true); log(f.noticeLog);
     }
     if(info.basil){   /* v1.23.0：バジルがつめる朝も、しゃだはる君が気づく */
-      await gap(); setMood('shada','happy',1600); await tell('shada','えりちゃん、バジル、そだったばう！',null,true);
+      await gap(); await tellWait(); setMood('shada','happy',1600); await tell('shada','えりちゃん、バジル、そだったばう！',null,true);
       await tell('eri','ほんとだ。あとで、つんでおこうね。','happy',true); log('温室のバジルが育っています。タップして、つみましょう。');
     }
     if(S.unlocked.tanbo && seasonDay()===1 && season()!==3){   /* v1.52.0：田んぼ。あしたの朝が 田植え・稲刈り。v1.57.0：夏も（カエルとトンボ） */
       const T=tanboT(), y=yearNo();
-      if(season()===0 && T.taue!==y){ await gap(); setMood('shada','happy',1600); await tell('shada',((T.tn||0)%2)?'たんぼ、きらきらばう！':'たんぼに、みず、ばう！',null,true);   /* v1.56.0：年ごとに */ await tell('eri','あしたは、田植えだね。','smile',true); log('春になって、田んぼに水をはりました。あしたの朝は、田植えです。'); }
-      if(season()===2 && T.taue===y && T.kari!==y){ await gap(); setMood('shada','happy',1600); await tell('shada',((T.kn||0)%2)?'たんぼ、いいにおいばう！':'たんぼ、きんいろばう！',null,true);   /* v1.56.0：年ごとに */ await tell('eri','あしたは、稲刈りだね。','smile',true); log('田んぼの稲が、きんいろに実りました。赤とんぼも とんでいます。あしたの朝は、稲刈りです。'); }
+      if(season()===0 && T.taue!==y){ await gap(); await tellWait(); setMood('shada','happy',1600); await tell('shada',((T.tn||0)%2)?'たんぼ、きらきらばう！':'たんぼに、みず、ばう！',null,true);   /* v1.56.0：年ごとに */ await tell('eri','あしたは、田植えだね。','smile',true); log('春になって、田んぼに水をはりました。あしたの朝は、田植えです。'); }
+      if(season()===2 && T.taue===y && T.kari!==y){ await gap(); await tellWait(); setMood('shada','happy',1600); await tell('shada',((T.kn||0)%2)?'たんぼ、いいにおいばう！':'たんぼ、きんいろばう！',null,true);   /* v1.56.0：年ごとに */ await tell('eri','あしたは、稲刈りだね。','smile',true); log('田んぼの稲が、きんいろに実りました。赤とんぼも とんでいます。あしたの朝は、稲刈りです。'); }
       if(season()===1 && T.taue===y){ await gap(); setMood('shada','happy',1600); const k=((T.tn||0)+1)%2; await tell('shada',k?'たんぼに、トンボ いっぱいばう！':'たんぼで、ケロケロ いってるばう！',null,true);   /* v1.57.0：年ごとに */ await tell('eri',k?'ふふ。すっかり、夏の田んぼだね。':'ふふ。カエルさん、げんきだね。','smile',true); log('田んぼの稲が、青々と育っています。カエルが鳴いて、トンボも とんでいます。'); }
     }
     if(info.hoshi){   /* v1.28.0：大根が干しあがった朝 */
-      await gap(); setMood('shada','happy',1600); await tell('shada','えりちゃん、だいこん、ほせたばう！',null,true);
+      await gap(); await tellWait(); setMood('shada','happy',1600); await tell('shada','えりちゃん、だいこん、ほせたばう！',null,true);
       await tell('eri','ほんとだ。いい干しぐあい。','happy',true);
       log('小屋の大根が、干しあがりました。'+HANG_DAYS+'日のあいだ、夕ごはんに「もう一品」が つきます。');
     }
     if(S.unlocked.compost && S.compostTold && (S.compost||0)>0 && !S.compostHeld && S.compostSaid!==S.day){   /* v1.40.0：たいひが箱にあるのに持っていない朝は、しゃだはる君が教える（依頼者の希望） */
       S.compostSaid=S.day;
-      await gap(); setMood('shada','happy',1600); await tell('shada','えりちゃん、たいひ、つかえるばう。',null,true);
+      await gap(); await tellWait(); setMood('shada','happy',1600); await tell('shada','えりちゃん、たいひ、つかえるばう。',null,true);
       await tell('eri','うん。あとで持っていくね。','smile',true);
     }
     if(info.zabuton){   /* v1.28.0：しゃだはる君の ざぶとん（小屋ができた次の朝。前からのセーブも、さいしょの朝に） */
@@ -11918,7 +11924,7 @@ async function morning_(info){
       fx('i-spark',{x:962,y:270}); Snd.play('spark');
       await pause(600);
       await tell('eri','しゃだはるの、こしかけだよ。','smile',true);   /* v1.35.1：ざぶとん → こしかけ（木の縁台。依頼者の希望） */
-      setMood('shada','happy',1800); await tell('shada','ここ、すきばう！',null,true);
+      await tellWait(); setMood('shada','happy',1800); await tell('shada','ここ、すきばう！',null,true);
       if(!reduceMotion){ A.shada.el.style.setProperty('--lean','0deg'); A.shada.el.classList.add('jumping'); setTimeout(()=>A.shada.el.classList.remove('jumping'),920); }
       await tellWait();
       log('小屋の前に、しゃだはる君の こしかけを置きました。お昼寝の場所が ふえました。');
