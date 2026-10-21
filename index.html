@@ -1498,7 +1498,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.70.0</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.70.1</span></span>
   </div>
 
   <div class="hud">
@@ -8472,13 +8472,13 @@ const HSPOT={
   cook:{x:132,y:168}, fridgeH:{x:252,y:258}, handH:{x:169,y:228},   /* v1.34.1：冷蔵庫が x182〜220 になったので、fridgeH は 232→252。handH は 台所と冷蔵庫のあいだの すきま（x156〜182）に立つ */
   cookPot:{x:86,y:146}, cookH:{x:138,y:170},   /* v1.26.0：ほまれくんも一品作る夜。えりちゃんは なべのうしろへ少しずれ、ほまれくんが となり（カウンターの右はし）に入る。v1.67.0：いつも ここで かきまぜる（x 90 → 86＝なべの まんなか） */
   doorEri:{x:284,y:280}, doorShada:{x:332,y:292}, greet:{x:204,y:280},   /* v1.54.2（依頼者の希望）：doorEri y306 → 296（夕がたの はじめ、えりちゃんの顔が テーブルに かくれていた）。v1.65.0：えりちゃんだけ 280（野菜を 胸の前で 持つ 手が ちゃぶ台に かくれないように）。v1.65.2（依頼者「えりちゃんだけがテーブルの高さから全身が見えてしまいます。皆を同じ高さに変えるか…」）：3人とも 22px 奥へ＝同じ 高さ（greet 302 → 280・doorShada 314 → 292）。野菜を 顔の 横に 持つ 形も ためしたが、体が ちゃぶ台に かくれると うでが 不自然に なるので、胸の前で 両手の まま */
-  basketLook:{x:60,y:274}, counterEnd:{x:152,y:262}, otetsuD:{x:64,y:296},   /* v1.55.0：おてつだい（かごの前） */   /* v1.34.1：台所のはし（前は178＝いまは冷蔵庫の前になる） */
+  basketLook:{x:60,y:274}, counterEnd:{x:152,y:278}, otetsuD:{x:64,y:296},   /* v1.55.0：おてつだい（かごの前） */   /* v1.34.1：台所のはし（前は178＝いまは冷蔵庫の前になる）。v1.70.1：y 262 → 278（足が 床に つく。262 だと 戸棚の 前面に はりついて 宙に 浮いて 見えた＝依頼者） */
   tableEri:{x:208,y:280}, tableHomare:{x:262,y:276}, tableShada:{x:316,y:288},
   sneak:{x:150,y:259}, sneakH:{x:198,y:258},
   window:{x:288,y:245}, windowH:{x:234,y:238},
   appliance:{x:178,y:386}, applianceH:{x:224,y:376},   /* せんぷうき・ストーブの前（v1.13.2：台を大きくしたので、台のまんなかに立って見えないよう、左手前へ） */
   shelf:{x:72,y:295}, cushion:{x:322,y:372},
-  playD:{x:254,y:392}, playH:{x:204,y:384}, blanketE:{x:314,y:378}, ajimiD:{x:200,y:268},   /* v1.70.0：毛布を かける えりちゃん（ふたりの 右）・あじみの しゃだはる君（台所の はしの 右手前。床の 上＝足が 床に つく） */
+  playD:{x:254,y:392}, playH:{x:204,y:384}, blanketE:{x:314,y:378}, ajimiD:{x:200,y:282},   /* v1.70.0：毛布を かける えりちゃん（ふたりの 右）・あじみの しゃだはる君（台所の はしの 右手前。床の 上＝足が 床に つく）。v1.70.1：counterEnd に 合わせて 手前へ（268 → 282） */
   /* v1.15.0：おもちゃ箱のそば／ボールを追いかける先／ラグの上／記念写真でならぶ場所（台の手前） */
   toy:{x:116,y:372}, toyH:{x:176,y:380}, ballEnd:{x:262,y:396}, rugL:{x:232,y:398}, rugR:{x:292,y:398},
   photoE:{x:206,y:376}, photoH:{x:258,y:370}, photoD:{x:308,y:388},
