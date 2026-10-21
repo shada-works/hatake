@@ -463,6 +463,31 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 @keyframes spreadR{100%{transform:translate(9px,7px)}}
 .actor .hold svg.spoon{width:18px;height:18px;margin:0}
 .actor .hold svg.mofu{width:22px;height:22px;margin:0}
+/* v1.72.0（ロードマップ おうち「朝と ごほうび」）：up＝両手を 上に（のびーっ）／rub＝目を こする（rubbing で 手が こきざみに）／wave＝片手を 上げて ふる（waving）／raise＝両手で 上に かかげる（絵・写真立て）／
+   reach の 上向き（ay を 小さく＝風鈴・ドライバー・おもり・エサ・鉛筆・おめかし）：fixing＝カチャカチャ、pulling＝ぐいっ、sprinkling＝ぱらぱら／peel＝みかんを 両手に（peeling で 手が 交互に）。手だけの 形は popIn を 使わない */
+.actor.rub .hold .hand,.actor.wave .hold .hand,.actor.up .hold .hand{animation:none}
+.actor.rub.rubbing .hold .hand.hl{animation:rubEye .18s ease-in-out infinite alternate}
+.actor.rub .face{transition:transform .3s}
+.actor.rub.rubbing .face{transform:translateY(4px)}   /* 目を こする あいだ、顔を 少し 下げる（うでを のばさずに 手が めがねの 下に とどく） */
+@keyframes rubEye{0%{transform:translate(-1.6px,0)}100%{transform:translate(1.6px,.6px)}}
+.actor.wave.waving .hold .hand.hl{animation:waveHand .32s ease-in-out infinite alternate}
+@keyframes waveHand{0%{transform:translate(-4px,1px)}100%{transform:translate(4px,-1px)}}
+.actor.fixing .holdIn,.actor.fixing .hold .hand{animation:fixHand .22s ease-in-out infinite alternate}
+@keyframes fixHand{0%{transform:translate(-1px,1px) rotate(-6deg)}100%{transform:translate(1px,-1px) rotate(6deg)}}
+.actor.pulling .holdIn,.actor.pulling .hold .hand{animation:pullHand .9s ease-in-out 1}
+@keyframes pullHand{0%,100%{transform:translateY(0)}45%,70%{transform:translateY(6px)}}
+.actor.sprinkling .holdIn,.actor.sprinkling .hold .hand{animation:sprinkleHand .26s ease-in-out infinite alternate}
+@keyframes sprinkleHand{0%{transform:translate(-2px,0) rotate(-8deg)}100%{transform:translate(2px,1px) rotate(8deg)}}
+.actor.peel .holdIn,.actor.peel .hold .hand{animation:none}
+.actor.peel.peeling .hold .hand.hl{animation:peelL .5s ease-in-out infinite alternate}
+.actor.peel.peeling .hold .hand.hr{animation:peelR .5s ease-in-out infinite alternate}
+@keyframes peelL{0%{transform:translate(0,0)}100%{transform:translate(-3px,-3px)}}
+@keyframes peelR{0%{transform:translate(0,0)}100%{transform:translate(2px,2px)}}
+.actor .hold svg.pencil{width:16px;height:16px;margin:0}
+.actor .hold svg.frame{width:22px;height:22px;margin:0}
+.actor .hold svg.mikan{width:18px;height:18px;margin:0}
+.actor .hold svg.pawPic{width:22px;height:22px;margin:0}
+.actor.reachR.wiping .holdIn,.actor.reachR.wiping .hold .hand{animation:wipeHand .5s ease-in-out infinite alternate}   /* 葉っぱを ふく（片手を 上げた まま ふきふき） */
 .actor.offer.offerR .hold{transform:translate(calc(-50% + 23px),-42px)}   /* v1.61.0：右どなりへ さし出す（えりちゃん → じゃすたくん。すいかの おみやげ） */
 .actor.jasta.offer.offerR .hold{transform:translate(calc(-50% + 16px),-52px)}   /* v1.51.0：となりの しゃだはる君の顔にかくれないよう、頭の上（少し右）にかかげる（armsUp と組で使う） */
 .actor .holdIn{display:flex;flex-wrap:wrap-reverse;align-items:center;justify-content:center;width:max-content;max-width:40px}
@@ -1286,6 +1311,9 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
   <symbol id="i-dorayaki" viewBox="0 0 40 40"><ellipse cx="20" cy="27.5" rx="14.5" ry="6" fill="#b9742f"/><path d="M6.4 25.4 C9 28.6 31 28.6 33.6 25.4" fill="none" stroke="#5a3420" stroke-width="3.2" stroke-linecap="round"/><path d="M5.5 23 C5.5 12.5 34.5 12.5 34.5 23 C34.5 27 5.5 27 5.5 23Z" fill="#c98438"/><path d="M11 19 q4 -4.2 9.5 -4.6" fill="none" stroke="#e3a660" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-cake" viewBox="0 0 40 40"><path d="M5 19 V29 C5 34 35 34 35 29 V19Z" fill="#f6dfb6"/><path d="M5 24.5 C5 28.8 35 28.8 35 24.5" fill="none" stroke="#ef9a9a" stroke-width="2.4"/><ellipse cx="20" cy="19" rx="15" ry="5.6" fill="#fffdf8" stroke="#eadfce" stroke-width="1"/><g fill="#e0524f"><path d="M10.5 17.6 c0 -5 6.4 -5 6.4 0 c0 3 -6.4 3 -6.4 0Z"/><path d="M17 14.2 c0 -5 6.4 -5 6.4 0 c0 3 -6.4 3 -6.4 0Z"/><path d="M23.4 17.8 c0 -5 6.4 -5 6.4 0 c0 3 -6.4 3 -6.4 0Z"/></g><g fill="#7fb069"><circle cx="13.7" cy="13.6" r="1.3"/><circle cx="20.2" cy="10.2" r="1.3"/><circle cx="26.6" cy="13.8" r="1.3"/></g><path d="M8 27 V31" stroke="#fbeccd" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-ball" viewBox="0 0 40 40"><circle cx="20" cy="22" r="12.5" fill="#e8786d"/><path d="M8.3 18.6 C14 24.4 26 24.4 31.7 18.6" fill="none" stroke="#fffdf8" stroke-width="3.6" stroke-linecap="round"/><path d="M12.8 14.4 q3 -3.6 7 -3.9" fill="none" stroke="#f5b3ab" stroke-width="2" stroke-linecap="round"/></symbol>
+  <!-- v1.72.0：鉛筆（せいくらべの しるし。ほまれくんの 手に）・写真立て（記念写真を かかげる） -->
+  <symbol id="i-pencil" viewBox="0 0 40 40"><path d="M11 29 L27 13" stroke="#e8b85a" stroke-width="7" stroke-linecap="butt"/><path d="M11 29 L27 13" stroke="#f6d27a" stroke-width="2" stroke-linecap="butt" opacity=".9"/><path d="M27 13 L31 9" stroke="#e9c9a8" stroke-width="7" stroke-linecap="butt"/><path d="M31 9 L33.5 6.5" stroke="#4a3f3a" stroke-width="7" stroke-linecap="butt"/><path d="M8 32 L11 29 L13.5 31.5Z" fill="#f0a3a3"/></symbol>
+  <symbol id="i-frame" viewBox="0 0 40 40"><rect x="6" y="8" width="28" height="25" rx="2.5" fill="#fffdf8" stroke="#a87c4e" stroke-width="3"/><rect x="10" y="12" width="20" height="17" fill="#cfe8f5"/><rect x="10" y="23" width="20" height="6" fill="#a9cb7c"/><circle cx="15.5" cy="21" r="3" fill="#24211f"/><circle cx="20.5" cy="20.6" r="3" fill="#23201e"/><circle cx="25.5" cy="21.6" r="2.8" fill="#fffefb" stroke="#d3cabd" stroke-width=".8"/></symbol>
   <symbol id="i-camera" viewBox="0 0 40 40"><rect x="12" y="8.5" width="10" height="7" rx="2" fill="#5b5b63"/><rect x="5" y="13" width="30" height="20" rx="4.5" fill="#6a6a73"/><rect x="5" y="17" width="30" height="4" fill="#5b5b63"/><circle cx="20" cy="23" r="7" fill="#d9e6ee" stroke="#3d3d44" stroke-width="2.6"/><circle cx="17.8" cy="20.8" r="1.9" fill="#fff"/><circle cx="30" cy="17" r="1.7" fill="#f2c14e"/></symbol>
   <!-- v1.66.0：お皿の 束（食卓の お皿と 同じ 色）・ふきん（水色の チェック）・おはし（2ぜん） -->
   <symbol id="i-plates" viewBox="0 0 40 40"><ellipse cx="20" cy="31.5" rx="16" ry="5.2" fill="#e9dfcd"/><ellipse cx="20" cy="29.5" rx="16" ry="5.2" fill="#fffdf8" stroke="#d9d0c3" stroke-width="1.4"/><ellipse cx="20" cy="25" rx="16" ry="5.2" fill="#fffdf8" stroke="#d9d0c3" stroke-width="1.4"/><ellipse cx="20" cy="20.5" rx="16" ry="5.2" fill="#fffdf8" stroke="#d9d0c3" stroke-width="1.4"/><ellipse cx="20" cy="20.5" rx="10.5" ry="2.9" fill="#f4ecdd"/></symbol>
@@ -1498,7 +1526,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.71.1</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.72.0</span></span>
   </div>
 
   <div class="hud">
@@ -7918,7 +7946,8 @@ const LOOP_SCENE={
     await hp(400);
     await hwalkAll([[E,HSPOT.photoE],[D,HSPOT.photoD],[H,HSPOT.photoH]]);
     await hp(300);
-    const flash=()=>{ if(!reduceMotion&&!homeSkip){ const f=$('#hFlash'); f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); } hfxText('パシャ',{x:150,y:176}); if(!homeSkip) Snd.play('camera'); };
+    const flash=()=>{ if(!reduceMotion&&!homeSkip){ const f=$('#hFlash'); f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); } hfxText('パシャ',{x:150,y:176}); if(!homeSkip) Snd.play('camera'); setTimeout(()=>{ if(E.el.classList.contains('wave')) hhold(E,null); },600); };   /* v1.72.0：パシャの あと 手を おろす */
+    hhold(E,null,'wave'); if(!reduceMotion&&!homeSkip) E.el.classList.add('waving');   /* v1.72.0（依頼者「B ア えりちゃんだけ」）：カメラに 向かって 片手を ふる */
     if(jump){
       hsay(H,'タイマーにしたよ。3、2、1……');
       await hp(2300);
@@ -7953,6 +7982,8 @@ const LOOP_SCENE={
     await hmove(H,HSPOT.counterEnd);
     if(cam) cam.remove();
     S.decor.photo=true; S.photo={family:true,need:[],icons:[],name:'3人の記念写真'};
+    hhold(H,[icon('i-frame','frame')],'raise'); await hp(900);   /* v1.72.0：写真立てを 両手で かかげて 棚へ */
+    hhold(H,null);
     bringOut('photo'); updatePhoto(false); showLook('photo',n);
     await hp(1000);
     hmood(D,'happy',2000);
@@ -8003,8 +8034,14 @@ const LOOP_SCENE={
     hsay(E,'そうだ。畑の絵、また かいてみたよ。',{mood:'smile'});
     await hp(1800);
     S.paint={se,pd};
+    /* v1.72.0：かべの 下へ 行って、両手で 絵を かかげる → かべに かかる（前は その場で ぽんと 出た） */
+    const eFrom={x:E.x,y:E.y}; hbubOff(E);
+    await hmove(E,CLOCKFIX.E);
+    hhold(E,[icon('i-frame','frame')],'raise'); await hp(900);
+    hhold(E,null);
     bringOut('picture'); showLook('picture',n,{paint:{se,pd}});
     await hp(900);
+    await hmove(E,eFrom);
     await hmove(D,HSPOT.clockD); D.el.classList.add('lookupL');
     hmood(D,'happy',1900);
     hsay(D,pd?'たんぼも、あるばう！':'木も、あるばう！');
@@ -8136,9 +8173,12 @@ Object.assign(LOOP_SCENE,{
     await hp(1500);
     await hmove(H,HSPOT.pillarH);
     hsay(H,'はい、まっすぐ立って。……ここ、と。');
-    await hp(1900);
-    showLook('height',n); heightPop(n);
+    await hp(1100);
+    hhold(H,[icon('i-pencil','pencil')],'reachR',{ax:43,ay:12});   /* v1.72.0：鉛筆を 柱へ */
     await hp(800);
+    showLook('height',n); heightPop(n);
+    await hp(600); hhold(H,null);
+    await hp(200);
     if(sn){
       hsay(H,'あれ？ ちょっと のびてる。');
       await hp(1500);
@@ -8204,8 +8244,10 @@ Object.assign(LOOP_SCENE,{
       return n===1?'観葉植物が 大きくなったので、大きな鉢に かえました。':'観葉植物に、白い花が さきました。';
     }
     await hmove(E,PLANT_E); E.el.classList.add('lookupR');
+    hhold(E,[icon('i-cloth','mid')],'reachR',{ax:43,ay:8}); if(!reduceMotion&&!homeSkip) E.el.classList.add('wiping');   /* v1.72.0：ふきんを あごの 高さに 上げて 葉っぱを ふく（植物は 右上。胸の 高さだと ちゃぶ台に かくれる） */
     hfxText('ふきふき',{x:232,y:206});
     await hp(1100);
+    hhold(E,null);
     await hmove(D,HSPOT.plant);
     hmood(D,'happy',1800);
     hsay(D,'おみず、あげるばう！');
@@ -8242,10 +8284,17 @@ Object.assign(LOOP_SCENE,{
     await hp(1800);
     hsay(E,['ありがとう、しゃだはる。台所の棚に、かざろうね。','ふふ、にてるね。台所の棚に、かざろうね。','ふふ、じょうずに かけたね。台所の棚に、かざろうね。'][v-1],{mood:'smile',dir:'toR'});
     await hp(2000);
-    D.el.classList.remove('carrying'); car.innerHTML='';
+    /* v1.72.0：えりちゃんが 受けとって（両手）、台所の はしへ 持っていき、かかげて 棚へ */
+    const eFrom={x:E.x,y:E.y}; hbubOff(E);
+    const pic='<svg class="pawPic" viewBox="0 0 40 40" aria-hidden="true">'+PAWART[v]+'</svg>';
+    D.el.classList.remove('carrying'); car.innerHTML=''; hhold(E,[pic],'carry');
+    await hp(300);
+    await hmove(E,HSPOT.counterEnd);
+    hhold(E,[pic],'raise'); await hp(900);
+    hhold(E,null);
     bringOut('pawart'); showLook('pawart',n);
-    await hp(1300);
-    await hwalkAll([[D,HSPOT.tableShada]]);
+    await hp(1000);
+    await hwalkAll([[E,eFrom],[D,HSPOT.tableShada]]);
     return 'しゃだはる君が、また絵を かきました（'+['えりちゃん','ほまれくん','しゃだはる君'][v-1]+'の絵）。台所の棚に かざってあります。';
   },
   /* 13 はと時計の しゅうり：2周め・4周め…＝はとが出てこない → ほまれくんが なおす／3周め…＝とまっている → えりちゃんが おもりを上げる。この夜は 夕ごはんの ぽっぽーは 鳴らない（cuckooTonight） */
@@ -8260,10 +8309,12 @@ Object.assign(LOOP_SCENE,{
       hsay(H,'あれ、こわれちゃったかな。見てみるね。');
       await hp(1700);
       await hwalkAll([[D,CLOCKFIX.D],[H,CLOCKFIX.H]]);
-      H.el.classList.add('lookupL'); hhold(H,['i-driver']);
+      H.el.classList.add('lookupL'); hhold(H,['i-driver'],'reachL',{ax:1,ay:8});   /* v1.72.0：右手で ドライバーを 上に（時計の ほう。手は あごの 高さ＝ふだんの うでの 長さ） */
       await hp(400);
+      if(!reduceMotion&&!homeSkip) H.el.classList.add('fixing');   /* v1.72.0：カチャカチャの あいだ 手が 動く */
       hfxText('カチャ カチャ',{x:96,y:48});
       await hp(1300);
+      H.el.classList.remove('fixing');
       cuckoo();
       await hp(1200);
       hmood(D,'happy',2000);
@@ -8287,9 +8338,11 @@ Object.assign(LOOP_SCENE,{
     await hmove(E,CLOCKFIX.E); E.el.classList.add('lookupL');
     hsay(E,'おもりを、上げてあげよう。',{mood:'smile'});
     await hp(1500);
+    hhold(E,null,'reachL',{ax:1,ay:8}); if(!reduceMotion&&!homeSkip) E.el.classList.add('pulling');   /* v1.72.0：右手を 上げて ぐいっ */
     hfxText('ぐいっ',{x:92,y:92});
     if(g) g.classList.add('wound');
     await hp(900);
+    hhold(E,null);
     hfxText('チクタク',{x:96,y:48});
     await hp(1100);
     cuckoo();
@@ -8366,9 +8419,14 @@ Object.assign(LOOP_SCENE,{
     await hp(1800);
     /* つけてあげる人の そばへ（台所で 料理中なら 台の前、食卓なら となり） */
     await hmove(D,G.y<230?{x:Math.max(140,G.x+18),y:259}:{x:G.x+(G===E?-40:34),y:G.y+14});
+    /* v1.72.0：つけてあげる 人が 片手を しゃだはる君の 頭へ（えりちゃんは 右手＝見て 左、ほまれくんは 左手＝見て 右。台所に いるときは 右手を 下の しゃだはる君へ） */
+    const wasHold=G.pose?{ids:[...G.el.querySelectorAll('.holdIn > *')].map(x=>x.outerHTML),pose:G.pose.name}:null;
+    if(G.y<230) hhold(G,null,'reachR',{ax:44,ay:12}); else if(G===E) hhold(G,null,'reachL',{ax:-1,ay:14}); else hhold(G,null,'reachR',{ax:46,ay:14});
+    await hp(400);
     shadaAcc(k); if(!homeSkip){ hfx('i-spark',{x:D.x,y:D.y-36}); Snd.play('spark'); }
     hmood(D,'happy',1600); hmood(G,'happy',1600);
     await hp(900);
+    if(wasHold && wasHold.pose==='stir') ladleOn(G); else hhold(G,null);   /* 料理中なら おたまに もどる */
     await hmove(D,HSPOT.mirrorD); D.el.classList.add('lookupL'); mirrorReflect(true);
     await hp(500);
     hmood(D,'happy',2200);
@@ -8918,7 +8976,15 @@ const POSE={
   eat:(w,h)=>({tx:-10.8,ty:-18.08,hands:[{x:4.8,y:13.2,s:[9.5,18.5]}],rest:[[34.5,18.5]]}),
   /* v1.70.0：sip＝湯のみを 両手で（carry と 同じ 持ちかた。sipping で 口もとへ）。grip＝ロープを 両手で（持ちものは なし。手は 体の まんなか・胸の 高さ＝ロープの はし（tugRope の e）。左手が 右手の 上） */
   sip:(w,h)=>{ const y=Math.min(h-6,Math.round(h*.62)+2); return {tx:-w/2,ty:-6,hands:[{x:-1,y,s:[9.5,18.5]},{x:w+1,y,s:[34.5,18.5]}]}; },
-  grip:()=>({tx:-5,ty:0,hands:[{x:-2,y:5,s:[9.5,18.5]},{x:4,y:5,s:[34.5,18.5]}]})
+  grip:()=>({tx:-5,ty:0,hands:[{x:-2,y:5,s:[9.5,18.5]},{x:4,y:5,s:[34.5,18.5]}]}),
+  /* v1.72.0：手だけの 形は .hold の 左上を コマの (0,0) に 置いて（tx −23・ty −47.84）、手の 位置を コマの 座標で 書く（顔は 0〜46・肩は (10.5,53.5)/(35.5,53.5)）。
+     **うでの 長さは ふだんと 同じ（肩から 12〜13px。手は あごの 高さ＝コマの y43 まで。reach・eat・stir と 同じ）**＝依頼者「静止画と比べて不自然な腕の長さを修正」。はじめは 頭の 横まで 上げていた（35px）ので 直した。
+     up＝両手を あごの 高さに 上げる（のびーっ）／rub＝右手（見て 左）を めがねの 下に（rubbing で 顔も 少し 下がる）／wave＝右手を 上げて ふる／raise＝両手で 持ちものを あごの 前に 持ち上げる／peel＝みかんを 両手に（carry より 少し 上） */
+  up:()=>({tx:-23,ty:-47.84,hands:[{x:3.5,y:43,s:[9.5,18.5]},{x:42.5,y:43,s:[34.5,18.5]}]}),
+  rub:()=>({tx:-23,ty:-47.84,hands:[{x:13,y:38.5,s:[9.5,18.5]}],rest:[[34.5,18.5]]}),
+  wave:()=>({tx:-23,ty:-47.84,hands:[{x:1.5,y:44.5,s:[9.5,18.5]}],rest:[[34.5,18.5]]}),
+  raise:(w,h)=>({tx:-w/2,ty:47-h-47.84,hands:[{x:-2,y:h-4,s:[9.5,18.5]},{x:w+2,y:h-4,s:[34.5,18.5]}]}),
+  peel:(w,h)=>{ const y=Math.min(h-6,Math.round(h*.62)+2); return {tx:-w/2,ty:-12,hands:[{x:-1,y,s:[9.5,18.5]},{x:w+1,y,s:[34.5,18.5]}]}; }
 };
 /* v1.70.0：おたまを 持つ（料理の あいだ。あじみの あとも ここへ もどる） */
 function ladleOn(E){ hhold(E,[icon('i-ladle','ladle')],'stir',{hand:roomToBody(E,POT_HAND.x,POT_HAND.y)}); }
@@ -8961,7 +9027,7 @@ function poseArms(a,pose,opt){
   if(svg){ const old=svg.querySelector('.poseArm'); if(old) old.remove(); }
   if(hold){ hold.querySelectorAll('.hand').forEach(h=>h.remove()); hold.style.transform=''; }
   if(hold) hold.querySelectorAll('.prop').forEach(h=>h.remove());   /* v1.67.0 */
-  a.el.classList.remove('posed','show','cam','uke','strum','carry','reachL','reachR','wipe','wiping','stir','stirring','chop','chopping','eat','munch','sip','sipping','grip','patting','spreading');   /* v1.66.0：carry・reachL・reachR・wipe・wiping も。v1.67.0：stir・chop・eat（と 動きの stirring・chopping・munch）も。v1.70.0：sip・grip・patting・spreading も */
+  a.el.classList.remove('posed','show','cam','uke','strum','carry','reachL','reachR','wipe','wiping','stir','stirring','chop','chopping','eat','munch','sip','sipping','grip','patting','spreading','up','rub','rubbing','wave','waving','raise','peel','peeling','fixing','pulling','sprinkling');   /* v1.66.0：carry・reachL・reachR・wipe・wiping も。v1.67.0：stir・chop・eat（と 動きの stirring・chopping・munch）も。v1.70.0：sip・grip・patting・spreading も。v1.72.0：up・rub・wave・raise・peel と 動きも */
   a.pose=null;
   if(!pose || !POSE[pose] || !svg || !hold || !box) return;
   a.el.classList.add(pose);
@@ -8977,7 +9043,7 @@ function poseArms(a,pose,opt){
   const g=document.createElementNS('http://www.w3.org/2000/svg','g'); g.setAttribute('class','poseArm');
   const sleeve=d=>{ for(let i=0;i<Math.min(2,src.length);i++){ const e=src[i].cloneNode(false); e.setAttribute('d',d); e.removeAttribute('class'); g.appendChild(e); } };
   P.hands.forEach(q=>{
-    const [sx,sy]=q.s, hx=bx+q.x, hy=by+q.y, cx=sx+(hx-sx)*.25, cy=Math.max(sy,hy)+3.5;   /* ひじは 下がわに */
+    const [sx,sy]=q.s, hx=bx+q.x, hy=by+q.y, raised=hy<sy-8, cx=raised?sx+(hx-sx)*.55:sx+(hx-sx)*.25, cy=raised?sy+(hy-sy)*.3:Math.max(sy,hy)+3.5;   /* ひじは 下がわに。v1.72.0：手が 肩より 上（raised）なら ゆるく そらせる */
     sleeve('M'+sx+' '+sy+' Q'+cx.toFixed(1)+' '+cy.toFixed(1)+' '+hx.toFixed(1)+' '+hy.toFixed(1));
   });
   (P.rest||[]).forEach(([sx,sy])=>{ const k=sx<22?-1:1; sleeve('M'+sx+' '+sy+' Q'+(sx+k*2.4).toFixed(1)+' '+(sy+4.5).toFixed(1)+' '+(sx+k*2.8).toFixed(1)+' '+(sy+9.5).toFixed(1)); });   /* v1.66.0：おろした うで（片手の ポーズの もう一方。ふだんの うでと 同じ 向きに 少し 外へ） */
@@ -9078,7 +9144,7 @@ function setupRoom(){
     ['eri','homare'].forEach(w=>HA[w].el.querySelector('.bob').insertAdjacentHTML('beforeend','<div class="hold"><div class="holdIn"></div></div>'));
   }
   dressHome();   /* v1.58.0：おうちの服を 季節で */
-  Object.values(HA).forEach(a=>{ a.el.classList.remove('sleeping','walking','working','tumble','carrying','wobble','holding','offer','show','jumping','wag','scarf','lookupR','rocking','lookupL','tugL','tugR','nobi','posed','cam','uke','strum','carry','reachL','reachR','wipe','wiping','stir','stirring','chop','chopping','eat','munch','sip','sipping','grip','pageflip','patting','spreading');   /* v1.65.0：posed・cam・uke・strum も。v1.66.0：carry・reachL・reachR・wipe・wiping も。v1.67.0：stir・chop・eat も。v1.70.0：sip・grip・pageflip・patting・spreading も */ if(a.flipT){ clearInterval(a.flipT); a.flipT=0; } a.el.dataset.mood='normal'; a.bub.classList.remove('on'); const cr=a.el.querySelector('.carry'); if(cr){ cr.style.color=''; cr.classList.remove('mouth'); } });
+  Object.values(HA).forEach(a=>{ a.el.classList.remove('sleeping','walking','working','tumble','carrying','wobble','holding','offer','show','jumping','wag','scarf','lookupR','rocking','lookupL','tugL','tugR','nobi','posed','cam','uke','strum','carry','reachL','reachR','wipe','wiping','stir','stirring','chop','chopping','eat','munch','sip','sipping','grip','pageflip','patting','spreading','up','rub','rubbing','wave','waving','raise','peel','peeling','fixing','pulling','sprinkling');   /* v1.65.0：posed・cam・uke・strum も。v1.66.0：carry・reachL・reachR・wipe・wiping も。v1.67.0：stir・chop・eat も。v1.70.0：sip・grip・pageflip・patting・spreading も。v1.72.0：up・rub・wave・raise・peel も */ if(a.flipT){ clearInterval(a.flipT); a.flipT=0; } a.el.dataset.mood='normal'; a.bub.classList.remove('on'); const cr=a.el.querySelector('.carry'); if(cr){ cr.style.color=''; cr.classList.remove('mouth'); } });
   homeStage.querySelectorAll('.tugRope').forEach(x=>x.remove());   /* v1.53.0 */
   shadaAcc(null); lapBlanket(0); { const gc=document.getElementById('g-clock'); if(gc) gc.classList.remove('wound'); }   /* v1.54.0：おめかしは その夜だけ（つぎの朝・つぎの夜は はずす） */
   bdayCleanup();
@@ -9370,9 +9436,12 @@ const REWARD_NIGHT={
     await hp(1500);
     await hmove(H,HSPOT.pillarH);
     hsay(H,'はい、まっすぐ立って。……ここ、と。');
-    await hp(1900);
-    decorPop('height');
+    await hp(1100);
+    hhold(H,[icon('i-pencil','pencil')],'reachR',{ax:43,ay:12});   /* v1.72.0：鉛筆を 柱へ（あごの 高さ＝ふだんの うでの 長さ） */
     await hp(800);
+    decorPop('height');
+    await hp(600); hhold(H,null);
+    await hp(200);
     hsay(D,'のびたばう？');
     await hp(1400);
     hsay(E,'うーん……かわらないね。',{mood:'smile'});
@@ -9526,9 +9595,16 @@ const REWARD_NIGHT={
     await hp(1700);
     hsay(E,'台所の棚に、かざろうね。',{mood:'smile'});   /* v1.47.0：棚へ（前は「畑の絵のとなりに」） */
     await hp(1600);
-    D.el.classList.remove('carrying'); D.el.querySelector('.carry').innerHTML='';
+    /* v1.72.0：えりちゃんが 受けとって（両手）、台所の はしへ 持っていき、かかげて 棚へ（前は しゃだはる君の 手もとから 消えて 棚に ぽんと 出た） */
+    const eFrom={x:E.x,y:E.y}; hbubOff(E);
+    D.el.classList.remove('carrying'); D.el.querySelector('.carry').innerHTML=''; hhold(E,['i-pawart'],'carry');
+    await hp(300);
+    await hmove(E,HSPOT.counterEnd);
+    hhold(E,['i-pawart'],'raise'); await hp(900);
+    hhold(E,null);
     decorPop('pawart');
-    await hp(1300);
+    await hp(1000);
+    await hmove(E,eFrom);
   },
   /* 3人で記念写真（セリフは依頼者が了解ずみ）。カメラは台所のはしに置いて、台の手前に3人でならぶ。写真立ては、この夜にふえる */
   async photo(E,D,H){
@@ -9544,6 +9620,7 @@ const REWARD_NIGHT={
     await hwalkAll([[E,HSPOT.photoE],[D,HSPOT.photoD],[H,HSPOT.photoH]]);
     await hp(300);
     hsay(H,'タイマーにしたよ。3、2、1……');
+    hhold(E,null,'wave'); if(!reduceMotion&&!homeSkip) E.el.classList.add('waving');   /* v1.72.0（依頼者「B ア えりちゃんだけ」）：カメラに 向かって 片手を ふる */
     await hp(2300);
     hhush();
     hmood(D,'happy',2200); hmood(E,'smile',1800); hmood(H,'happy',1800);
@@ -9552,7 +9629,8 @@ const REWARD_NIGHT={
     await hp(260);
     if(!reduceMotion&&!homeSkip){ const f=$('#hFlash'); f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); }
     hfxText('パシャ',{x:150,y:176}); if(!homeSkip) Snd.play('camera');
-    await hp(1300);
+    await hp(600); hhold(E,null);
+    await hp(700);
     hsay(E,'ふふ、しゃだはる、とんじゃった。',{mood:'happy'});
     await hp(1900);
     hsay(H,'いい写真だ。かざっておこう。');
@@ -9561,6 +9639,8 @@ const REWARD_NIGHT={
     await hmove(H,HSPOT.counterEnd);
     if(cam) cam.remove();
     S.decor.photo=true; S.photo={family:true,need:[],icons:[],name:'3人の記念写真'};
+    hhold(H,[icon('i-frame','frame')],'raise'); await hp(900);   /* v1.72.0：写真立てを 両手で かかげて 棚へ */
+    hhold(H,null);
     updatePhoto(false);
     const g=$('#g-photo'); g.style.display=''; svgPop(g); if(!homeSkip) Snd.play('spark');   /* v1.54.2 */
     await hp(1000);
@@ -9651,7 +9731,7 @@ async function dessertNight(E,D,H,kind,preview){
   await hmove(E, kind==='budou'?HSPOT.fridgeH:HSPOT.counterEnd);
   if(kind==='budou'){ openFridge(true); if(!homeSkip) Snd.play('fridge'); await hp(600); }
   else if(kind==='sakuranbo'){ if(!homeSkip) Snd.play('water'); hfxText('じゃー',{x:E.x+26,y:E.y-34}); await hp(1300); }   /* v1.35.0：さくらんぼは あらう */
-  else if(kind==='mikan'){ hfxText('むきむき',{x:E.x+26,y:E.y-34}); await hp(900); hfxText('むきむき',{x:E.x+26,y:E.y-34}); await hp(700); }   /* v1.35.0：みかんは むく */
+  else if(kind==='mikan'){ hhold(E,[icon('c-mikan','mikan')],'peel'); if(!reduceMotion&&!homeSkip) E.el.classList.add('peeling'); hfxText('むきむき',{x:E.x+26,y:E.y-34}); await hp(900); hfxText('むきむき',{x:E.x+26,y:E.y-34}); await hp(700); E.el.classList.remove('peeling'); }   /* v1.35.0：みかんは むく。v1.72.0：両手に 持って、手が 交互に 動く */
   else { chopOn(E,f.icon); if(!homeSkip) Snd.play('chop'); hfxText('とんとん',{x:E.x+26,y:E.y-34}); await hp(900); if(!homeSkip) Snd.play('chop'); await hp(500); chopOff(E); }   /* v1.67.0：包丁で */
   hhold(E,[f.icon],'carry');   /* v1.66.0：両手で */
   await hp(300);
@@ -9788,14 +9868,20 @@ const SEASONAL_SCENE={
   async furin(E,D,H){
     hsay(E,'そうだ。風鈴、つるしてみたよ。',{mood:'smile'});
     await hp(1600);
+    /* v1.72.0：窓べへ 行って、右手を 上に のばして つるす → 風鈴が 出る（前は その場で ぽんと 出た） */
+    const from={x:E.x,y:E.y}; hbubOff(E);
+    await hmove(E,HSPOT.windowH);
+    hhold(E,null,'reachL',{ax:1,ay:8}); await hp(500);
     const g=$('#g-furin'); g.style.display=''; if(!reduceMotion&&!homeSkip) g.classList.add('popIn');
     if(!homeSkip) Snd.play('furin'); hfxText('チリーン',{x:252,y:92});
-    await hp(1700);
+    await hp(700); hhold(E,null);
+    await hp(1000);
     hmood(D,'happy',1900);
     hsay(D,'ちりんちりん、ばう。');
     await hp(1700);
     hsay(H,'すずしい音だね。');
     await hp(1700);
+    await hmove(E,from);   /* v1.72.0 */
   },
   /* 冬のこたつ（セリフは依頼者が了解ずみ）。ちゃぶ台が、こたつに変わる */
   async kotatsu(E,D,H){
@@ -10504,7 +10590,7 @@ async function mornExtra(x,E,D,H){
     const a=who[w];
     if(w==='E') hsay(a,tx,{mood:md,fit:true}); else { hmood(a,md||'happy',1900); hsay(a,tx,{fit:true}); }
     if(mv==='hop' && !reduceMotion){ a.el.style.setProperty('--lean','0deg'); a.el.classList.add('jumping'); setTimeout(()=>a.el.classList.remove('jumping'),920); }
-    if(mv==='nobi' && !reduceMotion){ a.el.classList.add('nobi'); setTimeout(()=>a.el.classList.remove('nobi'),1300); }
+    if(mv==='nobi' && !reduceMotion){ a.el.classList.add('nobi'); setTimeout(()=>a.el.classList.remove('nobi'),1300); if(w==='H'){ hhold(a,null,'up'); setTimeout(()=>{ if(a.el.classList.contains('up')) hhold(a,null); },1300); } }   /* v1.72.0：ほまれくんは 両手を 頭の 横まで 上げて のび */
     await pause(Math.max(1400,1000+tx.length*75));
   }
 }
@@ -10527,7 +10613,7 @@ async function homeMorning(){
      おうちが出ていないとき（しらべる用に、じかに呼んだとき など）は、まっくらにしてから出す */
   if(!home.classList.contains('on')){ home.classList.add('deep','on'); void home.offsetWidth; }
   home.classList.add('show');
-  Snd.hush(13000+(mx?mornXms(mx):0));   /* v1.55.0：ひとことの ぶん、音楽を長く止める */
+  Snd.hush(13000+(mx?mornXms(mx):0)+(S.mood==='sleepy'?1300:0));   /* v1.55.0：ひとことの ぶん、音楽を長く止める。v1.72.0：目を こする ぶんも */
   await sleep(reduceMotion?150:500);
   home.classList.remove('deep');          /* まっくら → 夜あけ前の、うす暗い部屋 */
   await pause(1500);
@@ -10536,7 +10622,11 @@ async function homeMorning(){
   await pause(1500);
   /* えりちゃんから、じゅんばんに起きあがる */
   const wake=a=>{ a.el.classList.remove('inFuton'); hmood(a,'normal'); place(a,a.x,a.y-10,reduceMotion?0:260); };
+  /* v1.72.0：しゃだはる君の あいさつを 先に 決める（ねむい日＝「むにゃ……」の 朝は、えりちゃんが 起きあがって 目を こすってから「おはよう。」） */
+  const dl=(S.mood==='sleepy' && rnd()<.5)?'むにゃ……おはようばう。':rnd()<.33?'えりちゃん、おはようばう。':pick(['おはようばう。','ばう。']);
+  const dSleepy=dl.indexOf('むにゃ')===0;
   wake(E); await pause(350);
+  if(dSleepy && !reduceMotion){ hhold(E,null,'rub'); E.el.classList.add('rubbing'); await pause(1100); hhold(E,null); await pause(200); }   /* v1.72.0（依頼者「A ア えりちゃん」）：片手で 目を こする */
   hsay(E,rnd()<.35?'おはよう、ふたりとも。':'おはよう。',{mood:'smile',ms:3300});   /* v1.55.0（決めること1ア）：ときどき 名前つき */
   await pause(1150);
   wake(H); await pause(350);
@@ -10549,9 +10639,7 @@ async function homeMorning(){
   await pause(2300);
   wake(D); await pause(300);
   /* しゃだはる君は、日によって「おはようばう。」か「ばう。」（v1.13.2。依頼者の指定） */
-  /* v1.55.0：ねむい日は「むにゃ……おはようばう。」も。ときどき 名前つき（決めること1ア） */
-  const dl=(S.mood==='sleepy' && rnd()<.5)?'むにゃ……おはようばう。':rnd()<.33?'えりちゃん、おはようばう。':pick(['おはようばう。','ばう。']);
-  const dSleepy=dl.indexOf('むにゃ')===0;
+  /* v1.55.0：ねむい日は「むにゃ……おはようばう。」も。ときどき 名前つき（決めること1ア）。v1.72.0：ことばは 上（dl）で 先に 決めている */
   hmood(D,dSleepy?'sleepy':'happy',1900); hsay(D,dl);
   if(!reduceMotion && !dSleepy){ D.el.style.setProperty('--lean','0deg'); D.el.classList.add('jumping'); setTimeout(()=>D.el.classList.remove('jumping'),920); }
   await pause(1800);
@@ -10572,7 +10660,7 @@ function pickPre(quiet,ctx){   /* v1.55.0：ctx＝{need:その夜の料理の野
     await Promise.all([hmove(D,HSPOT.sneak), hmove(H,HSPOT.sneakH)]);
     hsay(D,'ちょっとだけ……ばう');
     await hp(1100);
-    hsay(H,'ちょっとだけ……'); hhold(H,null,'reachL',{ax:-5,ay:7});   /* v1.70.0：台所の ほうへ 手を のばす */
+    hsay(H,'ちょっとだけ……'); hhold(H,null,'reachL',{ax:-1,ay:10});   /* v1.70.0：台所の ほうへ 手を のばす。v1.72.0：うでは ふだんの 長さ */
     await hp(1200);
     hsay(E,'こら（笑）。ふたりとも、もうすぐだよ。',{mood:'happy'}); hhold(H,null);   /* v1.70.0：ひっこめる */
     await hp(1500);
@@ -10673,7 +10761,7 @@ function pickPre(quiet,ctx){   /* v1.55.0：ctx＝{need:その夜の料理の野
     await hmove(H,HSPOT.toyH);
     D.el.classList.remove('carrying'); D.el.querySelector('.carry').innerHTML='';
     hmood(H,'happy',1600);
-    hhold(H,['i-ball'],'reachR',{ax:43,ay:1});   /* v1.70.0：ボールを 持った うでを 上げて */
+    hhold(H,['i-ball'],'reachR',{ax:41,ay:8});   /* v1.70.0：ボールを 持った うでを 上げて。v1.72.0：あごの 高さまで（うでは ふだんの 長さ） */
     hsay(H,'よーし。それっ。');
     await hp(500);
     hhold(H,null,'reachR',{ax:46.5,ay:15.5});   /* v1.70.0：うでを ふり下ろす。ボールは 手の あたりから ころがる（前は 足もとから） */
@@ -10832,7 +10920,7 @@ function pickPre(quiet,ctx){   /* v1.55.0：ctx＝{need:その夜の料理の野
     await hp(1000);
     await hmove(D,{x:HSPOT.tableHomare.x+32,y:HSPOT.tableHomare.y+126});   /* v1.70.0：しゃだはる君は ほまれくんの 右手前（前は 右どなり）。頭に 手が とどく */
     await hmove(H,{x:HSPOT.tableHomare.x-8,y:HSPOT.tableHomare.y+80});
-    hhold(H,null,'reachR',{ax:49,ay:15});   /* v1.70.0：左手を しゃだはる君の 頭（耳の 上）に。patting で 上下 */
+    hhold(H,null,'reachR',{ax:47,ay:15});   /* v1.70.0：左手を しゃだはる君の 頭（耳の 上）に。patting で 上下。v1.72.0：うでは ふだんの 長さ */
     if(!reduceMotion && !homeSkip) H.el.classList.add('patting');
     hsay(H,'よしよし。');
     hfx('i-heart',{x:D.x,y:D.y-30});
@@ -10866,9 +10954,11 @@ function pickPre(quiet,ctx){   /* v1.55.0：ctx＝{need:その夜の料理の野
     await hp(1600);
     hsay(H,'エサ、あげようか。');
     await hmove(H,HSPOT.fishH);
+    hhold(H,['i-fishfood'],'reachL',{ax:1,ay:8}); if(!reduceMotion&&!homeSkip) H.el.classList.add('sprinkling');   /* v1.72.0：右手（見て 左）を 上げて エサを ぱらぱら（金魚ばち x280 は fishH (300,242) の 左上＝手は その 真下に くる） */
     await hp(400);
     feedFish();
-    await hp(1500);
+    await hp(900); hhold(H,null);
+    await hp(600);
     hmood(D,'happy',2000);
     hsay(D,'たべたばう！');
     await hp(1400);
