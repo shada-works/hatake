@@ -494,6 +494,8 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 .actor .hold svg.frame{width:22px;height:22px;margin:0}
 .actor .hold svg.mikan{width:18px;height:18px;margin:0}
 .actor .hold svg.pawPic{width:22px;height:22px;margin:0}
+.actor .hold svg.suika{width:30px;height:30px;margin:0}   /* v1.73.1：じゃすたくんに あげる すいか（まるごと。前は ふつうの 19px） */
+.actor.jasta .hold svg.suika{margin-top:-7px}   /* v1.73.1：じゃすたくんは おなかの 前に（.hold が 足もと（top 96%）なので 少し 上げる） */
 .actor.reachR.wiping .holdIn,.actor.reachR.wiping .hold .hand{animation:wipeHand .5s ease-in-out infinite alternate}   /* 葉っぱを ふく（片手を 上げた まま ふきふき） */
 .actor.offer.offerR .hold{transform:translate(calc(-50% + 23px),-42px)}   /* v1.61.0：右どなりへ さし出す（えりちゃん → じゃすたくん。すいかの おみやげ） */
 .actor.jasta.offer.offerR .hold{transform:translate(calc(-50% + 16px),-52px)}   /* v1.51.0：となりの しゃだはる君の顔にかくれないよう、頭の上（少し右）にかかげる（armsUp と組で使う） */
@@ -1547,7 +1549,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.0</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.1</span></span>
   </div>
 
   <div class="hud">
@@ -6431,15 +6433,16 @@ async function jastaSuikaNight(E,D,H,preview,pat){
     hhush();
     await hmove(E,HSPOT.basketLook);
     { const bi=$('#hBasketItems'), u=bi&&bi.querySelector('use[href="#c-suika"]'); if(u && u.parentNode) u.parentNode.style.visibility='hidden'; }   /* かごの すいかを 1つ 取る */
-    hhold(E,['c-suika'],'carry'); if(!homeSkip) Snd.play('pick'); await w(500);   /* v1.66.0：両手で 持って 行く */
+    const sk=icon('c-suika','suika');   /* v1.73.1：おみやげの すいかは 大きく（30px。CSS の .hold svg.suika） */
+    hhold(E,[sk],'carry'); if(!homeSkip) Snd.play('pick'); await w(500);   /* v1.66.0：両手で 持って 行く */
     await hmove(E,seat.giveE);
     const rJ={ax:46.5,ay:16};   /* v1.66.0：右の じゃすたくんへ 片手で さし出す（前は 持ちものだけを 右へ ずらしていた） */
-    hhold(E,['c-suika'],'reachR',rJ);
+    hhold(E,[sk],'reachR',rJ);
     say(E,'はい、どうぞ。',{mood:'smile'}); await w(1300);
     const fromE=holdCenter(E); hhold(E,null,'reachR',rJ);
-    held=await hpass('c-suika',fromE,{x:JA.x,y:JA.y+22});
+    held=await hpass('c-suika',fromE,{x:JA.x,y:JA.y+22},30);
     hhold(E,null);
-    hhold(JA,['c-suika']); if(held){ held.remove(); held=null; }
+    hhold(JA,[sk]); if(held){ held.remove(); held=null; }
     hmood(JA,'smile',2600); say(JA,'……ありがとうございます。'); await bow(JA); await w(1300);
     if(pt===1){ say(D,'じゃすたくん、よかったばう！',{mood:'happy'}); await wag(2200); }
     else{ say(D,'おとさないでばう！',{mood:'happy'}); await w(1800); say(JA,'……だいじょうぶです。'); hmood(JA,'smile',1800); await w(2000); }
@@ -9088,9 +9091,9 @@ function poseSpot(a,pose,opt,w,h){ const P=POSE[pose](w,h,1,opt); return {x:a.x+
 /* v1.65.0：ウクレレを ひく 右手を 動かす（ms のあいだ） */
 function strumHand(H,ms){ if(reduceMotion||homeSkip||!H) return; H.el.classList.add('strum'); clearTimeout(H.strumT); H.strumT=setTimeout(()=>H.el.classList.remove('strum'),ms); }
 /* 手から手へ：投げずに、まっすぐゆっくり動かす。わたしたものは、そのまま相手の手もとに残る（あとで remove する） */
-async function hpass(id,from,to){
+async function hpass(id,from,to,size){   /* v1.73.1：size＝飛ぶ あいだの 大きさ（省略で 20px） */
   const f=hfx(id,from,'still',0); if(!f) return null;
-  f.firstChild.style.width=f.firstChild.style.height='20px';
+  f.firstChild.style.width=f.firstChild.style.height=(size||20)+'px';
   void f.offsetWidth;
   f.style.transition='transform 420ms ease-in-out';
   f.style.transform='translate('+to.x+'px,'+to.y+'px)';
