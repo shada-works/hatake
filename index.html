@@ -308,6 +308,35 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 .actor.walking .bob{animation:hop .25s ease-in-out infinite}
 .actor.walking .shadow{animation:hopShadow .25s ease-in-out infinite}
 .actor.working .bob{animation:work .42s ease-in-out 1}
+/* v1.68.0（ロードマップ 畑①「しごとの 動き」）：しごとごとに 動きを 変える（work(a,i,iconId,job)＝.working＋.job-〜）。--side＝畑の ある 向き（1＝右）
+   dig＝くわ（ふり下ろすたびに 顔が 畑へ 少し かたむく。3回）／sprinkle＝種袋を かたむける（2回）／lean＝水やり（畑へ かたむいたまま）／pull＝収穫（かがんで ぐいっと。2回）／shoo＝虫（左右に ぷるぷる）／stomp＝霜柱を ふむ（2回） */
+.actor.working.job-till .bob{animation:dig .3s ease-in-out 3}
+.actor.working.job-plant .bob{animation:sprinkle .4s ease-in-out 2}
+.actor.working.job-water .bob{animation:lean .52s ease-in-out 1}
+.actor.working.job-harvest .bob{animation:pull .36s ease-in-out 2}
+.actor.working.job-shoo .bob{animation:shoo .56s ease-in-out 1}
+.actor.working.job-thaw .bob{animation:stomp .25s ease-in-out 2}
+@keyframes dig{0%,100%{transform:translateY(-3%) rotate(calc(var(--side,1)*-3deg))}40%{transform:translateY(6%) rotate(calc(var(--side,1)*5deg))}55%{transform:translateY(5%) rotate(calc(var(--side,1)*4deg))}}
+@keyframes sprinkle{0%,100%{transform:rotate(0) translateY(0)}35%,65%{transform:rotate(calc(var(--side,1)*8deg)) translateY(3%)}}
+@keyframes lean{0%,100%{transform:rotate(0)}30%,70%{transform:rotate(calc(var(--side,1)*7deg)) translateY(2%)}}
+@keyframes pull{0%,100%{transform:rotate(0) translateY(0)}45%{transform:rotate(calc(var(--side,1)*12deg)) translateY(9%)}70%{transform:rotate(calc(var(--side,1)*-5deg)) translateY(-7%)}}
+@keyframes shoo{0%,100%{transform:rotate(0) translateX(0)}20%{transform:rotate(-10deg) translateX(-3%)}40%{transform:rotate(10deg) translateX(3%)}60%{transform:rotate(-8deg) translateX(-2%)}80%{transform:rotate(8deg) translateX(2%)}}
+@keyframes stomp{0%,100%{transform:translateY(0) scale(1)}40%{transform:translateY(-16%) scale(.98,1.03)}70%{transform:translateY(2%) scale(1.06,.94)}}
+/* v1.68.0：えりちゃんの 道具（.tool。しごとの あいだだけ 見える）。本人の 右手＝画面の 左（依頼者「ア」。しゃだはる君が 右に ならぶので 当たらない）。
+   くわ・じょうろは 左右 反転（柄の 上・持ち手が 顔の そば、刃・口が 外）。種袋は 反転しない（畑の ほうへ かたむける） */
+.actor.eri .tool{position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -37px;display:none;transform:scaleX(-1)}
+.actor.eri.hasTool .tool{display:block}
+.actor.eri .tool.bag{transform:none}
+.actor.eri .tool svg{width:100%;height:100%;display:block}
+.actor.eri .tool.kuwa svg{transform-origin:22% 8%;transform:rotate(-38deg)}
+.actor.eri.working .tool.kuwa svg{animation:hoeSwing .3s ease-in-out 3}
+@keyframes hoeSwing{0%,100%{transform:rotate(-38deg)}40%{transform:rotate(14deg)}55%{transform:rotate(12deg)}}
+.actor.eri .tool.bag svg{transform-origin:50% 70%}
+.actor.eri.working .tool.bag svg{animation:bagTip .4s ease-in-out 2}
+@keyframes bagTip{0%,100%{transform:rotate(0)}35%,65%{transform:rotate(26deg)}}
+.actor.eri .tool.jouro svg{transform:rotate(-8deg)}   /* クラス名は jouro（.can に すると 3代目の .actor.eri .can の 置き場所が かぶる） */
+.actor.eri.working .tool.jouro svg{animation:canTip .44s ease-in-out 1}
+.actor.shada.hasCan.working.job-water .can{animation:canTip .44s ease-in-out 1}   /* v1.68.0：しゃだはる君の じょうろも かたむける */
 .actor.tumble .bob{animation:tumble .7s ease-in-out 1}
 .actor.wobble .bob{animation:wobble .46s ease-in-out infinite}
 .actor.sleeping .bob{animation:snooze 2.8s ease-in-out infinite}
@@ -321,12 +350,15 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 .actor.shada.hasCan .can{display:block}
 .actor.shada.hasCan.canDown .can{right:-16px;top:72%;width:18px;height:18px;transform:none}
 .actor.shada.bigCan .can{width:27px;height:27px;right:-15px;top:46%;transform:rotate(-8deg)}   /* v1.41.0：3代目のじょうろを運ぶあいだ（見本 C） */
-/* v1.63.0（依頼者「A」）：えりちゃんも 3代目の じょうろを 持つ（日照りの 12:00 に 受けとって、夕がたまで。しゃだはる君の .bigCan と 同じ 持ちかた＝顔の 右・肩の 高さ）。
-   pour＝水やりの あいだ（work の 0.44秒）かたむける。canDown＝おじさん・行事の あいだは 足もとに 置く（しゃだはる君と 同じ） */
-.actor.eri .can{position:absolute;right:-15px;top:46%;width:27px;height:27px;display:none;transform:rotate(-8deg)}
+/* v1.63.0（依頼者「A」）：えりちゃんも 3代目の じょうろを 持つ（日照りの 12:00 に 受けとって、夕がたまで。肩の 高さ）。
+   pour＝水やりの あいだ（work の 0.44秒）かたむける。canDown＝おじさん・行事の あいだは 足もとに 置く（しゃだはる君と 同じ）
+   v1.68.0：顔の 右 → 左（本人の 右手。ほかの 道具と 同じ側。絵は 反転＝口が 左）。かたむけるのは 中の svg */
+.actor.eri .can{position:absolute;left:-15px;top:46%;width:27px;height:27px;display:none;transform:scaleX(-1)}
+.actor.eri .can svg{transform:rotate(-8deg)}
 .actor.eri.hasCan .can{display:block}
-.actor.eri.hasCan.canDown .can{right:-18px;top:70%;width:22px;height:22px;transform:none}
-.actor.eri.hasCan.pour .can{animation:canTip .44s ease-in-out 1}
+.actor.eri.hasCan.canDown .can{left:-18px;top:70%;width:22px;height:22px}
+.actor.eri.hasCan.canDown .can svg{transform:none}
+.actor.eri.hasCan.pour .can svg{animation:canTip .44s ease-in-out 1}
 @keyframes canTip{0%,100%{transform:rotate(-8deg)}40%,60%{transform:rotate(34deg) translate(1px,3px)}}
 .actor .can svg{width:100%;height:100%;display:block}
 /* しゃだはる君に おねがい（v1.40.0）：v1.59.0 から 景色の外（.topbar の 右はし）。前は 畑の右上 → 左下（v1.58.4） */
@@ -436,6 +468,8 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 .fx.pop>span{animation:pop .7s ease-out forwards}
 .fx.fly>span{animation:arc .52s ease-out forwards}
 .fx.away>span{animation:away .8s ease-in forwards}
+.fx.tane>span{width:11px;height:11px;animation:seedFall .5s ease-in forwards}   /* v1.68.0：種袋の 口から 畑へ 落ちる 種つぶ（--sx/--sy＝落ちる 先。顔の 左下を 通って マスの 左上へ）。クラス名は tane（seed は 種えらびの ボタンの 名前） */
+@keyframes seedFall{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}12%{opacity:1;transform:translate(calc(-50% + var(--sx,0px)*.1),calc(-50% + var(--sy,0px)*.04)) scale(1)}100%{opacity:.9;transform:translate(calc(-50% + var(--sx,0px)),calc(-50% + var(--sy,0px))) scale(.85)}}
 .fx.snack{transition:opacity .3s}
 .fx.snack>span{width:30px;height:30px;animation:snackIn .4s ease-out}
 .fx.text>span{width:auto;height:auto;font-size:13px;font-weight:700;color:#3f7a35;white-space:nowrap;animation:pop .9s ease-out forwards}
@@ -1126,6 +1160,12 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
   </symbol>
 
   <!-- こもの -->
+  <!-- v1.68.0（畑①「しごとの 動き」）：えりちゃんの 道具。くわ（木の 柄＝左上から 右下へ・鉄の 刃は 下）・種袋（紙の 袋。口を 折って、前に 芽の しるし）・初代の じょうろ（小さい・うすい もも色）・2代目の じょうろ（ふつう・クリーム色。小屋が できてから）・種つぶ（まくときに 落ちる） -->
+  <symbol id="i-kuwa" viewBox="0 0 40 40"><path d="M9 3 L26.5 27" stroke="#a37a4c" stroke-width="4.4" stroke-linecap="round"/><path d="M10.5 4.5 L25 24.5" stroke="#c9a06e" stroke-width="1.2" stroke-linecap="round" opacity=".75"/><path d="M23 25.5 L31.5 22.5" stroke="#8b6a44" stroke-width="3" stroke-linecap="round"/><path d="M22 23 L34 19 L37 32 L26.5 37.5Z" fill="#6d7378" stroke="#4f5559" stroke-width="1.2" stroke-linejoin="round"/><path d="M24.5 25 L33 22" stroke="#a7adb2" stroke-width="1.3" stroke-linecap="round" opacity=".9"/></symbol>
+  <symbol id="i-tanebukuro" viewBox="0 0 40 40"><path d="M11 12 L29 12 L31 35 Q20 38 9 35Z" fill="#efe0bd" stroke="#c9ad7c" stroke-width="1.4" stroke-linejoin="round"/><path d="M11 12 L29 12 L28 7 Q20 4.5 12 7Z" fill="#d9bf8e" stroke="#c9ad7c" stroke-width="1.4" stroke-linejoin="round"/><path d="M12.5 10 Q20 8.5 27.5 10" fill="none" stroke="#b8975f" stroke-width="1" stroke-linecap="round" opacity=".8"/><rect x="14.5" y="18" width="11" height="10" rx="2" fill="#fff9ea" stroke="#d6c4a0" stroke-width="1"/><path d="M20 26 L20 21" stroke="#5f9a4a" stroke-width="1.6" stroke-linecap="round"/><path d="M20 22.5 Q16.5 21.5 16.5 18.5 Q19.5 18.5 20 22.5Z" fill="#7bb36a"/><path d="M20 22.5 Q23.5 21.5 23.5 18.5 Q20.5 18.5 20 22.5Z" fill="#7bb36a"/><ellipse cx="17" cy="31.5" rx="1.6" ry="1.1" fill="#8a5e3a"/><ellipse cx="22.5" cy="32" rx="1.6" ry="1.1" fill="#8a5e3a"/></symbol>
+  <symbol id="i-can1" viewBox="0 0 40 40"><rect x="9" y="18" width="18" height="15" rx="4" fill="#e7a69b"/><path d="M27 23 L35 15" stroke="#e7a69b" stroke-width="4.4" stroke-linecap="round"/><path d="M12.5 18 C12.5 9.5 23.5 9.5 23.5 18" fill="none" stroke="#e7a69b" stroke-width="3"/><circle cx="35" cy="14" r="2.9" fill="#f3c6bd"/><path d="M12.5 22.5 q5 -2.2 10 0" fill="none" stroke="#f8dcd6" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-can2" viewBox="0 0 40 40"><rect x="7" y="16" width="21" height="18" rx="4" fill="#e3c279"/><path d="M28 22 L37 13" stroke="#e3c279" stroke-width="5" stroke-linecap="round"/><path d="M11 16 C11 6 24 6 24 16" fill="none" stroke="#e3c279" stroke-width="3.4"/><circle cx="37" cy="12" r="3.2" fill="#f0dca5"/><path d="M11 21 q5 -2.4 10 0" fill="none" stroke="#f7ecc9" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-tane" viewBox="0 0 40 40"><ellipse cx="20" cy="20" rx="13" ry="8.5" transform="rotate(-25 20 20)" fill="#a8743f" stroke="#6b4423" stroke-width="2"/><path d="M13 17 Q17.5 13.5 23 14" fill="none" stroke="#e2bf8a" stroke-width="2.6" stroke-linecap="round" opacity=".9"/></symbol>
   <symbol id="i-can" viewBox="0 0 40 40"><rect x="7" y="16" width="21" height="18" rx="4" fill="#8fb3c4"/><path d="M28 22 L37 13" stroke="#8fb3c4" stroke-width="5" stroke-linecap="round"/><path d="M11 16 C11 6 24 6 24 16" fill="none" stroke="#8fb3c4" stroke-width="3.4"/><circle cx="37" cy="12" r="3.2" fill="#a9c9d6"/><path d="M11 21 q5 -2.4 10 0" fill="none" stroke="#c4dbe3" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-fishfood" viewBox="0 0 40 40"><g fill="#a9743a"><circle cx="14" cy="12" r="2"/><circle cx="22" cy="9" r="1.7"/><circle cx="27" cy="16" r="2"/><circle cx="17" cy="21" r="1.7"/><circle cx="24" cy="25" r="2"/></g></symbol>
   <symbol id="i-ukulele" viewBox="0 0 40 40"><g transform="translate(20 20) scale(.86) rotate(-26) translate(-20 -20)"><rect x="17.4" y="1.5" width="5.2" height="6.2" rx="1.6" fill="#7a5230"/><g fill="#e9e2d2"><circle cx="16.6" cy="3.4" r=".8"/><circle cx="16.6" cy="5.8" r=".8"/><circle cx="23.4" cy="3.4" r=".8"/><circle cx="23.4" cy="5.8" r=".8"/></g><rect x="18.5" y="7" width="3" height="14" fill="#8f6a44"/><path d="M20 20.5 c-4.4 0 -6.6 2.6 -6.6 5.6 c0 2.1 1.4 3.4 1.4 4.7 c0 2.2 -2.3 3.8 -2.3 6.8 c0 4.3 3.5 6.9 7.5 6.9 c4 0 7.5 -2.6 7.5 -6.9 c0 -3 -2.3 -4.6 -2.3 -6.8 c0 -1.3 1.4 -2.6 1.4 -4.7 c0 -3 -2.2 -5.6 -6.6 -5.6Z" fill="#d9a76a" stroke="#a87c4e" stroke-width="1"/><circle cx="20" cy="33.6" r="2.4" fill="#6b4a2c"/><rect x="17.8" y="38.2" width="4.4" height="1.6" rx=".5" fill="#6b4a2c"/><g stroke="#f6efd9" stroke-width=".5"><path d="M19.1 7 V38.2 M19.7 7 V38.2 M20.3 7 V38.2 M20.9 7 V38.2"/></g></g></symbol>
@@ -1414,7 +1454,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.67.0</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.68.0</span></span>
   </div>
 
   <div class="hud">
@@ -3098,13 +3138,13 @@ async function askScene(){
       const j=c[0]; if(bg) bg.plot=j;
       await moveShada(spotOf(j,shadaSide(j)));
       const q=S.plots[j]; if(!q.crop || q.watered || q.frost || isRipe(q)) continue;
-      await work(A.shada,j,'i-drop');
+      await work(A.shada,j,'i-drop','water');   /* v1.68.0 */
       q.watered=true; q.dry=false; done.push(j); renderPlots();
       if(k<2) say('shada','ばう。',800);
     }
     if(bg) bg.plot=null;
     if(done.length && fail){
-      const j=done[done.length-1]; await work(A.shada,j,'i-drop'); await work(A.shada,j,'i-drop');
+      const j=done[done.length-1]; await work(A.shada,j,'i-drop','water'); await work(A.shada,j,'i-drop','water');   /* v1.68.0 */
       S.plots[j].soggy=true; renderPlots();
       say('shada','いっぱいあげすぎたばう……'); setTimeout(()=>say('eri','ふふ、あげすぎだよ。',0,'happy',true),900); await pause(1700);
     }else if(done.length){
@@ -3163,7 +3203,7 @@ A.shada.el.querySelector('.bob').insertAdjacentHTML('beforeend','<div class="car
 A.homare=makeActor('homare');
 A.homare.el.setAttribute('aria-hidden','true');
 A.homare.el.querySelector('.bob').insertAdjacentHTML('beforeend','<div class="carry">'+icon('i-bento')+'</div>');   /* お花見のお弁当（v1.27.0） */
-A.eri.el.querySelector('.bob').insertAdjacentHTML('beforeend','<div class="carry">'+icon('i-crate')+'</div><div class="can">'+icon('i-bigcan')+'</div>');   /* v1.63.0：.can＝3代目の じょうろ（日照りの 午後に 持つ） */
+A.eri.el.querySelector('.bob').insertAdjacentHTML('beforeend','<div class="carry">'+icon('i-crate')+'</div><div class="can">'+icon('i-bigcan')+'</div><div class="tool"></div>');   /* v1.63.0：.can＝3代目の じょうろ（日照りの 午後に 持つ）。v1.68.0：.tool＝しごとの 道具（くわ・種袋・初代と 2代目の じょうろ。しごとの あいだだけ） */
 A.oji=makeActor('oji');
 A.oji.el.setAttribute('aria-hidden','true');
 A.oji.el.querySelector('.bob').insertAdjacentHTML('beforeend','<div class="carry">'+icon('i-crate')+'</div>');
@@ -3566,15 +3606,43 @@ function poke(i){
   e.classList.remove('poke'); void e.offsetWidth; e.classList.add('poke');
   setTimeout(()=>e.classList.remove('poke'),340);
 }
-async function work(a,i,iconId){
+/* v1.68.0（ロードマップ 畑①「しごとの 動き」）：job＝till（くわ 3回・0.9秒）／plant（種袋 2回・0.8秒。種つぶが 落ちる）／water（じょうろを かたむける・0.52秒）／harvest（ぐいっと 2回・0.72秒）／shoo（ぷるぷる・0.56秒）／thaw（ふむ 2回・0.5秒）。
+   job が なければ これまでの ゆれ（0.44秒）。えりちゃんの 道具は eriToolFor（3代目を 持っている 午後の 水やりは .can を かたむける＝.pour） */
+const WORK_MS={till:900,plant:800,water:520,harvest:720,shoo:560,thaw:500};
+function eriTool(id){
+  const el=A.eri.el, t=el.querySelector('.tool'); if(!t) return;
+  if(!id){ el.classList.remove('hasTool'); t.className='tool'; t.innerHTML=''; return; }
+  t.className='tool '+({'i-kuwa':'kuwa','i-tanebukuro':'bag'}[id]||'jouro'); t.innerHTML=icon(id); el.classList.add('hasTool');
+}
+function eriToolFor(job){
+  if(job==='till') return 'i-kuwa';
+  if(job==='plant') return 'i-tanebukuro';
+  if(job==='water') return S.eriCan?null:(S.unlocked.shed?'i-can2':'i-can1');   /* 初代（小屋が できるまで）／2代目（小屋が できてから）。3代目は .can */
+  return null;
+}
+function seedFall(a,i){   /* 種袋を かたむけた ときの 口（顔の 左上）から、顔の 左下を 通って マスの 左上（えりちゃんの すぐ 右下）へ、種つぶが 2回 ぱらぱら。袋は 顔の 左・マスは 右下なので、顔の まんなかは 通らない */
+  const r=plotRect(i), m={x:a.x-14,y:a.y-11};
+  [150,270,550,670].forEach(t=>setTimeout(()=>{ if(!a.el.classList.contains('working')) return; const f=fx('i-tane',m,'tane',640); if(!f) return;
+    const L={x:Math.max(r.x+6,a.x+4)+rnd()*10, y:a.y+24+rnd()*8};   /* 落ちる 先＝マスの 中（えりちゃんの 右下） */
+    f.firstChild.style.setProperty('--sx',Math.round(L.x-m.x)+'px'); f.firstChild.style.setProperty('--sy',Math.round(L.y-m.y)+'px'); },t));
+}
+async function work(a,i,iconId,job){
   a.el.style.setProperty('--side', a.x<=centerOf(i).x ? 1 : -1);
   poke(i);
   if(iconId) fx(iconId,centerOf(i));
   if(iconId==='i-drop') Snd.play('water');
+  if(job==='till'){ if(reduceMotion) Snd.play('dig'); else for(let k=0;k<3;k++) setTimeout(()=>{ Snd.play('dig'); if(k) poke(i); },100+k*300); }   /* くわの 音は ふり下ろしごと（3回） */
   if(reduceMotion) return;
+  const tool=(a===A.eri)?eriToolFor(job):null;
+  if(tool) eriTool(tool);
+  if(job==='water' && a===A.eri && S.eriCan) a.el.classList.add('pour');
+  if(job==='plant' && a===A.eri) seedFall(a,i);
+  if(job) a.el.classList.add('job-'+job);
   a.el.classList.add('working');
-  await sleep(440);
-  a.el.classList.remove('working');
+  await sleep(WORK_MS[job]||440);
+  a.el.classList.remove('working','pour');
+  if(job) a.el.classList.remove('job-'+job);
+  if(tool) eriTool(null);
 }
 async function flyToBasket(key,from,big,plain){   /* v1.39.0：big＝大きな野菜（絵を1.4倍に）。v1.60.0：plain＝ころがっていたのを ひろった（株の絵は 出さない） */
   if(reduceMotion){ Snd.play('basket'); return; }
@@ -6415,7 +6483,7 @@ async function plantVine(){
   await moveTo(A.eri,spotOf(i,'L'));
   say('eri',f.plantE,0,'smile');
   await pause(1300);
-  await work(A.eri,i,'s-seed'); Snd.play('plant');
+  await work(A.eri,i,'s-seed','plant'); Snd.play('plant');   /* v1.68.0：種袋 */
   S.vine={planted:S.day,stage:0,fruit:false,picked:0}; renderPlots();
   await follow;
   if(A.shada.mode==='follow'){ setMood('shada','happy',1600); say('shada',f.plantS); }
@@ -6440,7 +6508,7 @@ async function plantBasil(){
   await moveTo(A.eri,spotOf(i,'L'));
   say('eri','温室には、バジルを植えてみよう。',0,'smile');
   await pause(1300);
-  await work(A.eri,i,'s-seed'); Snd.play('plant');
+  await work(A.eri,i,'s-seed','plant'); Snd.play('plant');   /* v1.68.0：種袋 */
   S.basil={planted:S.day,ready:false,next:S.day+BASIL_FIRST,picked:0}; renderPlots();
   await follow;
   if(A.shada.mode==='follow'){ setMood('shada','happy',1600); say('shada','ばじる、ばう？'); }
@@ -6456,7 +6524,7 @@ async function pickBasil(){
   focusPlot(i);
   const follow=shadaFollowTo(spotOf(i,'R'));
   await moveTo(A.eri,spotOf(i,'L'));
-  await work(A.eri,i); await work(A.eri,i);
+  await work(A.eri,i,null,'harvest');   /* v1.68.0：ぐいっと（前は ゆれ 2回） */
   Snd.play('harvest'); fx('i-spark',centerOf(i));
   g.ready=false; g.picked=S.day; g.next=S.day+BASIL_AGAIN;
   S.pantry.basil=2;   /* 今日と明日の料理に使える（v1.23.1。依頼者の指定。おじさんの野菜と同じ。朝に1ずつ減る） */
@@ -6482,7 +6550,7 @@ async function pickFruit(kind){
   const follow=shadaFollowTo(sp);
   await moveTo(A.eri,e);
   const from=tree?{x:T.root.x-6,y:T.root.y-74}:centerOf(13);
-  if(tree){ await eriWorkAt(from); await eriWorkAt(from); } else { await work(A.eri,13); await work(A.eri,13); }
+  if(tree){ await eriWorkAt(from); await eriWorkAt(from); } else { await work(A.eri,13,null,'harvest'); }   /* v1.68.0：ぶどうは ぐいっと */
   Snd.play('harvest'); fx('i-spark',from);
   g.fruit=false; g.picked=S.day;
   dessertAdd(kind);   /* v1.60.0 */
@@ -6707,7 +6775,7 @@ async function shadaSelfWater(t,join){
     await moveShada(spotOf(j,shadaSide(j)));
     if(q.crop && q.bug){
       if(nth===1){ say('shada','むし、いるばう！'); await pause(600); }
-      await work(A.shada,j); await work(A.shada,j);
+      await work(A.shada,j,null,'shoo');   /* v1.68.0：ぷるぷる（前は ゆれ 2回） */
       q.bug=false; renderPlots();
       const c=centerOf(j); fx('i-bug',{x:c.x+16,y:c.y-4},'away',820); Snd.play('shoo');
       q.growth=Math.min(totalOf(q),q.growth+60); renderPlots();
@@ -6730,7 +6798,7 @@ async function shadaSelfWater(t,join){
   }
   await moveShada(spotOf(j,shadaSide(j)));
   if(q.crop && !q.watered && !S.raining && !q.frost){
-    await work(A.shada,j,'i-drop');
+    await work(A.shada,j,'i-drop','water');   /* v1.68.0 */
     q.watered=true; q.dry=false; renderPlots();
     if(nth===1) say('shada',pickV(['ここ、かわいてるばう。','おみず、あげるばう。'])); else say('shada','ばう。',900);
     log(fetch?'しゃだはる君が、じょうろを持ってきて、ひとマス水やりをしてくれました。':'しゃだはる君が、ひとマス水やりをしてくれました。');
@@ -6764,14 +6832,13 @@ async function playerAction(kind,i,seed){
   const chatty=rnd()<.6, shadaNear=A.shada.mode==='follow' && sw==null;   /* 水やりに行っているあいだは、そばでの ひとことは言わない（遠くから吹き出しが出て、画面のはしで切れるので） */
 
   if(kind==='till'){
-    Snd.play('dig');
-    await work(A.eri,i);
+    await work(A.eri,i,null,'till');   /* v1.68.0：くわ（音は work の 中で 3回） */
     p.tilled=true;
     say('eri',pickV(['ここも畑にしよう。','ここも、たがやしとこう。']),0,half('smile'));
     log('草地をたがやして、あたらしいマスができました。');
   }else if(kind==='plant'){
     Snd.play('plant');
-    await work(A.eri,i);
+    await work(A.eri,i,null,'plant');   /* v1.68.0：種袋 */
     p.crop=seed; p.growth=0; p.watered=!!S.raining; p.dry=false; p.soggy=false; p.dried=false; p.compost=false; p.big=null;   /* v1.50.0 */
     let wetLine=false, wet=false, compostUsed=false;
     if(S.wetMorn && S.clock<=DAY_START+180){ p.growth=Math.min(totalOf(p),NIGHT_BONUS); wet=true; if(S.wetSaid!==S.day){ S.wetSaid=S.day; wetLine=true; } }   /* v1.39.0：雨あがりの朝、9:00までにまいた種は 夜1回ぶん（3時間）育っている。ひとことは その朝の最初の1回だけ */
@@ -6790,7 +6857,7 @@ async function playerAction(kind,i,seed){
       follow.then(()=>flyIcon('s-seed',{x:A.shada.x,y:A.shada.y+8},{x:to.x,y:to.y+2})).then(()=>renderWorld());
     }
   }else if(kind==='water'){
-    A.eri.el.classList.add('pour'); await work(A.eri,i,'i-drop'); A.eri.el.classList.remove('pour');   /* v1.63.0：3代目を 持っている 午後は、じょうろを かたむける（.pour） */
+    await work(A.eri,i,'i-drop','water');   /* v1.63.0：3代目を 持っている 午後は、じょうろを かたむける（.pour）。v1.68.0：初代・2代目の じょうろも（work の 中で） */
     const done=[i];
     p.watered=true; p.dry=false;
     const bigCan=S.bigCanDay===S.day;   /* v1.41.0：日照りの日の午後は 3代目（上下にも届く） */
@@ -6809,15 +6876,15 @@ async function playerAction(kind,i,seed){
     /* 冬の朝：ふたりで霜柱をふんで、こおった土をほぐす */
     await follow;
     fxText('ざくざく',{x:c0.x,y:c0.y-18},'ice'); Snd.play('frost'); Snd.play('frost',.46);
-    await Promise.all([work(A.eri,i), shadaNear?work(A.shada,i):Promise.resolve()]);
-    await Promise.all([work(A.eri,i), shadaNear?work(A.shada,i):Promise.resolve()]);
+    await Promise.all([work(A.eri,i,null,'thaw'), shadaNear?work(A.shada,i,null,'thaw'):Promise.resolve()]);   /* v1.68.0：ふむ */
+    await Promise.all([work(A.eri,i,null,'thaw'), shadaNear?work(A.shada,i,null,'thaw'):Promise.resolve()]);
     p.frost=false;
     say('eri','しもばしら、ざくざくだね。',0,'happy');
     if(shadaNear){ setMood('shada','happy',1600); setTimeout(()=>say('shada','ざくざく、たのしいばう！'),500); }
     if(!S.frostJoy){ S.frostJoy=true; addNagomi(1,shadaNear?A.shada:A.eri); }
     log(shadaNear?'ふたりで霜柱をふんで、こおった土をほぐしました。':'霜柱をふんで、こおった土をほぐしました。');
   }else if(kind==='shoo'){
-    await work(A.eri,i);
+    await work(A.eri,i,null,'shoo');   /* v1.68.0：ぷるぷる */
     p.bug=false; renderPlots();
     fx('i-bug',{x:c0.x+16,y:c0.y-4},'away',820); Snd.play('shoo');
     p.growth=Math.min(totalOf(p),p.growth+60);
@@ -6826,7 +6893,7 @@ async function playerAction(kind,i,seed){
     log('虫を追いはらいました。'+CROPS[p.crop].name+'が元気になりました。');
   }else if(kind==='harvest'){
     const key=p.crop, c=CROPS[key], big=settleBig(p);   /* v1.39.0：大きな野菜。v1.50.0：収穫できるようになった時点の p.big */
-    await work(A.eri,i);
+    await work(A.eri,i,null,'harvest');   /* v1.68.0：ぐいっと */
     S.plots[i]=Object.assign(p,{crop:null,growth:0,watered:false,dry:false,soggy:false,bug:false,frost:false,dried:false,big:null});   /* v1.50.0：big ももどす */
     Snd.play('harvest'); if(big) setTimeout(()=>Snd.play('spark'),260);
     if(big){ say('eri','わあ、大きな'+c.name+'。',0,'happy'); if(shadaNear) setTimeout(()=>say('shada','おおきいばう！'),420); }   /* v1.39.0（依頼者が了解ずみ） */
@@ -10773,7 +10840,7 @@ const EVENTS=[
     async run(){
       const i=pick(thirstyPlots()), p=S.plots[i]; if(bg) bg.plot=i;
       await moveShada(spotOf(i,shadaSide(i)));
-      await work(A.shada,i,'i-drop');
+      await work(A.shada,i,'i-drop','water');   /* v1.68.0 */
       p.watered=true; p.dry=false; renderPlots();
       say('shada','ここ、かわいてるばう。');
       log('しゃだはる君が、ひとマスだけ水やりをしてくれました。');
@@ -10787,7 +10854,7 @@ const EVENTS=[
       await moveShada(spotOf(i,shadaSide(i)));
       await pause(500);
       say('shada','むし、いるばう！');
-      await work(A.shada,i); await work(A.shada,i);
+      await work(A.shada,i,null,'shoo');   /* v1.68.0 */
       p.bug=false; renderPlots();
       fx('i-bug',{x:c.x+16,y:c.y-4},'away',820); Snd.play('shoo');
       p.growth=Math.min(totalOf(p),p.growth+60);
@@ -10812,7 +10879,7 @@ const EVENTS=[
     async run(){
       const i=pick(growingPlots().filter(i=>S.plots[i].watered&&!S.plots[i].soggy)), p=S.plots[i]; if(bg) bg.plot=i;
       await moveShada(spotOf(i,shadaSide(i)));
-      await work(A.shada,i,'i-drop'); await work(A.shada,i,'i-drop'); await work(A.shada,i,'i-drop');
+      await work(A.shada,i,'i-drop','water'); await work(A.shada,i,'i-drop','water'); await work(A.shada,i,'i-drop','water');   /* v1.68.0 */
       p.soggy=true; renderPlots();
       say('shada',pickV(['いっぱいあげたばう！','ごくごくばう！']));
       setTimeout(()=>say('eri',pickV(['あはは、びしょびしょだね。','ふふ、あげすぎだよ。']),0,'happy',true),700);
@@ -10824,7 +10891,7 @@ const EVENTS=[
       const i=pick(ripePlots().filter(i=>CROPS[S.plots[i].crop].root)), p=S.plots[i], key=p.crop, c=CROPS[key], c0=centerOf(i), big=settleBig(p);   /* v1.39.0。v1.54.1：畑に見えていた大きさのまま（前は ここで もういちど くじを引いていたので、大きく見えていたのに ふつう、などがあった） */
       await moveShada(spotOf(i,shadaSide(i)));
       say('shada','ぬくばう！');
-      await work(A.shada,i); await work(A.shada,i);
+      await work(A.shada,i,null,'harvest');   /* v1.68.0：ぐいっと（前は ゆれ 2回） */
       const home={x:A.shada.x,y:A.shada.y}, dirX=A.shada.x>=c0.x?1:-1;
       if(!reduceMotion){ A.shada.el.classList.add('tumble'); }
       Snd.play('slip');
@@ -10837,7 +10904,7 @@ const EVENTS=[
       await moveTo(A.eri,spotOf(i,dirX>0?'L':'R'));
       say('eri','いっしょに引っぱろう。せーの！');
       await moveShada(home);
-      await Promise.all([work(A.eri,i),work(A.shada,i)]);
+      await Promise.all([work(A.eri,i,null,'harvest'),work(A.shada,i,null,'harvest')]);   /* v1.68.0：ふたりで ぐいっと */
       Object.assign(p,{crop:null,growth:0,watered:false,dry:false,soggy:false,dried:false,big:null});   /* v1.54.1：big も もどす */
       renderPlots();
       setMood('shada','happy',1800); setMood('eri','happy',1800);
@@ -12188,7 +12255,7 @@ if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitleEn)
 { const v=document.querySelector('.ver'); let taps=[];
   if(v) v.addEventListener('click',e=>{ e.stopPropagation(); const t=Date.now(); taps=taps.filter(x=>t-x<3000); taps.push(t); if(taps.length>=5){ taps=[]; openGyojiMenu(); } }); }
 if(location.hash.indexOf('debug')>=0){
-  window.__hatake={ hhold, ukeTake, hbubOff, poseArms, strumHand, POSE, holdCenter, poseSpot, roomToBody, chopSpot, POT_HAND, stirBurst, chopOn, chopOff, eatOn, eatOff, PLAY_SETS, THUNDER_SETS, HIDE_LINES, thunderScene, SHELTER, SHELTER_FREE, resumeEveningEnd, saveData, get eveSnap(){return eveSnap;}, goHidden, goVisible, jastaSuikaNight, jastaSuikaDue, jastaSuikaPreview, jportion, getJasta, get JA(){return JA;}, hgassho, carryBasketHome, carryBasketOut, basketTo, basketFrontOf, BK, BK_HOME, get basketAtDoor(){return basketAtDoor;}, set basketAtDoor(v){basketAtDoor=!!v;}, fitTop, renderNagomi, addNagomi, hNagomi, dressHome, HFUKU, renderPaddyLife, paddyLifeKind, paddyFrogTap, tonboFlyTo, tonboNose, paddyLifePreview, PADDY_FROGS, TONBO_ZONE, get plTonbo(){return plTonbo;}, riceBagLevel, renderRiceBag, gyojiLog, get hanamiRice(){return hanamiRice;}, tipOK, GIFT_TALK, VISIT_SETS, VISIT_CALL, visitScene, vary, saidOK, get SAID(){return SAID;}, ERI_TALK, OKAWARI, eriTalk, etSlot, MORN_X, mornExtra, reportLine, svgPop, liftOffFaces, walkHomeTogether, camGlide, bplates, bslice, bcakeSVG, get cameWithH(){return cameWithH;}, TANBO, tanboDue, hakobiDue, shinmaiDue, tanboScene, hakobiScene, shinmaiTalk, shinmaiPreview, tanboPreview, tanboState, renderPaddy, paddyArt, paddyHint, paddyTap, giftTonight, giftServed, giftPick, moreServe, moreEaten, giftRiceTalk, dessertAdd, dessertDue, dessertTime, dessertForm, fieldDessertNight, gourmetPreview, FIELD_DESSERT, DESSERT_LINES, GIFT_BY_SEASON, GIFT_EAT, RICE_DISHES, RICE_TALK, menuOK, riceShow, riceFill, get riceMix(){return riceMix;}, set riceMix(v){riceMix=v||'';}, RICE_MIX, openSeeds, chooseMenu, closeSheet, get tanboView(){return tanboView;}, sayTest:say, focusRange, seedOK, recipeOK, hsay, bubbleHTML, TSUKIMI, hotDry, returnBigCan, eriReturnBigCan, eriCarry, DRY_RUN, spOf, spKeys, spEmpty, HOT_AT, get bigCanCarry(){return bigCanCarry;}, get wxQueue(){return wxQueue;}, weatherScenes, askScene, askLeft, renderAsk, compostTap, ASK_MAX, COMPOST_MAX, place, moveTo, moveShada, shadaCanDown, shadaCarry, shadaMode, afterAction, returnCan, shadaSelfWater, get canDownScene(){return canDownScene;}, rollBig, spawnBug, startRain, yearReview, yearReviewScene, yearSnap, yearLines, openZukan, openDiary, dayStr, get sheetKind(){return sheetKind;}, get bg(){return bg;}, bgWait, set forceWait(v){forceWait=v;}, gyojiPat, GYOJI_LEAD, birthdayNight, get gyojiStep(){return gyojiStep;}, rollWeather, pickPre, gyojiNightDue, nightOn, nightOff, nightOuting, fwLaunch, senkoOn, HANABI, hangCan, hangScene, hangMorning, renderShed, shedTap, nextHoshiDish, hoshiReady, morningPlan, morning, GYOJI, GYOJI_SCENE, gyojiDue, gyojiScene, hRoute, hCross, hInB, HTABLE, HSPOT, hmove, get S(){return S;}, get busy(){return busy;}, get hiddenNow(){return hiddenNow;}, get pausedMs(){return pausedMs;}, gnow, shadaAcc, lapBlanket, heightArt, plantArt, pawArt, fishbowlArt, BLANKET, ACC, SONGS, playSong, homeMorning, get sceneDepth(){return sceneDepth;}, pumpTimers, mikanFit, basketPlace, get lastErr(){return lastErr;}, get stall(){return {n:stallN,max:stallMax};}, saveDiag, saveNow, get saveOK(){return saveOK;}, A, homeEvening, pickPre, dishCandidates, makeRequest, get HA(){return HA;}, advance, maybeEvent, renderAll, addHarvest, checkUnlocks, nextMorning, Store, CROPS, RECIPES, UNLOCKS, EVENTS, FRIDGE, rollFridge, rollWeather, placeFrost, weatherScenes, importSave, exportSave, normalize, Snd, GIFTS, planVisit, visitDue, fitVisit, DISH, setPortions, shelterAtShed, restAtHome, placeTreasure, rest, FRUITS, plantTree, plantVine, pickFruit, TREES, treeTap, dessertNight, fruitMorning, renderTree, moveShada, shadaSelfWater, selfWaterTarget, returnCan, playerAction, endDay, plantBasil, pickBasil, pickV, judgeBigDay, giftDetour, basilInFridge, SLOT_MAX, makeRoomFor, seasonSwap, fixup, workLeft, decorShown, closetTalk, openFridge, cuckoo, feedFish, mirrorReflect, strum, playUke, sitRock, seasonalDue, seasonalShow, SEASONAL, SEASONAL_SCENE, setupRoom, REWARD_NIGHT, DECOR, REWARDS, rewardSetup, LOOP, LOOP_SCENE, lapNext, lapReward, lapReady, lapPreview, renderLooks, showLook, bringOut, tugGame, tugRope, paintArt, LOOK_ART, lookN, lookV, nextReward, dueReward, renderNagomi, openNagomi, rewardCard, sweetsNight, updatePhoto, get SW(){return {n:S.swN,day:S.swDay,can:S.canOut};},
+  window.__hatake={ eriTool, eriToolFor, WORK_MS, work, seedFall, hhold, ukeTake, hbubOff, poseArms, strumHand, POSE, holdCenter, poseSpot, roomToBody, chopSpot, POT_HAND, stirBurst, chopOn, chopOff, eatOn, eatOff, PLAY_SETS, THUNDER_SETS, HIDE_LINES, thunderScene, SHELTER, SHELTER_FREE, resumeEveningEnd, saveData, get eveSnap(){return eveSnap;}, goHidden, goVisible, jastaSuikaNight, jastaSuikaDue, jastaSuikaPreview, jportion, getJasta, get JA(){return JA;}, hgassho, carryBasketHome, carryBasketOut, basketTo, basketFrontOf, BK, BK_HOME, get basketAtDoor(){return basketAtDoor;}, set basketAtDoor(v){basketAtDoor=!!v;}, fitTop, renderNagomi, addNagomi, hNagomi, dressHome, HFUKU, renderPaddyLife, paddyLifeKind, paddyFrogTap, tonboFlyTo, tonboNose, paddyLifePreview, PADDY_FROGS, TONBO_ZONE, get plTonbo(){return plTonbo;}, riceBagLevel, renderRiceBag, gyojiLog, get hanamiRice(){return hanamiRice;}, tipOK, GIFT_TALK, VISIT_SETS, VISIT_CALL, visitScene, vary, saidOK, get SAID(){return SAID;}, ERI_TALK, OKAWARI, eriTalk, etSlot, MORN_X, mornExtra, reportLine, svgPop, liftOffFaces, walkHomeTogether, camGlide, bplates, bslice, bcakeSVG, get cameWithH(){return cameWithH;}, TANBO, tanboDue, hakobiDue, shinmaiDue, tanboScene, hakobiScene, shinmaiTalk, shinmaiPreview, tanboPreview, tanboState, renderPaddy, paddyArt, paddyHint, paddyTap, giftTonight, giftServed, giftPick, moreServe, moreEaten, giftRiceTalk, dessertAdd, dessertDue, dessertTime, dessertForm, fieldDessertNight, gourmetPreview, FIELD_DESSERT, DESSERT_LINES, GIFT_BY_SEASON, GIFT_EAT, RICE_DISHES, RICE_TALK, menuOK, riceShow, riceFill, get riceMix(){return riceMix;}, set riceMix(v){riceMix=v||'';}, RICE_MIX, openSeeds, chooseMenu, closeSheet, get tanboView(){return tanboView;}, sayTest:say, focusRange, seedOK, recipeOK, hsay, bubbleHTML, TSUKIMI, hotDry, returnBigCan, eriReturnBigCan, eriCarry, DRY_RUN, spOf, spKeys, spEmpty, HOT_AT, get bigCanCarry(){return bigCanCarry;}, get wxQueue(){return wxQueue;}, weatherScenes, askScene, askLeft, renderAsk, compostTap, ASK_MAX, COMPOST_MAX, place, moveTo, moveShada, shadaCanDown, shadaCarry, shadaMode, afterAction, returnCan, shadaSelfWater, get canDownScene(){return canDownScene;}, rollBig, spawnBug, startRain, yearReview, yearReviewScene, yearSnap, yearLines, openZukan, openDiary, dayStr, get sheetKind(){return sheetKind;}, get bg(){return bg;}, bgWait, set forceWait(v){forceWait=v;}, gyojiPat, GYOJI_LEAD, birthdayNight, get gyojiStep(){return gyojiStep;}, rollWeather, pickPre, gyojiNightDue, nightOn, nightOff, nightOuting, fwLaunch, senkoOn, HANABI, hangCan, hangScene, hangMorning, renderShed, shedTap, nextHoshiDish, hoshiReady, morningPlan, morning, GYOJI, GYOJI_SCENE, gyojiDue, gyojiScene, hRoute, hCross, hInB, HTABLE, HSPOT, hmove, get S(){return S;}, get busy(){return busy;}, get hiddenNow(){return hiddenNow;}, get pausedMs(){return pausedMs;}, gnow, shadaAcc, lapBlanket, heightArt, plantArt, pawArt, fishbowlArt, BLANKET, ACC, SONGS, playSong, homeMorning, get sceneDepth(){return sceneDepth;}, pumpTimers, mikanFit, basketPlace, get lastErr(){return lastErr;}, get stall(){return {n:stallN,max:stallMax};}, saveDiag, saveNow, get saveOK(){return saveOK;}, A, homeEvening, pickPre, dishCandidates, makeRequest, get HA(){return HA;}, advance, maybeEvent, renderAll, addHarvest, checkUnlocks, nextMorning, Store, CROPS, RECIPES, UNLOCKS, EVENTS, FRIDGE, rollFridge, rollWeather, placeFrost, weatherScenes, importSave, exportSave, normalize, Snd, GIFTS, planVisit, visitDue, fitVisit, DISH, setPortions, shelterAtShed, restAtHome, placeTreasure, rest, FRUITS, plantTree, plantVine, pickFruit, TREES, treeTap, dessertNight, fruitMorning, renderTree, moveShada, shadaSelfWater, selfWaterTarget, returnCan, playerAction, endDay, plantBasil, pickBasil, pickV, judgeBigDay, giftDetour, basilInFridge, SLOT_MAX, makeRoomFor, seasonSwap, fixup, workLeft, decorShown, closetTalk, openFridge, cuckoo, feedFish, mirrorReflect, strum, playUke, sitRock, seasonalDue, seasonalShow, SEASONAL, SEASONAL_SCENE, setupRoom, REWARD_NIGHT, DECOR, REWARDS, rewardSetup, LOOP, LOOP_SCENE, lapNext, lapReward, lapReady, lapPreview, renderLooks, showLook, bringOut, tugGame, tugRope, paintArt, LOOK_ART, lookN, lookV, nextReward, dueReward, renderNagomi, openNagomi, rewardCard, sweetsNight, updatePhoto, get SW(){return {n:S.swN,day:S.swDay,can:S.canOut};},
     visit:async()=>{ if(busy) return false; busy=true; renderButtons(); S.oji={sy:Math.floor((S.day-1)/SEASON_DAYS),day:S.day,at:S.clock,done:false}; await visitScene(); busy=false; renderButtons(); return true; },
     force:async id=>{ if(busy) return false; busy=true; renderButtons(); S.sinceEvent=9; const r=await maybeEvent(false,id); await checkUnlocks(); busy=false; renderButtons(); return r; } };
 }
