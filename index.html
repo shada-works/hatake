@@ -315,7 +315,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 @keyframes sniffDown{0%,100%{transform:translateY(0) rotate(0)}25%,75%{transform:translateY(7%) rotate(-5deg)}}
 #actors .actor.shada.gest-sniff .face .nose{transform-box:fill-box;transform-origin:center;animation:noseWiggle .22s ease-in-out 4}
 @keyframes noseWiggle{0%,100%{transform:scale(1)}50%{transform:scale(1.25,.85)}}
-#actors .actor.shada .face .tail{display:none;transform-box:fill-box;transform-origin:0% 100%}
+.face .tail{display:none;transform-box:fill-box;transform-origin:0% 100%}   /* v1.73.2：顔の しっぽは どこでも かくす（前は #actors だけ だったので、おうちの コマと 小さな 顔では 顔の 横に 出ていた＝体の しっぽと 2本） */
 #actors .actor.shada.gest-wag .face .tail{display:inline;animation:tailWag .2s ease-in-out 6 alternate}
 @keyframes tailWag{0%{transform:rotate(-18deg)}100%{transform:rotate(20deg)}}
 #actors .actor.shada.gest-sit .bob{animation:sitDown 1.3s ease-in-out 1}
@@ -1430,7 +1430,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
   <circle cx="50" cy="95" r="4.6" fill="#e2b144" stroke="#b98a2b" stroke-width="1.2"/>
   <g class="earL"><path d="M18.5 37 L15 16 Q14.8 11 19.6 12.6 L39 19.5Z" fill="#fffefb" stroke="#d3cabd" stroke-width="2.6" stroke-linejoin="round"/><path d="M20.5 30 L18.6 16.6 L31.5 21.6Z" fill="#d9947d"/></g>   <!-- v1.73.0：.earL/.earR＝耳（風の 日に 左へ ぱたぱた） -->
   <g class="earR"><path d="M81.5 37 L85 16 Q85.2 11 80.4 12.6 L61 19.5Z" fill="#fffefb" stroke="#d3cabd" stroke-width="2.6" stroke-linejoin="round"/><path d="M79.5 30 L81.4 16.6 L68.5 21.6Z" fill="#d9947d"/></g>
-  <g class="tail"><path d="M80 73 Q98 70 95 53" fill="none" stroke="#d3cabd" stroke-width="10.4" stroke-linecap="round"/><path d="M80 73 Q98 70 95 53" fill="none" stroke="#fffefb" stroke-width="7.4" stroke-linecap="round"/></g>   <!-- v1.69.0：しっぽ（顔の うしろ。gest-wag の あいだだけ 見える） -->
+  <g class="tail"><path d="M80 73 Q98 70 95 53" fill="none" stroke="#d3cabd" stroke-width="10.4" stroke-linecap="round"/><path d="M80 73 Q98 70 95 53" fill="none" stroke="#fffefb" stroke-width="7.4" stroke-linecap="round"/></g>   <!-- v1.69.0：しっぽ（顔の うしろ。畑の gest-wag の あいだだけ 見える。v1.73.2：おうち・小さな 顔では かくす＝.face .tail） -->
   <path d="M12 52 C12 31 28 15.3 50 15.3 C72 15.3 88 31 88 52 C88 73 72 88 50 88 C28 88 12 73 12 52Z" fill="#fffefb" stroke="#d3cabd" stroke-width="2.6" stroke-linejoin="round"/>
   <ellipse cx="33" cy="40.5" rx="5.6" ry="3.6" transform="rotate(-14 33 40.5)" fill="#aa8778"/>
   <ellipse cx="67" cy="40.5" rx="5.6" ry="3.6" transform="rotate(14 67 40.5)" fill="#aa8778"/>
@@ -1549,7 +1549,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.1</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.2</span></span>
   </div>
 
   <div class="hud">
