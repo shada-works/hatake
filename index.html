@@ -527,6 +527,10 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 /* v1.73.5：話している 人が 画面の 外（か はしの すぐ そば）の とき（畑の clampView）。吹き出しは 画面の はしに 寄せ、しっぽは 吹き出しの はし（その人の いる 向き） */
 .bubble.farL::after{left:6px;right:auto}
 .bubble.farR::after{right:6px;left:auto}
+/* v1.73.6（依頼者「セリフの端にちいさな顔を入れて、誰の言葉かわかるように」）：far の 吹き出しには 話す 人の 小さな 顔（.who＝makeFace。clampView が 足す）を しっぽの がわの はしに。表情・目線は .actor の data-mood・--ex/--ey から 同じに なる */
+.bubble.farL{padding-left:34px}.bubble.farR{padding-right:34px}
+.bubble .who{position:absolute;top:50%;width:24px;height:24px;margin-top:-12px;pointer-events:none}
+.bubble.farL .who{left:6px}.bubble.farR .who{right:6px}
 /* v1.64.2：横に出す形（side）。相手の 顔が 頭の上に あって、上に 出すと かくれるとき（layoutBubbles）。顔の よこ・頭の高さに 出し、しっぽは 横向き */
 .bubble.side{bottom:-18%;max-width:min(150px,40vw)}   /* 横は 少し せまく（画面に 入りやすいように。行は ふえる）。下は 足もとより 少し 下まで（うしろの人の 顔に かからないように） */
 .bubble.side.toL{right:104%;left:auto}.bubble.side.toR{left:104%;right:auto}
@@ -1552,7 +1556,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.5</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.6</span></span>
   </div>
 
   <div class="hud">
@@ -3608,14 +3612,14 @@ function say(who,text,ms,mood,keep){
   a.bubT=setTimeout(()=>b.classList.remove('on'), ms || (1900+text.length*95));
   a.lineUntil=gnow()+readMs(text); a.lineAt=gnow();   /* v1.71.0：言いおわる 時刻。v1.73.4：出た 時刻（eriLineDone が 見る） */
 }
-/* v1.73.5（依頼者「畑では しゃだはる君が 動きまわるので、彼の セリフが 見切れてしまう。ふたりの 距離が 離れている ときも、ふたりの セリフだけは ひとつの 画面に 収まるように」）：
+/* v1.73.5（依頼者「畑では しゃだはる君が 動きまわるので、彼の セリフが 見切れてしまう。ふたりの 距離が 離れている ときも、ふたりの セリフだけは ひとつの 画面に 収まるように」。v1.73.6「セリフの端にちいさな顔を入れて、誰の言葉かわかるように」）：
    畑の 吹き出し（上に 出す 形）を 画面の 中に 入るように 横へ ずらす（--bs。しっぽは 話している 人の 上に 残す＝ずらしは しっぽが 吹き出しの 中に 残る ぶんまで）。
    それでも 入らない（話している 人が 画面の はしの すぐ そば か 外）ときは、吹き出しを 画面の はしに 寄せ、しっぽは 吹き出しの はし（その人の いる 向き）に＝farL／farR。
    しゃだはる君の しるし（peek。画面の はしの 丸い 札）が 同じ がわに 出ていれば、その 内がわに。カメラは 動かさない（タップ中の 畑が ずれないように）。
    say の とき と 0.1秒ごとの 置きなおし（layoutBubbles の set／ほまれくん・おじさんは じかに）で 呼ぶ＝カメラが 動いても・歩いても ついてくる。横に 出す 形（side）と みんなの 吹き出し（chorus）は そのまま */
 function clampView(a){
   const b=a.bub; if(!b || !b.classList.contains('on') || b.classList.contains('side') || b.classList.contains('chorus')) return;
-  b.style.setProperty('--bs','0px'); b.classList.remove('farL','farR');
+  b.style.setProperty('--bs','0px'); b.classList.remove('farL','farR'); { const f=b.querySelector('.who'); if(f) f.remove(); }   /* v1.73.6：はかる 前に 顔を 外す（far なら あとで つけなおす） */
   const wr=world.getBoundingClientRect(), r=b.getBoundingClientRect(); if(!r.width) return;
   const l=scroller.scrollLeft, vw=scroller.clientWidth, bl=r.left-wr.left, br=r.right-wr.left, w=br-bl;
   if(w>=vw-8) return;
@@ -3625,7 +3629,13 @@ function clampView(a){
   if(!d) return;
   const toL=b.classList.contains('toL'), lim=Math.max(0,w-30);   /* しっぽ（右・左 12px＋10px）が 吹き出しの 中に 残る ずらしの 上限 */
   const lo=toL?-10:-lim, hi=toL?lim:10;
-  if(d<lo || d>hi) b.classList.add(d>0?'farL':'farR');   /* しっぽを 話す 人の 上に 残せない＝その人は 画面の はし／外 → しっぽは 吹き出しの はし */
+  if(d<lo || d>hi){   /* しっぽを 話す 人の 上に 残せない＝その人は 画面の はし／外 → しっぽは 吹き出しの はし。v1.73.6：小さな 顔を 足して（幅が ふえる）はかりなおす */
+    b.classList.add(d>0?'farL':'farR');
+    if(!a.whoEl){ a.whoEl=document.createElement('i'); a.whoEl.className='who'; a.whoEl.appendChild(makeFace(a.who)); }   /* 1回 作って 使いまわす（say の innerHTML で 外れるので、そのたびに つけなおす） */
+    b.appendChild(a.whoEl);
+    const r2=b.getBoundingClientRect(), bl2=r2.left-wr.left, br2=r2.right-wr.left;
+    d=0; if(bl2<minL) d=minL-bl2; else if(br2>maxR) d=maxR-br2;
+  }
   b.style.setProperty('--bs',Math.round(d)+'px');
 }
 /* v1.54.2（依頼者「花火のとき、ほまれくんの台詞が しゃだはる君の顔を かくしている」）：外の吹き出しが、ほかの人の顔に かかるときは、その顔より上まで 持ち上げる。
@@ -8815,7 +8825,7 @@ async function hwalkPath(a,pts,opt){
     a.legIdx=i;   /* v1.64.2 */
     const q=pts[i], y0=a.y, last=i===pts.length-1, legMs=Math.max(last?120:60,Math.round(ms*lens[i]/tot));
     const tf=pts.length===1?'ease-in-out':i===0?'ease-in':last?'ease-out':'linear';   /* v1.64.0：まわり道の とちゅうは 等速 */
-    if(last){ const done=moveTo(a,q,Object.assign({},opt||{},{ms:pts.length>1?legMs:((opt&&opt.ms)||0),direct:true,tf})); hzTrack(a,y0,q.y,pts.length>1?legMs:((opt&&opt.ms)||homeMs(lens[i]))); await done; }
+    if(last){ const done=moveTo(a,q,Object.assign({},opt||{},{ms:legMs,direct:true,tf})); hzTrack(a,y0,q.y,legMs); await done; }   /* v1.73.6（依頼者「おうち全体はゆっくりにそろえてみます」）：まっすぐ（道が 1つ）の ときも legMs（＝homeMs 1px 4.2ms・最短 0.25秒、か opt.ms）。前は ms 0 を 渡していたので moveTo の stepMs（畑の 1px 3.0ms・0.34〜1.9秒）に なっていた（v1.64.4 からの 取りこぼし。まわり道だけ 4.2 だった） */
     else{
       a.moveId++; a.el.style.setProperty('--lean',(q.x>=a.x?5:-5)+'deg'); if(!(opt&&opt.slide)) a.el.classList.add('walking');
       place(a,q.x,q.y,legMs,tf); hzTrack(a,y0,q.y,legMs);
@@ -8986,8 +8996,8 @@ function hchorus(list,text,ms){
 }
 /* みんなで歩きだす前に、もう読めた吹き出し（1.2秒たったもの）はしまう。歩く人の顔の上を、ほかの人の吹き出しが横ぎらないように（v1.11.0） */
 function hwalkAll(list){ const now=Date.now(); Object.values(HA).forEach(x=>{ if(x.bub.classList.contains('on') && now-(x.bubAt||0)>=1200) hbubOff(x); }); return Promise.all(list.map(([a,spot,opt])=>hmove(a,spot,opt))); }   /* v1.73.5：3つめに opt（料理を 運ぶ えりちゃんは ゆっくり） */
-/* v1.73.5（依頼者「えりちゃんがお料理を運ぶ時のスピードを、もうすこし落として ゆっくり運ぶように」）：料理・デザート・お茶を 両手で 持って 食卓へ 運ぶ 歩きは 1px 5.5ms（まっすぐの 歩きは stepMs＝1px 3.0ms だったので 約1.8倍 ゆっくり。まわり道も 同じ 速さ＝hwalkPath が 道のりで のばす） */
-const CARRY_PX=5.5;
+/* v1.73.5（依頼者「えりちゃんがお料理を運ぶ時のスピードを、もうすこし落として ゆっくり運ぶように」）：料理・デザート・お茶を 両手で 持って 食卓へ 運ぶ 歩きは 1px 6.5ms（v1.73.6。ふだん 4.2 の 1.55倍 ゆっくり。まわり道も 同じ 速さ＝hwalkPath が 道のりで のばす） */
+const CARRY_PX=6.5;   /* v1.73.6：ふだんの 歩きが 4.2 に そろったので 6.5（1.55倍 ゆっくり。v1.73.5 は 5.5＝ふだんが 3.0 の ときの 値） */
 const carryMs=(a,spot)=>Math.round(Math.max(HOME_MIN,Math.hypot(spot.x-a.x,spot.y-a.y)*CARRY_PX));
 function hcarry(a,spot){ return hmove(a,spot,{ms:carryMs(a,spot)}); }
 function hfx(id,pos,cls,ms){
@@ -10301,7 +10311,7 @@ async function homeEvening(cands){
     }
     hhold(E,[DISH.icon(shown)],'carry');   /* v1.66.0：できあがった 料理を 両手で 食卓へ 運ぶ（前は 食卓に ぱっと 出ていた）。もう一品・ほまれくんの 一品は これまでどおり 食卓に 出る */
     await hp(250);
-    await hwalkAll([[E,HSPOT.tableEri,{ms:carryMs(E,HSPOT.tableEri)}],[D,HSPOT.tableShada],[H,HSPOT.tableHomare]]);   /* v1.73.5：料理を 持った えりちゃんは ゆっくり（1px 5.5ms） */
+    await hwalkAll([[E,HSPOT.tableEri,{ms:carryMs(E,HSPOT.tableEri)}],[D,HSPOT.tableShada],[H,HSPOT.tableHomare]]);   /* v1.73.5：料理を 持った えりちゃんは ゆっくり（1px 6.5ms） */
     hhold(E,null);
     if(decorShown('clock') && !cuckooTonight && !lapTonight('clock')) cuckoo();   /* v1.54.0：はと時計の しゅうりの夜は 鳴らない（こわれている／とまっている） */   /* v1.32.0：食卓につくと、はと時計が「ぽっぽー」（その夜「はと時計を待つ」が出ていれば、もう鳴らさない） */
     $('#g-setting').style.display=''; riceShow(true);
