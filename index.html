@@ -267,6 +267,12 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 
 /* 顔だけキャラ */
 .actors{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:30}
+/* v1.73.9（依頼者「台詞はどんな時も一番表に来るように」）：畑の 吹き出しの 層。人の コマ（#actors）とは 別に、世界の いちばん 上（z800）。
+   吹き出しは 人の コマと 同じ 大きさ・同じ 動き（transform）を する 影（.actor.ghost。makeActor が 作り、place が 動かす）の 中に 入れる＝かご・野菜・演出・手前の 人の 顔に かくれない */
+.bubbles{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:800}
+#bubbles .actor{pointer-events:none;cursor:default}
+#bubbles .actor.oji{--tok:58px}
+#bubbles .actor.homare:not(.on),#bubbles .actor.oji:not(.on){display:none}
 .actor{
   position:absolute;left:0;top:0;width:var(--tok);height:var(--tok);
   margin:calc(var(--tok)/-2) 0 0 calc(var(--tok)/-2);
@@ -294,8 +300,8 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 [data-mood="happy"] .face .happy{display:inline}
 /* えりちゃんの帽子：畑に出るときだけ（夏＝小さな麦わら帽子、冬＝小さなニット帽）。おうちの中や、にっきの顔にはかぶせない */
 .face .hat{display:none}
-#game[data-season="1"] #actors .actor.eri .hat-summer,#game[data-season="3"] #actors .actor.eri .hat-winter{display:inline}
-#game[data-season="1"] #actors .actor.eri .bubble,#game[data-season="3"] #actors .actor.eri .bubble{bottom:122%}
+#game[data-season="1"] #actors .actor.eri .hat-summer,#game[data-season="3"] #actors .actor.eri .hat-winter,#game[data-season="1"] #bubbles .actor.eri .hat-summer,#game[data-season="3"] #bubbles .actor.eri .hat-winter{display:inline}   /* v1.73.9：far の 吹き出しの 小さな 顔（#bubbles）にも 帽子 */
+#game[data-season="1"] #bubbles .actor.eri .bubble:not(.side):not(.below),#game[data-season="3"] #bubbles .actor.eri .bubble:not(.side):not(.below){bottom:122%}   /* v1.73.9：吹き出しは #bubbles。上に 出す 形だけ（前は 横の 形（side）にも かかって、夏と 冬は 横の 形が 頭の 上の 高さに 出ていた＝横の 形が 使えず 持ち上げに なっていた） */
 /* にっこり（smile）は、えりちゃんだけの表情。目を細めて、口は閉じたまま大きく笑う */
 [data-face="eri"][data-mood="smile"] .face .normal{display:none}
 [data-face="eri"][data-mood="smile"] .face .smile{display:inline}
@@ -309,7 +315,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 .actor.walking .shadow{animation:hopShadow .25s ease-in-out infinite}
 .actor.working .bob{animation:work .42s ease-in-out 1}
 /* v1.69.0（ロードマップ 畑②「しゃだはる君と 目線」）：目線＝ひとみ（.pupil）を --ex/--ey だけ ずらす（SVG の 単位。顔 100 に 対して 3〜4）。畑の コマだけ（#actors） */
-#actors .actor .eyes-open .pupil{transform:translate(var(--ex,0px),var(--ey,0px));transition:transform .22s ease-out}
+#actors .actor .eyes-open .pupil,#bubbles .actor .eyes-open .pupil{transform:translate(var(--ex,0px),var(--ey,0px));transition:transform .22s ease-out}   /* v1.73.9：far の 吹き出しの 小さな 顔にも */
 /* v1.69.0：しゃだはる君の 待ちしぐさ（gest-〜。shadaGesture）。sniff＝顔を 下げて 鼻を ひくひく／wag＝しっぽ（ふだんは 見えない）が 顔の 右下から 出て ふる／sit＝少し 低く どっしり／lookup＝空を 見上げる／yawn＝目を とじて 口を あける */
 #actors .actor.shada.gest-sniff .bob{animation:sniffDown 1s ease-in-out 1}
 @keyframes sniffDown{0%,100%{transform:translateY(0) rotate(0)}25%,75%{transform:translateY(7%) rotate(-5deg)}}
@@ -538,6 +544,10 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 .bubble.side::after{bottom:26px}   /* しっぽは 頭の高さ */
 .bubble.side.toL::after{right:-6px;left:auto;transform:rotate(-45deg)}
 .bubble.side.toR::after{left:-6px;right:auto;transform:rotate(135deg)}
+/* v1.73.9（依頼者「2行以上の台詞の上に もうひとりの台詞が来る場合に、ひとりの台詞を下側に出す」）：下に 出す 形（below）。足もとの 下に 出し、しっぽは 上向き（あごの 下）。
+   横の 置きかた（toL/toR・--bs の ずらし）は 上の 形と 同じ。吹き出しどうしが かさなる とき、持ち上げる 前に 新しい ことばを この 形に（layoutBubbles） */
+.bubble.below{top:108%;bottom:auto}
+.bubble.below::after{bottom:auto;top:-6px;transform:rotate(225deg)}
 /* 3人そろって言うセリフ（ごちそうさまでした。）の、ひとつにまとめた吹き出し。しっぽ（i）は人数ぶん（v1.18.0） */
 .bubble.chorus{left:0;top:0;bottom:auto;z-index:520;text-align:center}
 .bubble.chorus::after{display:none}
@@ -974,7 +984,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 .vp.locked .scroller{overflow-x:hidden;touch-action:none}   /* v1.53.1（依頼者の希望）：外の場面のあいだは、指で畑を動かさない（カメラは 場面が動かす。sceneLock） */
 .vp.locked .pan{display:none}
 #game .vp.night #actors .actor.eri .hat-summer,#game .vp.night #actors .actor.eri .hat-winter{display:none}
-#game .vp.night #actors .actor.eri .bubble{bottom:112%}
+#game .vp.night #bubbles .actor.eri .bubble:not(.side):not(.below){bottom:112%}   /* v1.73.9：#bubbles・上に 出す 形だけ */
 #nightVeil{position:absolute;left:0;top:0;width:100%;height:100%;z-index:28;pointer-events:none;background-color:rgba(14,22,60,.6);display:none;transition:background-color .25s}
 #nightSky{position:absolute;left:0;top:0;width:100%;height:200px;z-index:29;pointer-events:none;display:none}
 #nightWin{position:absolute;left:24px;top:58px;z-index:29;pointer-events:none;overflow:visible;display:none}
@@ -1557,7 +1567,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.8</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.9</span></span>
   </div>
 
   <div class="hud">
@@ -1704,6 +1714,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
         <svg id="nightWin" width="196" height="240" viewBox="0 0 196 240" aria-hidden="true"><defs><radialGradient id="nwG"><stop offset="0" stop-color="#ffe08a" stop-opacity=".5"/><stop offset="1" stop-color="#ffe08a" stop-opacity="0"/></radialGradient></defs><ellipse cx="145" cy="119" rx="40" ry="34" fill="url(#nwG)"/><rect x="128" y="104" width="34" height="30" rx="4" fill="#ffe08a" stroke="#c9b27a" stroke-width="2"/><path d="M145 104 V134 M128 119 H162" stroke="#c9b27a" stroke-width="2"/><ellipse cx="146" cy="196" rx="46" ry="12" fill="url(#nwG)" opacity=".55"/></svg>
         <div id="plots"></div>
         <div id="actors" class="actors"></div>
+        <div id="bubbles" class="bubbles" aria-hidden="true"></div>   <!-- v1.73.9：畑の 吹き出し（いちばん 上の 層） -->
       </div>
     </div>
     <div class="seasonFx" aria-hidden="true"></div>
@@ -2448,7 +2459,7 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const icon=(id,cls)=>'<svg class="'+(cls||'')+'" aria-hidden="true"><use href="#'+id+'"/></svg>';
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-const vp=$('#vp'), scroller=$('#scroller'), world=$('#world'), far=$('#far'), layer=$('#actors'), plotsBox=$('#plots');
+const vp=$('#vp'), scroller=$('#scroller'), world=$('#world'), far=$('#far'), layer=$('#actors'), plotsBox=$('#plots'), bubLayer=$('#bubbles');   /* v1.73.9：bubLayer＝吹き出しの 層 */
 const tint=$('#tint'), weatherEl=$('#weather'), peek=$('#peek'), sheet=$('#sheet'), sheetCard=$('#sheetCard');
 const logText=$('#logText'), restBtn=$('#restBtn'), endBtn=$('#endBtn'), diaryBtn=$('#diaryBtn');
 const basketFront=$('#basketFront');
@@ -3299,7 +3310,12 @@ function makeActor(who,parent){
   e.querySelector('.bob').appendChild(makeFace(who));
   if(who==='eri' || parent) e.setAttribute('aria-hidden','true');
   (parent||layer).appendChild(e);
-  return {who, el:e, bub:e.querySelector('.bubble'), x:0, y:0, moveId:0, bubT:0, mode:'follow', napUntil:0, watchPlot:null};
+  const bub=e.querySelector('.bubble'); let ghost=null;
+  if(!parent){   /* v1.73.9：畑の 吹き出しは、コマと 同じ 動きを する 影（#bubbles の 中＝いちばん 上の 層）に 入れる。おうち（parent あり）は そのまま */
+    ghost=document.createElement('div'); ghost.className='actor ghost '+who; ghost.dataset.face=who; ghost.dataset.mood='normal'; ghost.setAttribute('aria-hidden','true');
+    ghost.appendChild(bub); bubLayer.appendChild(ghost);
+  }
+  return {who, el:e, bub, ghost, x:0, y:0, moveId:0, bubT:0, mode:'follow', napUntil:0, watchPlot:null};
 }
 const A={ eri:makeActor('eri'), shada:makeActor('shada') };
 A.shada.el.querySelector('.bob').insertAdjacentHTML('beforeend','<div class="carry">'+icon('i-stone')+'</div><div class="can">'+icon('i-can')+'</div>');   /* v1.40.0：.can＝じょうろ（顔の右） */
@@ -3313,13 +3329,16 @@ A.oji.el.querySelector('.bob').insertAdjacentHTML('beforeend','<div class="carry
 A.shada.el.setAttribute('role','button');
 A.shada.el.setAttribute('tabindex','0');
 A.shada.el.setAttribute('aria-label','しゃだはるをなでる');
+/* v1.73.9：ほまれくん・おじさんの 出入り（.on）と 読みこみ中の visibility を、吹き出しの 影にも 写す（コマが 消えたら 吹き出しも 消える） */
+new MutationObserver(ms=>{ ms.forEach(m=>{ const el=m.target; if(!el.classList || !el.classList.contains('actor')) return; const a=[A.eri,A.shada,A.homare,A.oji].find(x=>x && x.el===el); if(!a || !a.ghost) return; a.ghost.classList.toggle('on',el.classList.contains('on')); if(a.ghost.style.visibility!==el.style.visibility) a.ghost.style.visibility=el.style.visibility; }); }).observe(layer,{attributes:true,subtree:true,attributeFilter:['class','style']});
 document.querySelectorAll('.mini[data-face]').forEach(m=>{ m.dataset.mood='normal'; m.appendChild(makeFace(m.dataset.face)); });
 
 const moodT={};
 function setMood(who,mood,ms){
   clearTimeout(moodT[who]);
-  A[who].el.dataset.mood=mood;
-  if(ms) moodT[who]=setTimeout(()=>{ A[who].el.dataset.mood = (who==='shada'&&A.shada.mode==='nap')?'sleepy':(who==='shada'&&A.shada.mode==='hide')?'scared':'normal'; },ms);
+  const a=A[who], put=m=>{ a.el.dataset.mood=m; if(a.ghost) a.ghost.dataset.mood=m; };   /* v1.73.9：吹き出しの 影にも（far の 小さな 顔の 表情） */
+  put(mood);
+  if(ms) moodT[who]=setTimeout(()=>{ put((who==='shada'&&A.shada.mode==='nap')?'sleepy':(who==='shada'&&A.shada.mode==='hide')?'scared':'normal'); },ms);
 }
 /* しゃだはる君のようす：follow＝ついてくる／nap＝昼寝／watch＝見張り／errand＝おつかい中／hide＝雷がこわくて家に避難中 */
 /* v1.69.0（ロードマップ 畑②）：しゃだはる君の 待ちしぐさ。shadaGesture(kind)＝くんくん sniff／しっぽ wag／おすわり sit／空を 見上げる lookup／あくび yawn（kind が なければ くじ。同じものを 続けて 出さない）。
@@ -3469,16 +3488,17 @@ function openNagomi(){
 const WALK_PX=3.0, WALK_MIN=340, WALK_MAX=1900;
 const stepMs=(dist,minMs,maxMs)=>Math.round(clamp(dist*WALK_PX,minMs||WALK_MIN,maxMs||WALK_MAX));
 /* v1.69.0（ロードマップ 畑②）：目線。gaze(a,ex,ey,ms)＝ひとみを (ex,ey) ずらす（ms の あと もどす）／gazeAt(a,p,ms,ey)＝p の ほうへ（ey を 与えれば 上下は それ）／gazeClear */
-function gaze(a,ex,ey,ms){ if(!a||!a.el) return; clearTimeout(a.gazeT); a.gazeT=0; a.el.style.setProperty('--ex',(ex||0)+'px'); a.el.style.setProperty('--ey',(ey||0)+'px'); if(ms) a.gazeT=setTimeout(()=>gazeClear(a),ms); }
-function gazeClear(a){ if(!a||!a.el) return; clearTimeout(a.gazeT); a.gazeT=0; a.el.style.setProperty('--ex','0px'); a.el.style.setProperty('--ey','0px'); }
+function gaze(a,ex,ey,ms){ if(!a||!a.el) return; clearTimeout(a.gazeT); a.gazeT=0; [a.el,a.ghost].forEach(el=>{ if(!el) return; el.style.setProperty('--ex',(ex||0)+'px'); el.style.setProperty('--ey',(ey||0)+'px'); }); if(ms) a.gazeT=setTimeout(()=>gazeClear(a),ms); }   /* v1.73.9：影（far の 小さな 顔）にも */
+function gazeClear(a){ if(!a||!a.el) return; clearTimeout(a.gazeT); a.gazeT=0; [a.el,a.ghost].forEach(el=>{ if(!el) return; el.style.setProperty('--ex','0px'); el.style.setProperty('--ey','0px'); }); }
 function gazeAt(a,p,ms,ey){ if(!a||!p) return; const dx=p.x-a.x, dy=p.y-a.y, d=Math.hypot(dx,dy)||1; gaze(a, 3.6*dx/d, ey!=null?ey:2.6*dy/d, ms); }
 function near2(a,b,r){ return !!(a&&b&&Math.hypot(a.x-b.x,a.y-b.y)<=r); }
 function place(a,x,y,ms,tf){
   a.x=x; a.y=y;
-  a.el.style.transitionDuration=(ms||0)+'ms';
-  a.el.style.transitionTimingFunction=ms?(tf||'ease-in-out'):'';   /* v1.64.0 */
-  a.el.style.transform='translate('+x+'px,'+y+'px)';
-  a.el.style.zIndex=Math.max(1,Math.round(y));
+  [a.el.style, a.ghost?a.ghost.style:null].forEach(st=>{ if(!st) return;   /* v1.73.9：吹き出しの 影（#bubbles）も 同じ 動き（同じ transition を 同時に 始めるので ついてくる） */
+    st.transitionDuration=(ms||0)+'ms';
+    st.transitionTimingFunction=ms?(tf||'ease-in-out'):'';   /* v1.64.0 */
+    st.transform='translate('+x+'px,'+y+'px)';
+    st.zIndex=Math.max(1,Math.round(y)); });
 }
 /* v1.64.0（依頼者「えりちゃんと しゃだはる君の動線が、お互いに衝突しないように」）：ふたりの よけ道と 待ち。
    相手の ようすで 3とおり（detourPlan。a.goal＝歩く先・a.from＝歩きだした場所。歩く前に goal を 決めておくと 相手に 伝わる）：
@@ -3602,16 +3622,17 @@ function say(who,text,ms,mood,keep){
   const sx=a.x-scroller.scrollLeft, vw=scroller.clientWidth, need=Math.min(190,vw*.48)+8;
   if(dir==='toL' && sx<need && vw-sx>sx) dir='toR';
   if(dir==='toR' && vw-sx<need && sx>vw-sx) dir='toL';
-  b.classList.remove('toL','toR','side','farL','farR'); b.style.setProperty('--bs','0px');   /* v1.64.2：side。v1.73.5：farL/farR */
+  b.classList.remove('toL','toR','side','below','farL','farR'); b.style.setProperty('--bs','0px');   /* v1.64.2：side。v1.73.5：farL/farR。v1.73.9：below（新しい ことばは 上の 形から。かさなれば layoutBubbles が 下に） */
   b.classList.add(dir);
   b.classList.add('on');
   breath(a,text);   /* v1.73.0：冬は 白い 息 */
   b.style.bottom=''; a.bubLowT=0;   /* v1.73.8：新しい ことばは 頭の 上から（えり・しゃだも。持ち上げを もどす 待ち（bubLowT）も 消す） */
+  a.lineAt=gnow();   /* v1.73.9：出た 時刻は 置く 前に（layoutBubbles が「新しい ことば」を 見分ける。前は あとで 入れていた） */
   layoutBubbles(A.eri,A.shada,world,1);
   [A.homare,A.oji].forEach(x=>{ if(x) clampView(x); });   /* v1.73.5：ほまれくん・おじさんの 吹き出しも 画面の 中に（えり・しゃだは layoutBubbles の set の 中で） */
   if([A.homare,A.oji].some(x=>x && x.el.classList.contains('on'))) [A.eri,A.shada,A.homare,A.oji].forEach(x=>{ if(x) liftOffFaces(x); });   /* v1.54.2：ほまれくん・おじさんが いるときだけ（えりちゃんと しゃだはる君だけのときは layoutBubbles で たりる） */
   a.bubT=setTimeout(()=>b.classList.remove('on'), ms || (1900+text.length*95));
-  a.lineUntil=gnow()+readMs(text); a.lineAt=gnow();   /* v1.71.0：言いおわる 時刻。v1.73.4：出た 時刻（eriLineDone が 見る） */
+  a.lineUntil=gnow()+readMs(text);   /* v1.71.0：言いおわる 時刻。v1.73.4：出た 時刻 lineAt（eriLineDone が 見る）は v1.73.9 から 上で */
 }
 /* v1.73.5（依頼者「畑では しゃだはる君が 動きまわるので、彼の セリフが 見切れてしまう。ふたりの 距離が 離れている ときも、ふたりの セリフだけは ひとつの 画面に 収まるように」。v1.73.6「セリフの端にちいさな顔を入れて、誰の言葉かわかるように」）：
    畑の 吹き出し（上に 出す 形）を 画面の 中に 入るように 横へ ずらす（--bs。しっぽは 話している 人の 上に 残す＝ずらしは しっぽが 吹き出しの 中に 残る ぶんまで）。
@@ -3632,7 +3653,7 @@ function clampView(a){
   const toL=b.classList.contains('toL'), lim=Math.max(0,w-30);   /* しっぽ（右・左 12px＋10px）が 吹き出しの 中に 残る ずらしの 上限 */
   const lo=toL?-10:-lim, hi=toL?lim:10;
   if(d<lo || d>hi){   /* しっぽを 話す 人の 上に 残せない＝その人は 画面の はし／外 → far。v1.73.6：小さな 顔を 足して（幅が ふえる）はかりなおす */
-    b.classList.add(d>0?'farL':'farR');
+    b.classList.add(d>0?'farL':'farR'); b.classList.remove('below');   /* v1.73.9：帯に 置くので 下の 形は やめる */
     if(!a.whoEl){ a.whoEl=document.createElement('i'); a.whoEl.className='who'; a.whoEl.appendChild(makeFace(a.who)); }   /* 1回 作って 使いまわす（say の innerHTML で 外れるので、そのたびに つけなおす） */
     b.appendChild(a.whoEl);
     /* v1.73.7（依頼者「吹き出しが 動線と ぶつかる」）：画面の 上の 帯に。下の 辺は BAND_Y（いちばん 上の マスの 列の 顔より 上）か、画面に 見えている ほかの 人（いまの 場所と 行き先）の 頭より 10px 上の、低い ほう。画面の 上からは はみ出さない。
@@ -3650,7 +3671,7 @@ const BAND_Y=152;   /* v1.73.7：far の 吹き出しの 下の 辺（world の 
 /* v1.54.2（依頼者「花火のとき、ほまれくんの台詞が しゃだはる君の顔を かくしている」）：外の吹き出しが、ほかの人の顔に かかるときは、その顔より上まで 持ち上げる。
    だれの吹き出しでも・だれの顔でも（えりちゃんと しゃだはる君の 吹き出しどうしは layoutBubbles）。顔の ふちに 少し かかるくらいは そのまま */
 function liftOffFaces(a){
-  const b=a.bub; if(!b || !b.classList.contains('on')) return;
+  const b=a.bub; if(!b || !b.classList.contains('on') || b.classList.contains('below')) return;   /* v1.73.9：下の 形は 持ち上げない（置く ときに みんなの 顔を 見ている） */
   const br=b.getBoundingClientRect(); if(!br.width) return;
   let top=null;
   [A.eri,A.shada,A.homare,A.oji].forEach(o=>{
@@ -3670,6 +3691,9 @@ function liftOffFaces(a){
    ・どれも だめなら 持ち上げる（前からの 作り。しっぽが 相手の 頭を さすことが あるので さいご）
    ・場所は 画面に 見えている 場所（getBoundingClientRect）で はかる＝歩いている とちゅうも 正しい。0.1秒ごとに 置きなおす（下の setInterval）ので、相手が 吹き出しの下に 歩いてきても かくれない */
 const LOWER_WAIT=600;   /* v1.73.8：持ち上げた 吹き出しを 頭の 上に もどすのは、よけなくて よくなってから 0.6秒 たってから */
+/* v1.73.9（依頼者「2行以上の台詞の上に もうひとりの台詞が来る場合に、ひとりの台詞を下側に出す」「体から台詞が離れすぎて、分かりにくい」）：下に 出す 形（below＝足もとの 下・しっぽは 上向き）。
+   吹き出しどうしが かさなる とき、持ち上げる 前に、新しい ことば（だめなら 古い ことば）を 下の 形に。相手の 顔に かぶる・画面に 入らない・それでも かさなる ときだけ 持ち上げ（前からの 作り）。
+   下の 形は ほまれくん・おじさんの 顔も 見て 決める（liftOffFaces で よけられないので）。いまの 形が まだ よければ そのまま（v1.73.8）＝新しい ことばは 上から 始まり、かさなれば 下へ。形の 名前：top／side／below（far は top の まま 帯に） */
 function layoutBubbles(e,s,box,scale){
   const wr=box.getBoundingClientRect(), k=scale||1;
   const R=el=>{ const r=el.getBoundingClientRect(); return {l:(r.left-wr.left)/k,t:(r.top-wr.top)/k,r:(r.right-wr.left)/k,b:(r.bottom-wr.top)/k}; };
@@ -3677,42 +3701,53 @@ function layoutBubbles(e,s,box,scale){
   const hit=(p,q)=>p.l<q.r+6 && q.l<p.r+6 && p.t<q.b+6 && q.t<p.b+6;
   const on=a=>a.bub.classList.contains('on');
   const face=o=>{ const r=R(o.el), m=(r.r-r.l)*.12; return {l:r.l+m,r:r.r-m,t:r.t+m,b:r.b-m*1.5}; };   /* 顔の ふちに 少し かかるくらいは かまわない（下は あごの下の 余白ぶん 広め） */
-  const covers=(a,o)=>{ const bb=BUB(a), f=face(o); return Math.min(bb.r,f.r)-Math.max(bb.l,f.l)>0 && Math.min(bb.b,f.b)-Math.max(bb.t,f.t)>0; };
-  const fits=a=>{ const r=R(a.bub), l=scroller.scrollLeft, vw=scroller.clientWidth; return r.l>=l+2 && r.r<=l+vw-2 && r.t>=0; };
-  const set=(a,dir,side)=>{ a.bub.classList.remove('toL','toR','side','farL','farR'); a.bub.classList.add(dir); if(side) a.bub.classList.add('side'); a.bub.style.setProperty('--bs','0px'); if(!side) clampView(a); };   /* v1.73.5：上に 出す 形は 画面の 中に ずらしてから はかる */
+  const ovl=(bb,f)=>Math.min(bb.r,f.r)-Math.max(bb.l,f.l)>0 && Math.min(bb.b,f.b)-Math.max(bb.t,f.t)>0;
+  const covers=(a,o)=>ovl(BUB(a),face(o));
+  const coversAny=a=>{ const bb=BUB(a); return [A.eri,A.shada,A.homare,A.oji].some(o=>o && o!==a && o.el.offsetParent && ovl(bb,face(o))); };   /* v1.73.9：下の 形は みんなの 顔を 見る */
+  const fits=a=>{ const r=R(a.bub), l=scroller.scrollLeft, vw=scroller.clientWidth; return r.l>=l+2 && r.r<=l+vw-2 && r.t>=0 && r.b<=wr.height/k-2; };   /* v1.73.9：下からも はみ出さない */
+  const side=a=>a.bub.classList.contains('side'), below=a=>a.bub.classList.contains('below'), band=a=>!!a.bub.dataset.band, dirOf=a=>a.bub.classList.contains('toL')?'toL':'toR', formOf=a=>side(a)?'side':below(a)?'below':'top';
+  const away=a=>((a===e?s:e).x<=a.x)?'toR':'toL', flip=d=>d==='toL'?'toR':'toL';   /* v1.73.9：下の 形は 相手から はなれる 向きを 先に（相手の 足もとの 下まで のびないように） */
+  const set=(a,dir,form)=>{ const c=a.bub.classList; c.remove('toL','toR','side','below','farL','farR'); c.add(dir); if(form==='side') c.add('side'); else if(form==='below') c.add('below'); a.bub.style.setProperty('--bs','0px'); if(form!=='side') clampView(a); };   /* v1.73.5：上に 出す 形は 画面の 中に ずらしてから はかる（v1.73.9：下の 形も。話す 人が 画面の 外なら clampView が 帯に して below を 外す） */
   const was={};   /* v1.73.8：この 置きなおしの 前の 持ち上げ（px。帯は のぞく） */
-  [e,s].forEach(a=>{ if(on(a)){ was[a.who]=a.bub.dataset.band?0:(parseFloat(a.bub.style.bottom)||0); a.bub.style.bottom=''; a.bub.style.setProperty('--bs','0px'); } });
-  /* 持ち上げ。v1.73.8：画面の 上からは はみ出さない ところまで（cap） */
-  const liftAbove=(a,topY)=>{ const lift=R(a.el).b-(topY-8), cur=parseFloat(a.bub.style.bottom)||0, cap=R(a.el).b-4-(a.bub.offsetHeight||30)/k; if(lift>Math.max(cur,TOK*1.12)) a.bub.style.bottom=Math.round(Math.min(lift,Math.max(cap,cur,TOK*1.12)))+'px'; };
-  /* 1) 向きと 形。v1.73.8：いまの 形（向き・横）が まだ よければ そのまま＝ころころ 変えない。だめな ときだけ 候補を 順に */
+  [e,s].forEach(a=>{ if(on(a)){ was[a.who]=(band(a)||below(a))?0:(parseFloat(a.bub.style.bottom)||0); a.bub.style.bottom=''; a.bub.style.setProperty('--bs','0px'); } });
+  /* 持ち上げ。v1.73.8：画面の 上からは はみ出さない ところまで（cap）。v1.73.9：下の 形は 持ち上げない */
+  const liftAbove=(a,topY)=>{ if(below(a)) return; const lift=R(a.el).b-(topY-8), cur=parseFloat(a.bub.style.bottom)||0, cap=R(a.el).b-4-(a.bub.offsetHeight||30)/k; if(lift>Math.max(cur,TOK*1.12)) a.bub.style.bottom=Math.round(Math.min(lift,Math.max(cap,cur,TOK*1.12)))+'px'; };
+  /* 1) 向きと 形。v1.73.8：いまの 形が まだ よければ そのまま＝ころころ 変えない。だめな ときだけ 候補を 順に（上の 形は 顔に かぶる ときだけ 動く。吹き出しどうしは 2) で） */
   [[e,s],[s,e]].forEach(([a,o])=>{
     if(!on(a)) return;
-    const cur=a.bub.classList.contains('toL')?'toL':'toR', alt=cur==='toL'?'toR':'toL', wasSide=a.bub.classList.contains('side');
-    const ok=()=>!covers(a,o) && fits(a) && !(on(o) && hit(BUB(a),BUB(o)));
-    set(a,cur,wasSide);
-    if(wasSide ? ok() : !covers(a,o)) return;
-    for(const [dir,side] of (wasSide?[[cur,false],[alt,false],[alt,true]]:[[alt,false],[cur,true],[alt,true]])){ set(a,dir,side); if(ok()) return; }
-    set(a,cur,false);
+    const cur=dirOf(a), alt=cur==='toL'?'toR':'toL', f0=formOf(a);
+    const ok=()=>!(below(a)?coversAny(a):covers(a,o)) && fits(a) && !(on(o) && hit(BUB(a),BUB(o)));
+    set(a,cur,f0);
+    if(formOf(a)==='top' ? !covers(a,o) : ok()) return;
+    const aw=away(a), cands=f0==='top'?[[alt,'top'],[cur,'side'],[alt,'side'],[aw,'below'],[flip(aw),'below']]
+               :f0==='side'?[[cur,'top'],[alt,'top'],[alt,'side'],[aw,'below'],[flip(aw),'below']]
+               :[[cur,'top'],[alt,'top'],[cur,'side'],[alt,'side'],[alt,'below']];
+    for(const [dir,form] of cands){ set(a,dir,form); if(ok()) return; }
+    set(a,cur,'top');
   });
-  const side=a=>a.bub.classList.contains('side');
-  /* 2) 吹き出しどうし：上の 形どうしなら 上に いる ほうを 持ち上げる。v1.73.8：横の 形と 上の 形なら 上の 形を 持ち上げる（前は 上の 形どうしだけ＝かさなったまま だった） */
+  /* 2) 吹き出しどうしが かさなる：v1.73.9：まず 新しい ことば（だめなら 古い ことば）を 下の 形に（帯・横の 形は そのまま）。下に 出せなければ 持ち上げ（上の 形どうしは 上に いる ほう。横の 形と 上の 形なら 上の 形。下の 形と 上の 形なら 上の 形） */
+  const okAt=(a,o)=>!coversAny(a) && fits(a) && !(on(o) && hit(BUB(a),BUB(o)));
   const bubClash=()=>{ if(!(on(e) && on(s) && hit(BUB(e),BUB(s)))) return;
-    if(!side(e) && !side(s)){ const up=e.y<=s.y?e:s, base=up===e?s:e; liftAbove(up,BUB(base).t); }
+    const nw=(s.lineAt||0)>=(e.lineAt||0)?s:e, od=nw===e?s:e;
+    for(const a of [nw,od]){ if(band(a) || side(a) || below(a)) continue; const o=a===e?s:e, d=dirOf(a), aw=away(a); for(const dd of [aw,flip(aw)]){ set(a,dd,'below'); if(okAt(a,o)) return; } set(a,d,'top'); }
+    for(const a of [nw,od]){ if(!below(a)) continue; const o=a===e?s:e, d=dirOf(a); set(a,d,'top'); if(!covers(a,o) && fits(a) && !hit(BUB(a),BUB(o))) return; set(a,d,'below'); }   /* 下の 形の ほうを 上に もどせば 収まるか（まれ） */
+    if(!side(e) && !side(s) && !below(e) && !below(s)){ const up=e.y<=s.y?e:s, base=up===e?s:e; liftAbove(up,BUB(base).t); }
+    else if(below(e)!==below(s)){ const top=below(e)?s:e, bl=below(e)?e:s; if(!side(top)) liftAbove(top,BUB(bl).t); }
     else if(side(e)!==side(s)){ const top=side(e)?s:e, sb=side(e)?e:s; liftAbove(top,BUB(sb).t); } };
   bubClash();
-  /* 3) それでも 顔に かぶるなら 持ち上げる */
+  /* 3) それでも 顔に かぶるなら 持ち上げる（上の 形だけ） */
   [[e,s],[s,e]].forEach(([a,o])=>{
-    if(!on(a) || side(a) || !covers(a,o)) return;
+    if(!on(a) || side(a) || below(a) || !covers(a,o)) return;
     liftAbove(a, on(o) ? Math.min(BUB(o).t, R(o.el).t) : R(o.el).t);
   });
   /* 4) v1.73.8：もどす（頭の 上に 下ろす）のは 0.6秒 待ってから。上げる ほうは すぐ。待っている あいだに 相手の 吹き出しと かさなれば、もう一度 2) */
   let kept=false;
-  [e,s].forEach(a=>{ if(!on(a) || a.bub.dataset.band || side(a)) return; const now=parseFloat(a.bub.style.bottom)||0, w=was[a.who]||0;
+  [e,s].forEach(a=>{ if(!on(a) || band(a) || side(a) || below(a)) return; const now=parseFloat(a.bub.style.bottom)||0, w=was[a.who]||0;
     if(now<w){ if(!a.bubLowT) a.bubLowT=gnow(); if(gnow()-a.bubLowT<LOWER_WAIT){ a.bub.style.bottom=Math.round(w)+'px'; kept=true; } else a.bubLowT=0; }
     else a.bubLowT=0; });
   if(kept) bubClash();
   /* 5) v1.73.8：持ち上げたまま 歩いて 上の 列へ 行っても、画面の 上から はみ出さない（cap。帯は clampView が 見る） */
-  [e,s].forEach(a=>{ if(!on(a) || a.bub.dataset.band || side(a)) return; const now=parseFloat(a.bub.style.bottom)||0; if(!now) return; const cap=Math.max(TOK*1.12,R(a.el).b-4-(a.bub.offsetHeight||30)/k); if(now>cap) a.bub.style.bottom=Math.round(cap)+'px'; });
+  [e,s].forEach(a=>{ if(!on(a) || band(a) || side(a) || below(a)) return; const now=parseFloat(a.bub.style.bottom)||0; if(!now) return; const cap=Math.max(TOK*1.12,R(a.el).b-4-(a.bub.offsetHeight||30)/k); if(now>cap) a.bub.style.bottom=Math.round(cap)+'px'; });
 }
 /* v1.64.2：畑の吹き出しは 出ているあいだ 0.1秒ごとに 置きなおす（歩いている 相手の 顔を かくさないように） */
 let bubKey='';
@@ -3776,7 +3811,7 @@ async function workTalk(eText,eMood,sText,sMood,follow){
   }
   if(said) await pause(350);   /* v1.73.4：返事が 出たら 0.35秒で 手を はなす（前は 読みおわるまで）。次の 歩きだしは eriLineDone（0.7秒）、次の ことばは tellWait（読めてから） */
 }
-function hush(){ [A.eri,A.shada,A.homare,A.oji].forEach(a=>{ if(bg && a===A.shada) return; clearTimeout(a.bubT); a.bub.classList.remove('on'); });   /* v1.37.2：うしろで流れる場面のあいだ、彼の吹き出しは えりちゃんの行動で消さない */ layer.querySelectorAll('.bubble.chorus').forEach(b=>b.remove()); }
+function hush(){ [A.eri,A.shada,A.homare,A.oji].forEach(a=>{ if(bg && a===A.shada) return; clearTimeout(a.bubT); a.bub.classList.remove('on'); });   /* v1.37.2：うしろで流れる場面のあいだ、彼の吹き出しは えりちゃんの行動で消さない */ bubLayer.querySelectorAll('.bubble.chorus').forEach(b=>b.remove()); }   /* v1.73.9：chorus は 吹き出しの 層 */
 /* v1.73.0（ロードマップ 畑④「季節の 演出」。依頼者「A ア 1つ（長い セリフは 2つ）」）：冬に 話すと 白い 息。口もと（CSS の .breath）から 1つ、ふわっと のぼって 1.2秒で 消える。
    8字より 長い ことば（句読点を のぞく）は 0.9秒 あとに もう1つ。.bob の 中に 置くので 歩きながらでも 口に ついてくる。畑の コマだけ（おうちの hsay は 呼ばない）。「動きを 減らす」では 出さない */
 function breath(a,text){
@@ -3789,7 +3824,7 @@ function breath(a,text){
 function chorus(list,text,ms){
   hush();
   const b=document.createElement('div'); b.className='bubble chorus'; b.innerHTML=bubbleHTML(text);
-  layer.appendChild(b);
+  bubLayer.appendChild(b);   /* v1.73.9：吹き出しの 層（いちばん 上） */
   const w=b.offsetWidth, h=b.offsetHeight;
   const cx=list.reduce((t,a)=>t+a.x,0)/list.length, top=Math.min.apply(null,list.map(a=>a.y-TOK/2));
   const l=Math.round(clamp(cx-w/2,4,W-4-w)), t=Math.round(Math.max(2,top-9-h));
