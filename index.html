@@ -1578,7 +1578,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.13</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.14</span></span>
   </div>
 
   <div class="hud">
@@ -2293,6 +2293,34 @@ RECIPES.push(
   {name:'春菊のサラダ',tag:'fresh',need:['shungiku'],eri:'とれたてだから、サラダにしよっか。'},
   {name:'春菊のかき揚げ',tag:'grill',need:['shungiku'],eri:'春菊、かき揚げにしよっか。'},
   {name:'すき焼き',tag:'hot',need:['shungiku','negi'],fridge:'pork',eri:'今日は、すき焼きにしよっか。'}
+);
+/* v1.73.14（依頼者「それぞれの季節で、採れた野菜を複数組み合わせたメニューや、お肉やお魚と野菜のメニューを、いくつか追加して欲しい」）：季節ごとに 5つ＝20。
+   どれも おかず（メニュー表。もう一品・ほまれくんの 一品にも 使われる）。絵は 名前の ことばで 型が 決まる（DISH.typeOf）。新しい セリフは なし。**名前は 依頼者の確認まち（37こめ）** */
+RECIPES.push(
+  /* 春（じゃがいも・そら豆・たまねぎ・キャベツ） */
+  {name:'新じゃがとそら豆の煮もの',tag:'hot',need:['jagaimo','soramame']},
+  {name:'じゃがいもとキャベツのスープ',tag:'hot',need:['jagaimo','kyabetsu']},
+  {name:'じゃがいもとたまねぎのオムレツ',tag:'hot',need:['jagaimo','tamanegi'],fridge:'egg'},
+  {name:'鶏肉とキャベツの蒸し煮',tag:'hot',need:['kyabetsu'],fridge:'chicken'},
+  {name:'鮭とたまねぎのホイル焼き',tag:'grill',need:['tamanegi'],fridge:'fish'},
+  /* 夏（トマト・なす・きゅうり・とうもろこし・枝豆） */
+  {name:'夏野菜のチキンカレー',tag:'hot',need:['nasu','tomato'],fridge:'chicken'},
+  {name:'きゅうりとなすの浅漬け',tag:'fresh',need:['kyuri','nasu']},
+  {name:'トマトとコーンのサラダ',tag:'fresh',need:['tomato','corn']},
+  {name:'豚肉となすのトマト煮',tag:'hot',need:['nasu','tomato'],fridge:'pork'},
+  {name:'枝豆とトマトのサラダ',tag:'fresh',need:['edamame','tomato']},
+  /* 秋（かぼちゃ・さつまいも・里いも・にんじん・かぶ） */
+  {name:'かぼちゃとさつまいものサラダ',tag:'fresh',need:['kabocha','satsumaimo']},
+  {name:'里いもとにんじんのそぼろ煮',tag:'hot',need:['satoimo','ninjin'],fridge:'pork'},
+  {name:'鮭とかぼちゃのクリーム煮',tag:'hot',need:['kabocha'],fridge:'fish'},
+  {name:'にんじんとかぼちゃのかき揚げ',tag:'grill',need:['ninjin','kabocha']},
+  {name:'かぶと鶏肉のスープ',tag:'hot',need:['kabu'],fridge:'chicken'},
+  /* 冬（白菜・ねぎ・ほうれん草・大根・ブロッコリー） */
+  {name:'白菜とねぎの鶏だんご鍋',tag:'hot',need:['hakusai','negi'],fridge:'chicken'},
+  {name:'ほうれん草と白菜のおひたし',tag:'fresh',need:['horenso','hakusai']},
+  {name:'鮭と白菜のクリーム煮',tag:'hot',need:['hakusai'],fridge:'fish'},
+  {name:'ほうれん草とねぎのたまご炒め',tag:'grill',need:['horenso','negi'],fridge:'egg'},
+  {name:'大根とブロッコリーのサラダ',tag:'fresh',need:['daikon','broccoli']}
 );
 /* 干し大根の料理（v1.28.0）。メニューには出さない（S.pantry に hoshidaikon は入れない）。干し大根があるあいだ、えりちゃんが「もう一品」として作る（依頼者の指定「ほまれくんの一品のように、別メニュー」） */
 RECIPES.push(
