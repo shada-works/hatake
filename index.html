@@ -1567,7 +1567,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.9</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.10</span></span>
   </div>
 
   <div class="hud">
@@ -3628,9 +3628,7 @@ function say(who,text,ms,mood,keep){
   breath(a,text);   /* v1.73.0：冬は 白い 息 */
   b.style.bottom=''; a.bubLowT=0;   /* v1.73.8：新しい ことばは 頭の 上から（えり・しゃだも。持ち上げを もどす 待ち（bubLowT）も 消す） */
   a.lineAt=gnow();   /* v1.73.9：出た 時刻は 置く 前に（layoutBubbles が「新しい ことば」を 見分ける。前は あとで 入れていた） */
-  layoutBubbles(A.eri,A.shada,world,1);
-  [A.homare,A.oji].forEach(x=>{ if(x) clampView(x); });   /* v1.73.5：ほまれくん・おじさんの 吹き出しも 画面の 中に（えり・しゃだは layoutBubbles の set の 中で） */
-  if([A.homare,A.oji].some(x=>x && x.el.classList.contains('on'))) [A.eri,A.shada,A.homare,A.oji].forEach(x=>{ if(x) liftOffFaces(x); });   /* v1.54.2：ほまれくん・おじさんが いるときだけ（えりちゃんと しゃだはる君だけのときは layoutBubbles で たりる） */
+  layoutBubbles(A.eri,A.shada,world,1);   /* v1.73.10：出ている 吹き出し ぜんぶ（ほまれくん・おじさんも）を 同じ きまりで 置く（前は clampView＋liftOffFaces を 別に） */
   a.bubT=setTimeout(()=>b.classList.remove('on'), ms || (1900+text.length*95));
   a.lineUntil=gnow()+readMs(text);   /* v1.71.0：言いおわる 時刻。v1.73.4：出た 時刻 lineAt（eriLineDone が 見る）は v1.73.9 から 上で */
 }
@@ -3669,7 +3667,8 @@ function clampView(a){
 }
 const BAND_Y=152;   /* v1.73.7：far の 吹き出しの 下の 辺（world の y。いちばん 上の マスの 列（y186）の 顔の 上 163 より 上） */
 /* v1.54.2（依頼者「花火のとき、ほまれくんの台詞が しゃだはる君の顔を かくしている」）：外の吹き出しが、ほかの人の顔に かかるときは、その顔より上まで 持ち上げる。
-   だれの吹き出しでも・だれの顔でも（えりちゃんと しゃだはる君の 吹き出しどうしは layoutBubbles）。顔の ふちに 少し かかるくらいは そのまま */
+   だれの吹き出しでも・だれの顔でも（えりちゃんと しゃだはる君の 吹き出しどうしは layoutBubbles）。顔の ふちに 少し かかるくらいは そのまま。
+   v1.73.10：使わない（layoutBubbles が 4人 ぶん 同じ きまりで 置く）。持ち上げが もどらない・行き先（a.y）で 計る ので、しゃだはる君の よけ道の あいだ おじさんの 吹き出しが 上がったまま だった */
 function liftOffFaces(a){
   const b=a.bub; if(!b || !b.classList.contains('on') || b.classList.contains('below')) return;   /* v1.73.9：下の 形は 持ち上げない（置く ときに みんなの 顔を 見ている） */
   const br=b.getBoundingClientRect(); if(!br.width) return;
@@ -3693,61 +3692,74 @@ function liftOffFaces(a){
 const LOWER_WAIT=600;   /* v1.73.8：持ち上げた 吹き出しを 頭の 上に もどすのは、よけなくて よくなってから 0.6秒 たってから */
 /* v1.73.9（依頼者「2行以上の台詞の上に もうひとりの台詞が来る場合に、ひとりの台詞を下側に出す」「体から台詞が離れすぎて、分かりにくい」）：下に 出す 形（below＝足もとの 下・しっぽは 上向き）。
    吹き出しどうしが かさなる とき、持ち上げる 前に、新しい ことば（だめなら 古い ことば）を 下の 形に。相手の 顔に かぶる・画面に 入らない・それでも かさなる ときだけ 持ち上げ（前からの 作り）。
-   下の 形は ほまれくん・おじさんの 顔も 見て 決める（liftOffFaces で よけられないので）。いまの 形が まだ よければ そのまま（v1.73.8）＝新しい ことばは 上から 始まり、かさなれば 下へ。形の 名前：top／side／below（far は top の まま 帯に） */
+   いまの 形が まだ よければ そのまま（v1.73.8）＝新しい ことばは 上から 始まり、かさなれば 下へ。形の 名前：top／side／below（far は top の まま 帯に）。
+   v1.73.10（依頼者「おじさんの セリフが えりちゃんの 顔に かかったり、大きく 上に 離れたり」）：出ている 吹き出し ぜんぶ（えり・しゃだ・ほまれ・おじさん）を この 1つの きまりで 置く。
+   顔は だれの でも 見る。e,s の 引数は 前の まま（使わない）。持ち上げの もとの 高さ（base）は その 人の コマの 大きさ×1.12（おじさんは 58px） */
 function layoutBubbles(e,s,box,scale){
   const wr=box.getBoundingClientRect(), k=scale||1;
   const R=el=>{ const r=el.getBoundingClientRect(); return {l:(r.left-wr.left)/k,t:(r.top-wr.top)/k,r:(r.right-wr.left)/k,b:(r.bottom-wr.top)/k}; };
   const BUB=a=>R(a.bub);
   const hit=(p,q)=>p.l<q.r+6 && q.l<p.r+6 && p.t<q.b+6 && q.t<p.b+6;
   const on=a=>a.bub.classList.contains('on');
-  const face=o=>{ const r=R(o.el), m=(r.r-r.l)*.12; return {l:r.l+m,r:r.r-m,t:r.t+m,b:r.b-m*1.5}; };   /* 顔の ふちに 少し かかるくらいは かまわない（下は あごの下の 余白ぶん 広め） */
+  const faces=[A.eri,A.shada,A.homare,A.oji].filter(o=>o && o.el.offsetParent);   /* 見えている 人（顔） */
+  const L=faces.filter(a=>on(a));   /* 出ている 吹き出し（v1.73.10：4人 ぶん） */
+  if(!L.length) return;
+  /* v1.73.10：歩いている 人の 顔は、進む 向きに 少し（0.12秒ぶん＝40px まで）広げて はかる＝0.1秒ごとの 置きなおしの 1回ぶん 早く よける（前は 顔が 吹き出しに 入ってから 動いた） */
+  const face=o=>{ const r=R(o.el), m=(r.r-r.l)*.12, f={l:r.l+m,r:r.r-m,t:r.t+m,b:r.b-m*1.5};   /* 顔の ふちに 少し かかるくらいは かまわない（下は あごの下の 余白ぶん 広め） */
+    if(o.goal && o.el.classList.contains('walking')){ const q=shownPos(o), dx=o.goal.x-q.x, dy=o.goal.y-q.y, d=Math.hypot(dx,dy); if(d>1){ const n=Math.min(40,d)/d, ex=dx*n, ey=dy*n; f.l=Math.min(f.l,f.l+ex); f.r=Math.max(f.r,f.r+ex); f.t=Math.min(f.t,f.t+ey); f.b=Math.max(f.b,f.b+ey); } }
+    return f; };
   const ovl=(bb,f)=>Math.min(bb.r,f.r)-Math.max(bb.l,f.l)>0 && Math.min(bb.b,f.b)-Math.max(bb.t,f.t)>0;
-  const covers=(a,o)=>ovl(BUB(a),face(o));
-  const coversAny=a=>{ const bb=BUB(a); return [A.eri,A.shada,A.homare,A.oji].some(o=>o && o!==a && o.el.offsetParent && ovl(bb,face(o))); };   /* v1.73.9：下の 形は みんなの 顔を 見る */
+  const coversAny=a=>{ const bb=BUB(a); return faces.some(o=>o!==a && ovl(bb,face(o))); };
+  const hitAny=a=>{ const bb=BUB(a); return L.some(o=>o!==a && hit(bb,BUB(o))); };
   const fits=a=>{ const r=R(a.bub), l=scroller.scrollLeft, vw=scroller.clientWidth; return r.l>=l+2 && r.r<=l+vw-2 && r.t>=0 && r.b<=wr.height/k-2; };   /* v1.73.9：下からも はみ出さない */
   const side=a=>a.bub.classList.contains('side'), below=a=>a.bub.classList.contains('below'), band=a=>!!a.bub.dataset.band, dirOf=a=>a.bub.classList.contains('toL')?'toL':'toR', formOf=a=>side(a)?'side':below(a)?'below':'top';
-  const away=a=>((a===e?s:e).x<=a.x)?'toR':'toL', flip=d=>d==='toL'?'toR':'toL';   /* v1.73.9：下の 形は 相手から はなれる 向きを 先に（相手の 足もとの 下まで のびないように） */
+  const flip=d=>d==='toL'?'toR':'toL';
+  const away=a=>{ let o=null,bd=1e9; faces.forEach(p=>{ if(p===a) return; const d=Math.abs(p.x-a.x); if(d<bd){ bd=d; o=p; } }); return (o && o.x>a.x)?'toL':'toR'; };   /* v1.73.9：下の 形は いちばん 近い 人から はなれる 向きを 先に */
+  const base=a=>(a.el.offsetHeight||TOK)*1.12;   /* v1.73.10：ふだんの 高さ（CSS の bottom:112%）。おじさんは 58px */
   const set=(a,dir,form)=>{ const c=a.bub.classList; c.remove('toL','toR','side','below','farL','farR'); c.add(dir); if(form==='side') c.add('side'); else if(form==='below') c.add('below'); a.bub.style.setProperty('--bs','0px'); if(form!=='side') clampView(a); };   /* v1.73.5：上に 出す 形は 画面の 中に ずらしてから はかる（v1.73.9：下の 形も。話す 人が 画面の 外なら clampView が 帯に して below を 外す） */
   const was={};   /* v1.73.8：この 置きなおしの 前の 持ち上げ（px。帯は のぞく） */
-  [e,s].forEach(a=>{ if(on(a)){ was[a.who]=(band(a)||below(a))?0:(parseFloat(a.bub.style.bottom)||0); a.bub.style.bottom=''; a.bub.style.setProperty('--bs','0px'); } });
+  L.forEach(a=>{ was[a.who]=(band(a)||below(a))?0:(parseFloat(a.bub.style.bottom)||0); a.bub.style.bottom=''; a.bub.style.setProperty('--bs','0px'); });
   /* 持ち上げ。v1.73.8：画面の 上からは はみ出さない ところまで（cap）。v1.73.9：下の 形は 持ち上げない */
-  const liftAbove=(a,topY)=>{ if(below(a)) return; const lift=R(a.el).b-(topY-8), cur=parseFloat(a.bub.style.bottom)||0, cap=R(a.el).b-4-(a.bub.offsetHeight||30)/k; if(lift>Math.max(cur,TOK*1.12)) a.bub.style.bottom=Math.round(Math.min(lift,Math.max(cap,cur,TOK*1.12)))+'px'; };
+  const liftAbove=(a,topY)=>{ if(below(a) || band(a)) return; const lift=R(a.el).b-(topY-8), cur=parseFloat(a.bub.style.bottom)||0, bs=base(a), cap=R(a.el).b-4-(a.bub.offsetHeight||30)/k; if(lift>Math.max(cur,bs)) a.bub.style.bottom=Math.round(Math.min(lift,Math.max(cap,cur,bs)))+'px'; };
   /* 1) 向きと 形。v1.73.8：いまの 形が まだ よければ そのまま＝ころころ 変えない。だめな ときだけ 候補を 順に（上の 形は 顔に かぶる ときだけ 動く。吹き出しどうしは 2) で） */
-  [[e,s],[s,e]].forEach(([a,o])=>{
-    if(!on(a)) return;
-    const cur=dirOf(a), alt=cur==='toL'?'toR':'toL', f0=formOf(a);
-    const ok=()=>!(below(a)?coversAny(a):covers(a,o)) && fits(a) && !(on(o) && hit(BUB(a),BUB(o)));
+  L.forEach(a=>{
+    const cur=dirOf(a), alt=flip(cur), f0=formOf(a);
+    const ok=()=>!coversAny(a) && fits(a) && !hitAny(a);
     set(a,cur,f0);
-    if(formOf(a)==='top' ? !covers(a,o) : ok()) return;
+    if(formOf(a)==='top' ? !coversAny(a) : ok()) return;
     const aw=away(a), cands=f0==='top'?[[alt,'top'],[cur,'side'],[alt,'side'],[aw,'below'],[flip(aw),'below']]
                :f0==='side'?[[cur,'top'],[alt,'top'],[alt,'side'],[aw,'below'],[flip(aw),'below']]
                :[[cur,'top'],[alt,'top'],[cur,'side'],[alt,'side'],[alt,'below']];
     for(const [dir,form] of cands){ set(a,dir,form); if(ok()) return; }
     set(a,cur,'top');
   });
-  /* 2) 吹き出しどうしが かさなる：v1.73.9：まず 新しい ことば（だめなら 古い ことば）を 下の 形に（帯・横の 形は そのまま）。下に 出せなければ 持ち上げ（上の 形どうしは 上に いる ほう。横の 形と 上の 形なら 上の 形。下の 形と 上の 形なら 上の 形） */
-  const okAt=(a,o)=>!coversAny(a) && fits(a) && !(on(o) && hit(BUB(a),BUB(o)));
-  const bubClash=()=>{ if(!(on(e) && on(s) && hit(BUB(e),BUB(s)))) return;
-    const nw=(s.lineAt||0)>=(e.lineAt||0)?s:e, od=nw===e?s:e;
-    for(const a of [nw,od]){ if(band(a) || side(a) || below(a)) continue; const o=a===e?s:e, d=dirOf(a), aw=away(a); for(const dd of [aw,flip(aw)]){ set(a,dd,'below'); if(okAt(a,o)) return; } set(a,d,'top'); }
-    for(const a of [nw,od]){ if(!below(a)) continue; const o=a===e?s:e, d=dirOf(a); set(a,d,'top'); if(!covers(a,o) && fits(a) && !hit(BUB(a),BUB(o))) return; set(a,d,'below'); }   /* 下の 形の ほうを 上に もどせば 収まるか（まれ） */
-    if(!side(e) && !side(s) && !below(e) && !below(s)){ const up=e.y<=s.y?e:s, base=up===e?s:e; liftAbove(up,BUB(base).t); }
-    else if(below(e)!==below(s)){ const top=below(e)?s:e, bl=below(e)?e:s; if(!side(top)) liftAbove(top,BUB(bl).t); }
-    else if(side(e)!==side(s)){ const top=side(e)?s:e, sb=side(e)?e:s; liftAbove(top,BUB(sb).t); } };
+  /* 2) 吹き出しどうしが かさなる（組ごとに）：v1.73.9：まず 新しい ことば（だめなら 古い ことば）を 下の 形に（帯・横の 形は そのまま）。下に 出せなければ 持ち上げ（上の 形どうしは 上に いる ほう。横の 形と 上の 形なら 上の 形。下の 形と 上の 形なら 上の 形） */
+  const okAt=a=>!coversAny(a) && fits(a) && !hitAny(a);
+  const bubClash=()=>{
+    for(let i=0;i<L.length;i++) for(let j=i+1;j<L.length;j++){
+      const p=L[i], q=L[j]; if(!hit(BUB(p),BUB(q))) continue;
+      const nw=(q.lineAt||0)>=(p.lineAt||0)?q:p, od=nw===p?q:p; let done=false;
+      for(const a of [nw,od]){ if(done || band(a) || side(a) || below(a)) continue; const d=dirOf(a), aw=away(a); for(const dd of [aw,flip(aw)]){ set(a,dd,'below'); if(okAt(a)){ done=true; break; } } if(!done) set(a,d,'top'); }
+      if(done) continue;
+      for(const a of [nw,od]){ if(done || !below(a)) continue; const d=dirOf(a); set(a,d,'top'); if(okAt(a)) done=true; else set(a,d,'below'); }   /* 下の 形の ほうを 上に もどせば 収まるか（まれ） */
+      if(done) continue;
+      if(!side(p) && !side(q) && !below(p) && !below(q)){ const up=p.y<=q.y?p:q, bs=up===p?q:p; liftAbove(up,BUB(bs).t); }
+      else if(below(p)!==below(q)){ const top=below(p)?q:p, bl=below(p)?p:q; if(!side(top)) liftAbove(top,BUB(bl).t); }
+      else if(side(p)!==side(q)){ const top=side(p)?q:p, sb=side(p)?p:q; liftAbove(top,BUB(sb).t); }
+    } };
   bubClash();
-  /* 3) それでも 顔に かぶるなら 持ち上げる（上の 形だけ） */
-  [[e,s],[s,e]].forEach(([a,o])=>{
-    if(!on(a) || side(a) || below(a) || !covers(a,o)) return;
-    liftAbove(a, on(o) ? Math.min(BUB(o).t, R(o.el).t) : R(o.el).t);
-  });
+  /* 3) それでも 顔に かぶるなら 持ち上げる（上の 形だけ）：かぶっている 顔の 上（見えている 場所）と、その 人の 吹き出しの 上の、高い ほうまで */
+  L.forEach(a=>{ if(side(a) || below(a)) return; const bb=BUB(a); let topY=null;
+    faces.forEach(o=>{ if(o===a || !ovl(bb,face(o))) return; let t=R(o.el).t; if(on(o)) t=Math.min(t,BUB(o).t); topY=topY==null?t:Math.min(topY,t); });
+    if(topY!=null) liftAbove(a,topY); });
   /* 4) v1.73.8：もどす（頭の 上に 下ろす）のは 0.6秒 待ってから。上げる ほうは すぐ。待っている あいだに 相手の 吹き出しと かさなれば、もう一度 2) */
   let kept=false;
-  [e,s].forEach(a=>{ if(!on(a) || band(a) || side(a) || below(a)) return; const now=parseFloat(a.bub.style.bottom)||0, w=was[a.who]||0;
+  L.forEach(a=>{ if(band(a) || side(a) || below(a)) return; const now=parseFloat(a.bub.style.bottom)||0, w=was[a.who]||0;
     if(now<w){ if(!a.bubLowT) a.bubLowT=gnow(); if(gnow()-a.bubLowT<LOWER_WAIT){ a.bub.style.bottom=Math.round(w)+'px'; kept=true; } else a.bubLowT=0; }
     else a.bubLowT=0; });
   if(kept) bubClash();
   /* 5) v1.73.8：持ち上げたまま 歩いて 上の 列へ 行っても、画面の 上から はみ出さない（cap。帯は clampView が 見る） */
-  [e,s].forEach(a=>{ if(!on(a) || band(a) || side(a) || below(a)) return; const now=parseFloat(a.bub.style.bottom)||0; if(!now) return; const cap=Math.max(TOK*1.12,R(a.el).b-4-(a.bub.offsetHeight||30)/k); if(now>cap) a.bub.style.bottom=Math.round(cap)+'px'; });
+  L.forEach(a=>{ if(band(a) || side(a) || below(a)) return; const now=parseFloat(a.bub.style.bottom)||0; if(!now) return; const cap=Math.max(base(a),R(a.el).b-4-(a.bub.offsetHeight||30)/k); if(now>cap) a.bub.style.bottom=Math.round(cap)+'px'; });
 }
 /* v1.64.2：畑の吹き出しは 出ているあいだ 0.1秒ごとに 置きなおす（歩いている 相手の 顔を かくさないように） */
 let bubKey='';
@@ -3758,11 +3770,10 @@ setInterval(()=>{
     if(!list.length){ bubKey=''; return; }
     /* v1.65.0：だれも 歩いておらず、吹き出しも 画面も 前と 同じなら 計りなおさない（毎回 画面を 計ると 端末に 負担。歩いている あいだは これまでどおり 0.1秒ごと） */
     const key=[A.eri,A.shada,A.homare,A.oji].map(x=>{ if(!x) return ''; const q=shownPos(x); return x.who+Math.round(q.x)+','+Math.round(q.y)+(x.bub.classList.contains('on')?'|'+x.bub.textContent:''); }).join(';')+'#'+Math.round(scroller.scrollLeft);
-    if(key===bubKey) return;
+    const lifted=list.some(x=>!x.bub.dataset.band && !x.bub.classList.contains('side') && !x.bub.classList.contains('below') && (parseFloat(x.bub.style.bottom)||0)>0);   /* v1.73.10：持ち上がったままの 吹き出しが あれば、だれも 動かなくても 計りなおす（0.6秒 たてば 下ろす。前は 動くまで 上がったままだった） */
+    if(key===bubKey && !lifted) return;
     bubKey=key;
-    layoutBubbles(A.eri,A.shada,world,1);
-    [A.homare,A.oji].forEach(x=>{ if(x) clampView(x); });   /* v1.73.5 */
-    if([A.homare,A.oji].some(x=>x && x.el.classList.contains('on'))) [A.eri,A.shada,A.homare,A.oji].forEach(x=>{ if(x) liftOffFaces(x); });
+    layoutBubbles(A.eri,A.shada,world,1);   /* v1.73.10：ほまれくん・おじさんも この 中で */
   }catch(e){}
 },100);
 /* v1.64.0（依頼者「台詞が多く重なり、矢継ぎ早に言葉が流れては消える」）：セリフの間。
@@ -4942,9 +4953,9 @@ async function visitScene_(){
   if(withS && !itsumo){ await tellWait(); setMood('shada','happy',1800); await tell('shada','おじさん、ありがとばう！'); }   /* v1.56.0：えりちゃんが「いつも、ありがとうございます。」と言ったときは なし（お礼が 3つ つづかないように） */
   await tellWait(); hush();
   if(withS){
-    /* しゃだはる君が そばに来て、おじさんに なでてもらう */
-    await tell('oji','しゃだはるも、元気そうだね。','happy');
+    /* しゃだはる君が そばに来て、おじさんに なでてもらう。v1.73.10：先に そばへ 来てから ことば（前は ことばの あいだに 歩いたので、えりちゃんを よける 道（上がわ y338）が おじさんの 吹き出しを 通って、吹き出しが 顔を よけて 上がった） */
     await moveShada(VISIT.pat);
+    await tell('oji','しゃだはるも、元気そうだね。','happy');
     await pause(250);
     Snd.play('pet');
     setMood('shada','happy',2200); setMood('eri','smile',1700);
