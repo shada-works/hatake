@@ -1567,7 +1567,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.10</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.11</span></span>
   </div>
 
   <div class="hud">
@@ -3690,6 +3690,7 @@ function liftOffFaces(a){
    ・どれも だめなら 持ち上げる（前からの 作り。しっぽが 相手の 頭を さすことが あるので さいご）
    ・場所は 画面に 見えている 場所（getBoundingClientRect）で はかる＝歩いている とちゅうも 正しい。0.1秒ごとに 置きなおす（下の setInterval）ので、相手が 吹き出しの下に 歩いてきても かくれない */
 const LOWER_WAIT=600;   /* v1.73.8：持ち上げた 吹き出しを 頭の 上に もどすのは、よけなくて よくなってから 0.6秒 たってから */
+const HEAD_GAP={eri:2.3,shada:5.6,homare:1.8,oji:1.7}, HOP_TOL=10;   /* v1.73.11：コマの 上から 見えている 頭（髪・耳・帽子）の 上までの px（36こめに 計った）と、はねた 頭が 吹き出しに 入って よい 深さ */
 /* v1.73.9（依頼者「2行以上の台詞の上に もうひとりの台詞が来る場合に、ひとりの台詞を下側に出す」「体から台詞が離れすぎて、分かりにくい」）：下に 出す 形（below＝足もとの 下・しっぽは 上向き）。
    吹き出しどうしが かさなる とき、持ち上げる 前に、新しい ことば（だめなら 古い ことば）を 下の 形に。相手の 顔に かぶる・画面に 入らない・それでも かさなる ときだけ 持ち上げ（前からの 作り）。
    いまの 形が まだ よければ そのまま（v1.73.8）＝新しい ことばは 上から 始まり、かさなれば 下へ。形の 名前：top／side／below（far は top の まま 帯に）。
@@ -3704,9 +3705,12 @@ function layoutBubbles(e,s,box,scale){
   const faces=[A.eri,A.shada,A.homare,A.oji].filter(o=>o && o.el.offsetParent);   /* 見えている 人（顔） */
   const L=faces.filter(a=>on(a));   /* 出ている 吹き出し（v1.73.10：4人 ぶん） */
   if(!L.length) return;
-  /* v1.73.10：歩いている 人の 顔は、進む 向きに 少し（0.12秒ぶん＝40px まで）広げて はかる＝0.1秒ごとの 置きなおしの 1回ぶん 早く よける（前は 顔が 吹き出しに 入ってから 動いた） */
-  const face=o=>{ const r=R(o.el), m=(r.r-r.l)*.12, f={l:r.l+m,r:r.r-m,t:r.t+m,b:r.b-m*1.5};   /* 顔の ふちに 少し かかるくらいは かまわない（下は あごの下の 余白ぶん 広め） */
-    if(o.goal && o.el.classList.contains('walking')){ const q=shownPos(o), dx=o.goal.x-q.x, dy=o.goal.y-q.y, d=Math.hypot(dx,dy); if(d>1){ const n=Math.min(40,d)/d, ex=dx*n, ey=dy*n; f.l=Math.min(f.l,f.l+ex); f.r=Math.max(f.r,f.r+ex); f.t=Math.min(f.t,f.t+ey); f.b=Math.max(f.b,f.b+ey); } }
+  /* v1.73.10：歩いている 人の 顔は、進む 向きに 少し 広げて はかる＝0.1秒ごとの 置きなおしの 1回ぶん 早く よける（前は 顔が 吹き出しに 入ってから 動いた）。v1.73.11：40px → 20px（40 だと ふたりで 歩く とき 相手の 下の 形が 横 → 下 と ちらついた）。
+     hop＝true なら 歩きの はね（.bob の hop＝コマの 30%＋scale で 34% 上がる）も 見る：はねた ときの 頭の 上（コマの 上 − 34%＋HEAD_GAP）から HOP_TOL（10px）より 深く 吹き出しに 入る ぶん
+     ＝おじさん（58px・帽子が コマの 上まで）が はねて 来る とき、えりちゃんの 吹き出しの 下に 帽子が 12〜16px かかっていた。これは 3) の 持ち上げ（上の 形）だけが 見る（形は 変えない＝ふたりが ならんで 歩く ときの 耳・髪の 4〜8px は そのまま） */
+  const face=(o,hop)=>{ const r=R(o.el), m=(r.r-r.l)*.12, f={l:r.l+m,r:r.r-m,t:r.t+m,b:r.b-m*1.5};   /* 顔の ふちに 少し かかるくらいは かまわない（下は あごの下の 余白ぶん 広め） */
+    if(o.el.classList.contains('walking')){ if(hop) f.t=Math.min(f.t,r.t-(r.b-r.t)*.34+(HEAD_GAP[o.who]||2)+HOP_TOL);
+      if(o.goal){ const q=shownPos(o), dx=o.goal.x-q.x, dy=o.goal.y-q.y, d=Math.hypot(dx,dy); if(d>1){ const n=Math.min(20,d)/d, ex=dx*n, ey=dy*n; f.l=Math.min(f.l,f.l+ex); f.r=Math.max(f.r,f.r+ex); f.t=Math.min(f.t,f.t+ey); f.b=Math.max(f.b,f.b+ey); } } }
     return f; };
   const ovl=(bb,f)=>Math.min(bb.r,f.r)-Math.max(bb.l,f.l)>0 && Math.min(bb.b,f.b)-Math.max(bb.t,f.t)>0;
   const coversAny=a=>{ const bb=BUB(a); return faces.some(o=>o!==a && ovl(bb,face(o))); };
@@ -3748,9 +3752,9 @@ function layoutBubbles(e,s,box,scale){
       else if(side(p)!==side(q)){ const top=side(p)?q:p, sb=side(p)?p:q; liftAbove(top,BUB(sb).t); }
     } };
   bubClash();
-  /* 3) それでも 顔に かぶるなら 持ち上げる（上の 形だけ）：かぶっている 顔の 上（見えている 場所）と、その 人の 吹き出しの 上の、高い ほうまで */
+  /* 3) それでも 顔に かぶるなら 持ち上げる（上の 形だけ）：かぶっている 顔の 上（見えている 場所。v1.73.11：歩いている 人は はねた 頭の 上＝face(o,true)）と、その 人の 吹き出しの 上の、高い ほうまで */
   L.forEach(a=>{ if(side(a) || below(a)) return; const bb=BUB(a); let topY=null;
-    faces.forEach(o=>{ if(o===a || !ovl(bb,face(o))) return; let t=R(o.el).t; if(on(o)) t=Math.min(t,BUB(o).t); topY=topY==null?t:Math.min(topY,t); });
+    faces.forEach(o=>{ if(o===a) return; const f=face(o,true); if(!ovl(bb,f)) return; let t=Math.min(R(o.el).t,f.t); if(on(o)) t=Math.min(t,BUB(o).t); topY=topY==null?t:Math.min(topY,t); });
     if(topY!=null) liftAbove(a,topY); });
   /* 4) v1.73.8：もどす（頭の 上に 下ろす）のは 0.6秒 待ってから。上げる ほうは すぐ。待っている あいだに 相手の 吹き出しと かさなれば、もう一度 2) */
   let kept=false;
