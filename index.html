@@ -358,19 +358,24 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 @keyframes shoo{0%,100%{transform:rotate(0) translateX(0)}20%{transform:rotate(-10deg) translateX(-3%)}40%{transform:rotate(10deg) translateX(3%)}60%{transform:rotate(-8deg) translateX(-2%)}80%{transform:rotate(8deg) translateX(2%)}}
 @keyframes stomp{0%,100%{transform:translateY(0) scale(1)}40%{transform:translateY(-16%) scale(.98,1.03)}70%{transform:translateY(2%) scale(1.06,.94)}}
 /* v1.68.0：えりちゃんの 道具（.tool。しごとの あいだだけ 見える）。本人の 右手＝画面の 左（依頼者「ア」。しゃだはる君が 右に ならぶので 当たらない）。
-   くわ・じょうろは 左右 反転（柄の 上・持ち手が 顔の そば、刃・口が 外）。種袋は 反転しない（畑の ほうへ かたむける） */
-.actor.eri .tool{position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -37px;display:none;transform:scaleX(-1)}
-.actor.eri.hasTool .tool{display:block}
-.actor.eri .tool.bag{transform:none}
-.actor.eri .tool svg{width:100%;height:100%;display:block}
-.actor.eri .tool.kuwa svg{transform-origin:22% 8%;transform:rotate(-38deg)}
-.actor.eri.working .tool.kuwa svg{animation:hoeSwing .3s ease-in-out 3}
+   くわ・じょうろは 左右 反転（柄の 上・持ち手が 顔の そば、刃・口が 外）。種袋は 反転しない（畑の ほうへ かたむける）。
+   v1.73.13：#actors .actor に 広げた（稲刈りの 鎌は ほまれくんも 持つ＝A.homare にも .tool。actorTool(a,id)） */
+#actors .actor .tool{position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -37px;display:none;transform:scaleX(-1)}
+#actors .actor.hasTool .tool{display:block}
+#actors .actor .tool.bag{transform:none}
+#actors .actor .tool svg{width:100%;height:100%;display:block}
+#actors .actor .tool.kuwa svg{transform-origin:22% 8%;transform:rotate(-38deg)}
+#actors .actor.working .tool.kuwa svg{animation:hoeSwing .3s ease-in-out 3}
 @keyframes hoeSwing{0%,100%{transform:rotate(-38deg)}40%{transform:rotate(14deg)}55%{transform:rotate(12deg)}}
-.actor.eri .tool.bag svg{transform-origin:50% 70%}
-.actor.eri.working .tool.bag svg{animation:bagTip .4s ease-in-out 2}
+#actors .actor .tool.bag svg{transform-origin:50% 70%}
+#actors .actor.working .tool.bag svg{animation:bagTip .4s ease-in-out 2}
 @keyframes bagTip{0%,100%{transform:rotate(0)}35%,65%{transform:rotate(26deg)}}
-.actor.eri .tool.jouro svg{transform:rotate(-8deg)}   /* クラス名は jouro（.can に すると 3代目の .actor.eri .can の 置き場所が かぶる） */
-.actor.eri.working .tool.jouro svg{animation:canTip .44s ease-in-out 1}
+#actors .actor .tool.jouro svg{transform:rotate(-8deg)}   /* クラス名は jouro（.can に すると 3代目の .actor.eri .can の 置き場所が かぶる） */
+#actors .actor.working .tool.jouro svg{animation:canTip .44s ease-in-out 1}
+#actors .actor .tool.kama{margin-top:-7px}   /* v1.73.13：鎌は 手の 高さ（顔の まんなかより 8px 下） */
+#actors .actor .tool.kama svg{transform-origin:20% 8%;transform:rotate(-14deg)}   /* v1.73.13：鎌。柄の 上を 支点に、刈る あいだ ひと ふり（work の 0.44秒）＝上から いねの 根もとへ */
+#actors .actor.working .tool.kama svg{animation:kamaSwing .44s ease-in-out 1}
+@keyframes kamaSwing{0%,100%{transform:rotate(-14deg)}45%{transform:rotate(30deg)}62%{transform:rotate(26deg)}}
 .actor.shada.hasCan.working.job-water .can{animation:canTip .44s ease-in-out 1}   /* v1.68.0：しゃだはる君の じょうろも かたむける */
 .actor.tumble .bob{animation:tumble .7s ease-in-out 1}
 .actor.wobble .bob{animation:wobble .46s ease-in-out infinite}
@@ -1157,11 +1162,16 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
     <g stroke="#7f2f50" stroke-width="1.3" stroke-linecap="round"><path d="M15 25 L17 27 M24 22 L26 24 M29 18 L31 19.5"/></g>
     <path d="M2 25 L-1 27 M38 21 L41 20" stroke="#a8456b" stroke-width="1.6" stroke-linecap="round"/>
   </symbol>
-  <symbol id="c-kabocha" viewBox="0 0 40 40">
-    <ellipse cx="20" cy="24" rx="16" ry="11.5" fill="#3f6b3a"/>
-    <g fill="none" stroke="#6c9a5f" stroke-width="1.6"><ellipse cx="20" cy="24" rx="4" ry="11.2"/><ellipse cx="20" cy="24" rx="10" ry="11.4"/></g>
-    <path d="M9 19 C11 16 14 14.5 17 14" stroke="#86b377" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <path d="M18 13.5 C18 10 19 7.5 22 6.5 L24 9 C22 10 22 12 22 13.5Z" fill="#b89a62"/>
+  <symbol id="c-kabocha" viewBox="0 0 40 40">   <!-- v1.73.13：すいかと 見分けやすく（依頼者「少し似ていて間違える」）。ひらたい 形・5つの こぶ（みぞ）・太い へた・うすい まだら・おしりの だいだい色の 地づき。前は まるい 緑に たての しま -->
+    <path d="M19.1 15.2 C18.6 12.2 19.2 9.6 21.4 7.8 L24.6 9.6 C22.8 11.2 22.2 13.2 22.3 15.2Z" fill="#9a9164"/><path d="M20.6 13.6 C20.4 11.6 20.8 10 22.2 9" fill="none" stroke="#b7ae84" stroke-width=".9" stroke-linecap="round"/>
+    <g stroke="#2a4a2c" stroke-width="1.1" stroke-linejoin="round">
+      <ellipse cx="8.8" cy="26.2" rx="5.6" ry="9.2" fill="#375f36"/><ellipse cx="31.2" cy="26.2" rx="5.6" ry="9.2" fill="#375f36"/>
+      <ellipse cx="14.2" cy="25.4" rx="5.9" ry="10.6" fill="#3c6a3b"/><ellipse cx="25.8" cy="25.4" rx="5.9" ry="10.6" fill="#3c6a3b"/>
+      <ellipse cx="20" cy="25.8" rx="6.2" ry="11" fill="#3f6f3e"/>
+    </g>
+    <g fill="none" stroke="#6f9b61" stroke-width="1.1" stroke-linecap="round" opacity=".8"><path d="M5.2 21.6 q.6 -4.2 3 -5.6"/><path d="M10.4 19.4 q.8 -3.6 3.2 -4.6"/><path d="M15.8 18.2 q1 -2.8 3.4 -3.4"/></g>
+    <g fill="#a9c48f" opacity=".55"><ellipse cx="9.4" cy="28.6" rx=".9" ry="2.2"/><ellipse cx="13.6" cy="22.4" rx=".8" ry="2.6"/><ellipse cx="15" cy="30.2" rx=".8" ry="2"/><ellipse cx="20.4" cy="20.4" rx=".9" ry="2.8"/><ellipse cx="19.6" cy="29.8" rx=".8" ry="2.4"/><ellipse cx="25.4" cy="22" rx=".8" ry="2.4"/><ellipse cx="26.6" cy="31" rx=".8" ry="1.9"/><ellipse cx="31.4" cy="24.8" rx=".8" ry="2.2"/></g>
+    <ellipse cx="26.6" cy="33.3" rx="5.4" ry="1.9" fill="#e2ac55" opacity=".88"/><ellipse cx="27" cy="33" rx="3" ry="1" fill="#f1c56e" opacity=".9"/>
   </symbol>
 
   <symbol id="c-kabu" viewBox="0 0 40 40">
@@ -1268,6 +1278,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
   <!-- こもの -->
   <!-- v1.68.0（畑①「しごとの 動き」）：えりちゃんの 道具。くわ（木の 柄＝左上から 右下へ・鉄の 刃は 下）・種袋（紙の 袋。口を 折って、前に 芽の しるし）・初代の じょうろ（小さい・うすい もも色）・2代目の じょうろ（ふつう・クリーム色。小屋が できてから）・種つぶ（まくときに 落ちる） -->
   <symbol id="i-kuwa" viewBox="0 0 40 40"><path d="M9 3 L26.5 27" stroke="#a37a4c" stroke-width="4.4" stroke-linecap="round"/><path d="M10.5 4.5 L25 24.5" stroke="#c9a06e" stroke-width="1.2" stroke-linecap="round" opacity=".75"/><path d="M23 25.5 L31.5 22.5" stroke="#8b6a44" stroke-width="3" stroke-linecap="round"/><path d="M22 23 L34 19 L37 32 L26.5 37.5Z" fill="#6d7378" stroke="#4f5559" stroke-width="1.2" stroke-linejoin="round"/><path d="M24.5 25 L33 22" stroke="#a7adb2" stroke-width="1.3" stroke-linecap="round" opacity=".9"/></symbol>
+  <symbol id="i-kama" viewBox="0 0 40 40"><path d="M6 2 L19 23" stroke="#a37a4c" stroke-width="4.6" stroke-linecap="round"/><path d="M7.5 3.5 L18 20.5" stroke="#c9a06e" stroke-width="1.2" stroke-linecap="round" opacity=".75"/><path d="M17.6 21.6 L21.6 26.2" stroke="#5f5a52" stroke-width="4.4" stroke-linecap="round"/><path d="M18.6 22.8 C25 19.8 32.4 18.4 39.2 18.6 C36.6 23.4 29.4 27.2 20.8 27.6Z" fill="#6d7378" stroke="#4f5559" stroke-width="1.1" stroke-linejoin="round"/><path d="M21.6 26.4 C28.6 25.8 34.4 23 37.6 19.8" stroke="#a7adb2" stroke-width="1.3" stroke-linecap="round" fill="none" opacity=".9"/></symbol>   <!-- v1.73.13：鎌（稲刈り。柄は 左上＝反転して 顔の そば、刃は 外） -->
   <symbol id="i-tanebukuro" viewBox="0 0 40 40"><path d="M11 12 L29 12 L31 35 Q20 38 9 35Z" fill="#efe0bd" stroke="#c9ad7c" stroke-width="1.4" stroke-linejoin="round"/><path d="M11 12 L29 12 L28 7 Q20 4.5 12 7Z" fill="#d9bf8e" stroke="#c9ad7c" stroke-width="1.4" stroke-linejoin="round"/><path d="M12.5 10 Q20 8.5 27.5 10" fill="none" stroke="#b8975f" stroke-width="1" stroke-linecap="round" opacity=".8"/><rect x="14.5" y="18" width="11" height="10" rx="2" fill="#fff9ea" stroke="#d6c4a0" stroke-width="1"/><path d="M20 26 L20 21" stroke="#5f9a4a" stroke-width="1.6" stroke-linecap="round"/><path d="M20 22.5 Q16.5 21.5 16.5 18.5 Q19.5 18.5 20 22.5Z" fill="#7bb36a"/><path d="M20 22.5 Q23.5 21.5 23.5 18.5 Q20.5 18.5 20 22.5Z" fill="#7bb36a"/><ellipse cx="17" cy="31.5" rx="1.6" ry="1.1" fill="#8a5e3a"/><ellipse cx="22.5" cy="32" rx="1.6" ry="1.1" fill="#8a5e3a"/></symbol>
   <symbol id="i-can1" viewBox="0 0 40 40"><rect x="9" y="18" width="18" height="15" rx="4" fill="#e7a69b"/><path d="M27 23 L35 15" stroke="#e7a69b" stroke-width="4.4" stroke-linecap="round"/><path d="M12.5 18 C12.5 9.5 23.5 9.5 23.5 18" fill="none" stroke="#e7a69b" stroke-width="3"/><circle cx="35" cy="14" r="2.9" fill="#f3c6bd"/><path d="M12.5 22.5 q5 -2.2 10 0" fill="none" stroke="#f8dcd6" stroke-width="1.8" stroke-linecap="round"/></symbol>
   <symbol id="i-can2" viewBox="0 0 40 40"><rect x="7" y="16" width="21" height="18" rx="4" fill="#e3c279"/><path d="M28 22 L37 13" stroke="#e3c279" stroke-width="5" stroke-linecap="round"/><path d="M11 16 C11 6 24 6 24 16" fill="none" stroke="#e3c279" stroke-width="3.4"/><circle cx="37" cy="12" r="3.2" fill="#f0dca5"/><path d="M11 21 q5 -2.4 10 0" fill="none" stroke="#f7ecc9" stroke-width="2" stroke-linecap="round"/></symbol>
@@ -1567,7 +1578,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.12</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.13</span></span>
   </div>
 
   <div class="hud">
@@ -3321,7 +3332,7 @@ const A={ eri:makeActor('eri'), shada:makeActor('shada') };
 A.shada.el.querySelector('.bob').insertAdjacentHTML('beforeend','<div class="carry">'+icon('i-stone')+'</div><div class="can">'+icon('i-can')+'</div>');   /* v1.40.0：.can＝じょうろ（顔の右） */
 A.homare=makeActor('homare');
 A.homare.el.setAttribute('aria-hidden','true');
-A.homare.el.querySelector('.bob').insertAdjacentHTML('beforeend','<div class="carry">'+icon('i-bento')+'</div>');   /* お花見のお弁当（v1.27.0） */
+A.homare.el.querySelector('.bob').insertAdjacentHTML('beforeend','<div class="carry">'+icon('i-bento')+'</div><div class="tool"></div>');   /* お花見のお弁当（v1.27.0）。v1.73.13：.tool＝稲刈りの 鎌 */
 A.eri.el.querySelector('.bob').insertAdjacentHTML('beforeend','<div class="carry">'+icon('i-crate')+'</div><div class="can">'+icon('i-bigcan')+'</div><div class="tool"></div>');   /* v1.63.0：.can＝3代目の じょうろ（日照りの 午後に 持つ）。v1.68.0：.tool＝しごとの 道具（くわ・種袋・初代と 2代目の じょうろ。しごとの あいだだけ） */
 A.oji=makeActor('oji');
 A.oji.el.setAttribute('aria-hidden','true');
@@ -3833,7 +3844,7 @@ function breath(a,text){
   if(reduceMotion || !S || season()!==3 || !a || !a.el || !a.el.offsetParent || home.classList.contains('on')) return;
   const puff=()=>{ if(!a.el.offsetParent) return; const i=document.createElement('i'); i.className='breath'; i.innerHTML=icon('i-iki'); a.el.querySelector('.bob').appendChild(i); setTimeout(()=>i.remove(),1300); };
   puff();
-  if(String(text).replace(/[、。！？!?…（）\s]/g,'').length>8) setTimeout(puff,900);
+  if(String(text).replace(/[、。！？!?…（）\s]/g,'').length>12) setTimeout(puff,900);   /* v1.73.13：2つめの 息は 12字より 長い ことばだけ（前は 8字。依頼者「出る数を もうすこしだけ 減らして」） */
 }
 /* 3人で そろって言うセリフを、ひとつの吹き出しに（畑用。v1.37.0。おうちの hchorus と同じ考え：みんなの頭の上のまんなかに置き、しっぽを ひとりに1つずつ） */
 function chorus(list,text,ms){
@@ -3882,11 +3893,12 @@ function poke(i){
 /* v1.68.0（ロードマップ 畑①「しごとの 動き」）：job＝till（くわ 3回・0.9秒）／plant（種袋 2回・0.8秒。種つぶが 落ちる）／water（じょうろを かたむける・0.52秒）／harvest（ぐいっと 2回・0.72秒）／shoo（ぷるぷる・0.56秒）／thaw（ふむ 2回・0.5秒）。
    job が なければ これまでの ゆれ（0.44秒）。えりちゃんの 道具は eriToolFor（3代目を 持っている 午後の 水やりは .can を かたむける＝.pour） */
 const WORK_MS={till:900,plant:800,water:520,harvest:720,shoo:560,thaw:500};
-function eriTool(id){
-  const el=A.eri.el, t=el.querySelector('.tool'); if(!t) return;
+function actorTool(a,id){   /* v1.73.13：だれの 道具でも（えりちゃん・ほまれくん＝.tool の ある コマ） */
+  const el=a.el, t=el.querySelector('.tool'); if(!t) return;
   if(!id){ el.classList.remove('hasTool'); t.className='tool'; t.innerHTML=''; return; }
-  t.className='tool '+({'i-kuwa':'kuwa','i-tanebukuro':'bag'}[id]||'jouro'); t.innerHTML=icon(id); el.classList.add('hasTool');
+  t.className='tool '+({'i-kuwa':'kuwa','i-tanebukuro':'bag','i-kama':'kama'}[id]||'jouro'); t.innerHTML=icon(id); el.classList.add('hasTool');
 }
+function eriTool(id){ actorTool(A.eri,id); }
 function eriToolFor(job){
   if(job==='till') return 'i-kuwa';
   if(job==='plant') return 'i-tanebukuro';
@@ -4528,7 +4540,7 @@ function tanboPrep(){
 function tanboEnd(lockedBefore,keepH){
   if(!keepH) tanboView=null;   /* v1.54.2：keepH のときは 田んぼの絵（切り株）も そのまま。3人が 帰りおわってから もどす（見るだけの画面で、はざかけが また出ないように） */
   shadaCarryItem=null; shadaCarry(); shadaCanDown(false);
-  const H=A.homare; H.el.classList.remove('working');
+  const H=A.homare; H.el.classList.remove('working'); eriTool(null); actorTool(H,null);   /* v1.73.13：とちゅうで 止まっても 鎌を しまう */
   if(!keepH){ H.el.classList.remove('on','carrying'); H.el.querySelector('.carry').innerHTML=icon('i-bento'); }   /* v1.54.2：keepH＝稲刈りの日の夕方（ほまれくんは お米を持ったまま、いっしょに帰る） */
   renderPaddy(); if(lockedBefore) renderWorld();
 }
@@ -4622,6 +4634,7 @@ async function tanboScene_(kind,preview,pat){
       setMood('shada','happy',1800); await line('shada','はこぶばう！',null,1500);
       hush();
       gyojiStep='稲刈り：刈る';
+      eriTool('i-kama'); actorTool(H,'i-kama');   /* v1.73.13（依頼者「稲刈りの時には、なにか刈るための道具を」）：ふたりとも 鎌を 本人の 右手（画面の 左）に。刈る（work）たびに ふる */
       for(let i=0;i<TANBO_ORDER.length;i++){
         const c=TANBO_ORDER[i], left=c<=5, who=left?A.eri:H;
         await go(who,left?eriCol(c):homCol(c),420);
@@ -4645,6 +4658,7 @@ async function tanboScene_(kind,preview,pat){
         }
         await gwait(reduceMotion?120:150);
       }
+      eriTool(null); actorTool(H,null);   /* v1.73.13：刈りおわったら 鎌を しまう */
       /* はざかけ：ほまれくんが組んで、しゃだはる君が たばを運び、ほまれくんが かける */
       gyojiStep='稲刈り：はざかけ';
       await Promise.all([go(A.eri,E0,900), go(H,H0,900)]);
@@ -6498,7 +6512,7 @@ async function jastaSuikaNight(E,D,H,preview,pat){
     /* ④ えりちゃんが すいかを 切る（冷やしすいかの 夜と 同じ しぐさ）→ 4人の 取り皿に */
     say(E,'すいか、冷やしておいたよ。',{mood:'smile'}); await w(1500);
     hhush();
-    await hmove(E,HSPOT.counterEnd);
+    await hmove(E,HSPOT.cook);   /* v1.73.13：台所の はしで 切る（前は counterEnd） */
     { const at={x:E.x+26,y:E.y-34}; chopOn(E,'c-suika'); if(!homeSkip) Snd.play('chop'); hfxText('とんとん',at); await w(900); if(!homeSkip) Snd.play('chop'); await w(500); chopOff(E); }   /* v1.67.0：包丁で */
     hhold(E,['c-suika'],'carry'); await w(300);   /* v1.66.0：両手で */
     await hmove(E,seat.E); hhold(E,null);
@@ -9128,7 +9142,7 @@ const POSE={
   /* v1.72.0：手だけの 形は .hold の 左上を コマの (0,0) に 置いて（tx −23・ty −47.84）、手の 位置を コマの 座標で 書く（顔は 0〜46・肩は (10.5,53.5)/(35.5,53.5)）。
      **うでの 長さは ふだんと 同じ（肩から 12〜13px。手は あごの 高さ＝コマの y43 まで。reach・eat・stir と 同じ）**＝依頼者「静止画と比べて不自然な腕の長さを修正」。はじめは 頭の 横まで 上げていた（35px）ので 直した。
      up＝両手を あごの 高さに 上げる（のびーっ）／rub＝右手（見て 左）を めがねの 下に（rubbing で 顔も 少し 下がる）／wave＝右手を 上げて ふる／raise＝両手で 持ちものを あごの 前に 持ち上げる／peel＝みかんを 両手に（carry より 少し 上） */
-  up:()=>({tx:-23,ty:-47.84,hands:[{x:3.5,y:43,s:[9.5,18.5]},{x:42.5,y:43,s:[34.5,18.5]}]}),
+  up:()=>({tx:-23,ty:-47.84,straight:true,under:true,hands:[{x:4.6,y:34.6,s:[11,8.5]},{x:41.4,y:34.6,s:[33,8.5]}]}),   /* v1.73.13（依頼者「腕が肩ではなく肘の位置から出ているように見える。肩の付け根から…」→「腕の長さも、腕を下ろした時の長さとちがう。Tシャツの上側から腕が出るのが自然」）：うでは Tシャツの そでの 上がわ（肩の つけ根 (11,8.5)／(33,8.5)＝体の 座標。そでの 下に 入れる under）から、おろした うでと 同じ 長さ（11.9px）だけ ななめ 上へ まっすぐ（straight）。手は ほほの 横（コマの y34.6）。前は あごの 高さ（y43）で そでの 下の はしから 曲げていた */
   rub:()=>({tx:-23,ty:-47.84,hands:[{x:13,y:38.5,s:[9.5,18.5]}],rest:[[34.5,18.5]]}),
   wave:()=>({tx:-23,ty:-47.84,hands:[{x:1.5,y:44.5,s:[9.5,18.5]}],rest:[[34.5,18.5]]}),
   raise:(w,h)=>({tx:-w/2,ty:47-h-47.84,hands:[{x:-2,y:h-4,s:[9.5,18.5]},{x:w+2,y:h-4,s:[34.5,18.5]}]}),
@@ -9191,11 +9205,13 @@ function poseArms(a,pose,opt){
   const g=document.createElementNS('http://www.w3.org/2000/svg','g'); g.setAttribute('class','poseArm');
   const sleeve=d=>{ for(let i=0;i<Math.min(2,src.length);i++){ const e=src[i].cloneNode(false); e.setAttribute('d',d); e.removeAttribute('class'); g.appendChild(e); } };
   P.hands.forEach(q=>{
-    const [sx,sy]=q.s, hx=bx+q.x, hy=by+q.y, raised=hy<sy-8, cx=raised?sx+(hx-sx)*.55:sx+(hx-sx)*.25, cy=raised?sy+(hy-sy)*.3:Math.max(sy,hy)+3.5;   /* ひじは 下がわに。v1.72.0：手が 肩より 上（raised）なら ゆるく そらせる */
+    const [sx,sy]=q.s, hx=bx+q.x, hy=by+q.y, raised=hy<sy-8, st=!!P.straight, k=hx<sx?-1:1;   /* v1.73.13：straight（のびーっ）＝そでを 曲げず、肩から 手まで ほぼ まっすぐ（ひじを 外へ 1.2px だけ） */
+    const cx=st?(sx+hx)/2+k*1.2:raised?sx+(hx-sx)*.55:sx+(hx-sx)*.25, cy=st?(sy+hy)/2+1.2:raised?sy+(hy-sy)*.3:Math.max(sy,hy)+3.5;   /* ひじは 下がわに。v1.72.0：手が 肩より 上（raised）なら ゆるく そらせる */
     sleeve('M'+sx+' '+sy+' Q'+cx.toFixed(1)+' '+cy.toFixed(1)+' '+hx.toFixed(1)+' '+hy.toFixed(1));
   });
   (P.rest||[]).forEach(([sx,sy])=>{ const k=sx<22?-1:1; sleeve('M'+sx+' '+sy+' Q'+(sx+k*2.4).toFixed(1)+' '+(sy+4.5).toFixed(1)+' '+(sx+k*2.8).toFixed(1)+' '+(sy+9.5).toFixed(1)); });   /* v1.66.0：おろした うで（片手の ポーズの もう一方。ふだんの うでと 同じ 向きに 少し 外へ） */
-  svg.appendChild(g);
+  const arms=svg.querySelectorAll('.arm');   /* v1.73.13：under（のびーっ）＝ふだんの うでと 同じ 場所（シャツの 下）に 入れる＝うでの つけ根が そでに かくれて、そでの 上がわから 出て 見える。ほかの 形は いちばん 上（胸の 前で 持つ） */
+  if(P.under && arms.length) arms[arms.length-1].insertAdjacentElement('afterend',g); else svg.appendChild(g);
   a.el.classList.add('posed');
 }
 /* v1.66.0：いま 手に 持っている ものの まんなか（部屋の 座標）。手から 手へ わたす（hpass）・手から なべへ（hfly）の 出発点 */
@@ -9876,7 +9892,7 @@ async function dessertNight(E,D,H,kind,preview){
   const f=FRUITS[kind], rec=fruitRecipe(kind);
   await hwalkAll([[E,HSPOT.tableEri],[D,HSPOT.tableShada],[H,HSPOT.tableHomare]]);
   hbubOff(E);
-  await hmove(E, kind==='budou'?HSPOT.fridgeH:HSPOT.counterEnd);
+  await hmove(E, kind==='budou'?HSPOT.fridgeH:HSPOT.cook);   /* v1.73.13：切る・むく・あらうは 台所の はし（cook＝カウンターの うしろ。夕ごはんの 包丁と 同じ）で（依頼者「部屋の中で切ったりむいたりして出してくれるのが不自然」。前は counterEnd＝戸棚の 右はしの 前） */
   if(kind==='budou'){ openFridge(true); if(!homeSkip) Snd.play('fridge'); await hp(600); }
   else if(kind==='sakuranbo'){ if(!homeSkip) Snd.play('water'); hfxText('じゃー',{x:E.x+26,y:E.y-34}); await hp(1300); }   /* v1.35.0：さくらんぼは あらう */
   else if(kind==='mikan'){ hhold(E,[icon('c-mikan','mikan')],'peel'); if(!reduceMotion&&!homeSkip) E.el.classList.add('peeling'); hfxText('むきむき',{x:E.x+26,y:E.y-34}); await hp(900); hfxText('むきむき',{x:E.x+26,y:E.y-34}); await hp(700); E.el.classList.remove('peeling'); }   /* v1.35.0：みかんは むく。v1.72.0：両手に 持って、手が 交互に 動く */
@@ -9938,7 +9954,7 @@ async function fieldDessertNight(E,D,H,kind,form,preview){
   await hwalkAll([[E,HSPOT.tableEri],[D,HSPOT.tableShada],[H,HSPOT.tableHomare]]);
   hbubOff(E);
   const fr=act==='fridge';
-  await hmove(E, fr?HSPOT.fridgeH:HSPOT.counterEnd);
+  await hmove(E, fr?HSPOT.fridgeH:HSPOT.cook);   /* v1.73.13：台所の はしで（前は counterEnd） */
   const at={x:E.x+26,y:E.y-34};
   if(fr){ openFridge(true); if(!homeSkip) Snd.play('fridge'); await hp(600); }
   else if(act==='wash'){ if(!homeSkip) Snd.play('water'); hfxText('じゃー',at); await hp(1300); }
@@ -10764,7 +10780,8 @@ async function homeMorning(){
      おうちが出ていないとき（しらべる用に、じかに呼んだとき など）は、まっくらにしてから出す */
   if(!home.classList.contains('on')){ home.classList.add('deep','on'); void home.offsetWidth; }
   home.classList.add('show');
-  Snd.hush(13000+(mx?mornXms(mx):0)+(S.mood==='sleepy'?1300:0));   /* v1.55.0：ひとことの ぶん、音楽を長く止める。v1.72.0：目を こする ぶんも */
+  const hNobi=!reduceMotion && !(mx && mx.some(l=>l[3]==='nobi')) && rnd()<.5;   /* v1.73.13（依頼者「のびーっのシーンがあまり出ない」）：MORN_X の のびーっの 朝 以外は、半分の 朝 ほまれくんが 起きあがって ことば なしで のびーっ */
+  Snd.hush(13000+(mx?mornXms(mx):0)+(S.mood==='sleepy'?1300:0)+(hNobi?1550:0));   /* v1.55.0：ひとことの ぶん、音楽を長く止める。v1.72.0：目を こする ぶんも。v1.73.13：のびーっの ぶんも */
   await sleep(reduceMotion?150:500);
   home.classList.remove('deep');          /* まっくら → 夜あけ前の、うす暗い部屋 */
   await pause(1500);
@@ -10781,6 +10798,7 @@ async function homeMorning(){
   hsay(E,rnd()<.35?'おはよう、ふたりとも。':'おはよう。',{mood:'smile',ms:3300});   /* v1.55.0（決めること1ア）：ときどき 名前つき */
   await pause(1150);
   wake(H); await pause(350);
+  if(hNobi){ H.el.classList.add('nobi'); hhold(H,null,'up'); await pause(1300); hhold(H,null); H.el.classList.remove('nobi'); await pause(250); }   /* v1.73.13：起きあがって のびーっ（MORN_X の「ぼくも、のびーっ。」と 同じ 動き。ことば なし） */
   /* ほまれくんは、あいさつのあとに ひとこと（v1.13.2。依頼者が「日がわりで3つ」をえらんだ）。天気のひとことは、雨・雪になる日だけ言いかえる */
   /* v1.55.0：季節の ひとことを足して 4つ（さいきんの2つは出さない） */
   const hLines=['よくねむれた？', dull?(season()===3?'今日は、雪になりそうだね。':'今日は、雨になりそうだね。'):'今日もいい天気だね。', '今日も畑、たのしんできてね。', ['春の朝は、気持ちいいね。','今日も、あつくなりそうだね。','すずしくて、いい朝だね。','ふとん、あったかいなあ。'][season()]];
