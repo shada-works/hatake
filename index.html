@@ -1578,7 +1578,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.15</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.16</span></span>
   </div>
 
   <div class="hud">
@@ -7464,6 +7464,8 @@ const REST_SCENES=[
       lines:[['eri','息が白いね。',null],['shada','はーっ。しろいばう！'],['eri','くっつくと、あったかいね。','happy']],
       shada:s=>{ fxText('はーっ',{x:s.x+12,y:s.y-40},'ice'); setMood('shada','happy',1700); setTimeout(()=>moveTo(A.shada,{x:s.x-13,y:s.y-1}),900); }} ]
 ];
+/* v1.73.16：しゃだはる君が そばに いない（お昼寝・かくれんぼ・おつかい・見張り）ときの えりちゃんの ひとこと（依頼者 了解ずみ 10月23日 23:28「新しいセリフを入れてしまって」）。季節ごと 1つ。お昼寝中は どの 季節でも REST_ALONE_NAP */
+const REST_ALONE=['ぽかぽか、いい天気。','ふう、あついね。','風が、気持ちいい。','はあ、さむい。'], REST_ALONE_NAP='しゃだはる、よく寝てる。';
 async function rest(auto){
   auto=auto===true;   /* v1.35.5：自動のひとやすみ（ボタンからは click の event が来るので、true のときだけ） */
   if(busy||modal||!S) return;
@@ -7503,15 +7505,16 @@ async function rest(auto){
   Snd.play('rest');
   if(sc.amb) sc.amb(e,s);
   let first=true;   /* v1.71.0：読める 間（tell）。1つめは 前の ことばを しまってから、あとは 掛け合い（両方 残す）。前は 1.25秒＋1字 0.045秒 */
-  for(const [who,text,mood] of sc.lines){
-    if(who==='shada'){ if(!withS) continue; await tellWait(); if(sc.shada) sc.shada(s); }   /* v1.71.1：しぐさ・音（カラン・ほくほく など）は ことばの 直前に（前は 2〜3秒 早かった） */
+  for(const [who,text,mood] of (withS?sc.lines:[])){   /* v1.73.16：しゃだはる君が そばに いない（お昼寝・かくれんぼ・おつかい・見張り）ときは 掛け合いの ことばを 出さない（依頼者「寝ている時にも、いる時の台詞を話している」）。ひとりの ことばは 依頼者の確認まち */
+    if(who==='shada'){ await tellWait(); if(sc.shada) sc.shada(s); }   /* v1.71.1：しぐさ・音（カラン・ほくほく など）は ことばの 直前に（前は 2〜3秒 早かった） */
     await tell(who,text,mood,!first); first=false;
   }
+  if(!withS){ const nap=A.shada.mode==='nap'; await tell('eri',nap?REST_ALONE_NAP:REST_ALONE[season()],(!nap && season()===3)?null:'smile'); }   /* v1.73.16：ひとりの ひとこと（依頼者 了解ずみ。お昼寝中は どの 季節でも「しゃだはる、よく寝てる。」） */
   await tellWait();
   if(bench) addNagomi(1,{x:(e.x+s.x)/2,y:e.y-14});
   await pause(450);
   if(snack){ snack.style.opacity='0'; setTimeout(()=>snack.remove(),320); }
-  log(sc.log+REST_LABEL+'たちました。');
+  log((withS?sc.log:(A.shada.mode==='nap'?'しゃだはる君が お昼寝しているあいだに、ひとりで ひとやすみしました。':'ひとりで ひとやすみしました。'))+REST_LABEL+'たちました。');   /* v1.73.16：ひとりの ときの できごと欄 */
   await advance(REST);
   S.sinceEvent+=2;
   await afterAction(true);
@@ -7535,11 +7538,13 @@ function workLeft(){
   for(const k in TREES){ const T=TREES[k]; if(S.unlocked[T.unlock] && (!S[T.st] || S[T.st].fruit)) return true; }
   return false;
 }
-let idleTicks=0;
+let idleTicks=0, autoEndTried=0;   /* v1.73.16：autoEndTried＝18:00 からの 自動の ひとやすみを した 日 */
 function autoRestTick(){
-  if(!S || !S.intro || hiddenNow || busy || modal || bg || queued!=null || home.classList.contains('on') || S.clock>=DAY_END || workLeft()){ idleTicks=0; return; }   /* v1.37.2：bg。v1.46.0：とじているあいだは 時計を進めない */
+  if(!S || !S.intro || hiddenNow || busy || modal || bg || queued!=null || home.classList.contains('on') || workLeft()){ idleTicks=0; return; }   /* v1.73.16：S.clock>=DAY_END でも 止めない＝18:00 で やることが なければ ひとやすみ（restLight）→ afterAction が 1日を 終える（依頼者「一度ひとやすみをしても、まだやることがない場合に、ゲームが進まなくなる」。雨やどりの 30分で 18:00 に なった ときに 止まっていた） */   /* v1.37.2：bg。v1.46.0：とじているあいだは 時計を進めない */
   if(++idleTicks<2) return;
-  idleTicks=0; if(yearNo()===1) autoEnd(); else rest(true);   /* v1.48.0：1年目は ひとやすみのかわりに、夕方まで進めて 1日を終える */
+  idleTicks=0;
+  if(S.clock>=DAY_END){ if(autoEndTried===S.day) return; autoEndTried=S.day; }   /* v1.73.16：18:00 からの 自動は 1日に 1回だけ（1日を 終えられなかった ときに くりかえさない） */
+  if(yearNo()===1) autoEnd(); else rest(true);   /* v1.48.0：1年目は ひとやすみのかわりに、夕方まで進めて 1日を終える */
 }
 /* v1.48.0（依頼者の希望「1年目は畑も小さく収穫も少ないので、やることがなくなったら1日を終える」）：
    30分ずつ時計を進める（afterAction も通すので、天気・おじさん・行事・出来事・日照りの水切れは いままでどおり起きる。やることができたら止まる）。17:00 をすぎたら afterAction が 1日を終える */
@@ -7556,6 +7561,7 @@ async function autoEnd(){
       await afterAction(true);
       if(S.day===d0 && bg) await bg.done;
     }
+    if(S.day===d0 && S.clock>=DAY_END && !modal && !workLeft()){ if(bg) await bg.done; await afterAction(true); }   /* v1.73.16：18:00 に なっていて やることが なければ、ここで 1日を 終える（前は while が 回らず 何も しなかった） */
   } finally { autoResting=false; }
   busy=false; renderButtons(); saveSoon(); runQueued();
 }
