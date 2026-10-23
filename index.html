@@ -1578,7 +1578,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.14</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.15</span></span>
   </div>
 
   <div class="hud">
@@ -3825,7 +3825,7 @@ setInterval(()=>{
    朝（お見送り・畑のあいさつ・知らせ）・帰り道・おすそわけで 使う（ほかの場面は これまでどおり） */
 const readMs=t=>1000+String(t).replace(/[、。！？!?…（）\s]/g,'').length*65;   /* v1.73.4：1400＋80 → 1000＋65 */
 let lineUntil=0, lineRead=0;   /* v1.73.4：lineRead＝さいごの ことばの readMs（掛け合いの 返事は その 6割で 出す） */
-const REPLY_AT=.55, WALK_AFTER=600;   /* v1.73.4：返事は 前の ことばが 6割 読めたら／歩きだしは さいごの ことばが 出てから 0.7秒。v1.73.5（依頼者「さらに詰められますか？」）：半分 読めたら／0.5秒。v1.73.12（依頼者「もう ほんの わずかだけ 落とせますか」）：55%／0.6秒＝その あいだ */
+const REPLY_AT=.5, WALK_AFTER=500;   /* v1.73.4：返事は 前の ことばが 6割 読めたら／歩きだしは さいごの ことばが 出てから 0.7秒。v1.73.5（依頼者「さらに詰められますか？」）：半分 読めたら／0.5秒。v1.73.12（依頼者「もう ほんの わずかだけ 落とせますか」）：55%／0.6秒 → v1.73.15（依頼者「こんどは遅く感じる。もとに戻して」）：v1.73.5 の 半分／0.5秒に もどした */
 function bubsOff(){ [A.eri,A.shada,A.homare,A.oji].forEach(a=>{ if(!a) return; clearTimeout(a.bubT); a.bub.classList.remove('on'); }); }   /* うしろで流れる場面（bg）でも しゃだはる君の 吹き出しを しまう（hush は しまわない）。v1.71.0：おじさんも */
 /* v1.71.0（ロードマップ 畑③「セリフの 間と テンポ」）：tell を 畑ぜんぶに（しごとの ひとこと・しゃだはる君の 水やり・虫・天気・ひとやすみ・おじさん・出来事）。
    tellWait は 読めるまで 待ちなおす（待っている あいだに ほかの tell が 時刻を のばしても）。早送り（hurry）の あいだは 待たない。
