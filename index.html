@@ -1660,7 +1660,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.75.0</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.75.1</span></span>
   </div>
 
   <div class="hud">
@@ -10903,7 +10903,7 @@ async function homeEvening(cands){
 const DREAM_LINES=[
   {y:'あきらめたらあかん！',                  e:'はい、先生。'},
   {y:'いいですか。「がんばらない」んですよ。',    e:'はい、先生。'},
-  {y:'「木を見て、森を見る」ことが大切です。',   e:'はい、先生。'},
+  {y:'「木を見て、森を見る」\nことが大切です。',   e:'はい、先生。'},   /* v1.75.1：\n＝ここで 折る（依頼者「「木を見て、森を見る」／ことが大切です。」）。ふつうの 折れかた（「、」の あと）だと「「木を見て、／森を見る」ことが大切です。」に なっていた */
   {y:'「陰」と「陽」のバランスを整えましょう。',  e:'はい、先生。'},
   {y:'今日やっときましょう。', aside:'おい、今日いけるな？', e:'はい、先生。'}
 ];
@@ -10917,7 +10917,7 @@ async function dreamScene(){
   const Y=mk('yoshiharu',96,200,196), E=mk('eri',64,92,334);
   const look=(el,ex,ey)=>{ el.style.setProperty('--ex',ex+'px'); el.style.setProperty('--ey',ey+'px'); };
   if(!reduceMotion) [[48,70,0],[300,96,.9],[236,330,1.6],[40,250,.5],[322,210,2.1],[130,118,1.3],[268,40,1.9]].forEach(([x,y,d])=>{ const t=document.createElement('i'); t.className='tw'; t.style.left=x+'px'; t.style.top=y+'px'; t.style.animationDelay=d+'s'; box.appendChild(t); });
-  const dsay=(el,text,cls)=>{ const b=el.querySelector('.bubble'); b.className='bubble '+cls; b.innerHTML=bubbleHTML(text); void b.offsetWidth; b.classList.add('on'); saidAdd(text); return sleep(rd(text)); };
+  const dsay=(el,text,cls)=>{ const b=el.querySelector('.bubble'); b.className='bubble '+cls; b.innerHTML=text.split('\n').map(bubbleHTML).join('<br>'); void b.offsetWidth; b.classList.add('on'); saidAdd(text.replace(/\n/g,'')); return sleep(rd(text)); };   /* v1.75.1：\n の ところで 折る（行ごとに bubbleHTML） */
   const dhush=el=>el.querySelector('.bubble').classList.remove('on');
   lay.classList.add('on'); await pause(900);   /* うっすらと 明かり */
   E.classList.add('in'); await pause(600);
@@ -10934,7 +10934,7 @@ async function dreamScene(){
   Y.classList.remove('in'); E.classList.remove('in'); await pause(750);
   lay.classList.remove('on'); await pause(reduceMotion?300:950);
   box.innerHTML='';
-  log('1年のさいごの夜。えりちゃんは、よしはる先生の夢を見ました。「'+L.y+'」');
+  log('1年のさいごの夜。えりちゃんは、よしはる先生の夢を見ました。「'+L.y.replace(/\n/g,'')+'」');   /* v1.75.1：できごと欄には 改行を 入れない */
 }
 /* 朝のおうち（v1.13.0。依頼者の希望）：ふとんで目をさまして「おはよう。」→ すぐ外へ（お見送りの場面）。おうちの中なので「。」 */
 const FUTON={eri:{x:172,y:348}, homare:{x:242,y:348}, shada:{x:309,y:354}};
