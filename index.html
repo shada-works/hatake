@@ -910,6 +910,20 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 /* 夜をこす（v1.13.2）：「おやすみ」のあと、畑にはもどさない。暗い部屋が そのまま まっくらになって、朝のおうちへつながる */
 .hBlack{position:absolute;left:0;top:0;right:0;bottom:0;background:#0e1328;opacity:0;transition:opacity .8s ease;pointer-events:none;z-index:700}
 .home.deep .hBlack{opacity:1}
+/* v1.75.0（依頼者「1年最後の夜に、えりちゃんが夢をみます」「暗闇の中にうっすらと明かりが灯り」）：夢の 場面。まっくら（.hBlack z700）の 上（z720）に、うっすらと 暖かい 明かりと、顔だけの ふたり（えりちゃん 64px・よしはる先生 96px）。またたく 光 */
+.hDream{position:absolute;left:0;top:0;right:0;bottom:0;z-index:720;opacity:0;transition:opacity .9s ease;pointer-events:none;background:radial-gradient(ellipse at 54% 44%,rgba(255,236,190,.22),rgba(255,236,190,.07) 40%,rgba(14,19,40,0) 68%)}
+.hDream.on{opacity:1}
+.hDreamBox{position:absolute;left:0;top:0;width:360px;height:440px}
+.hDream .actor{opacity:0;transition:opacity .7s ease}
+.hDream .actor.in{opacity:1}
+.hDream .actor .bob{transform:scale(.86) translateY(4%);transition:transform .7s cubic-bezier(.3,.8,.4,1)}
+.hDream .actor.in .bob{transform:none}
+.hDream .actor .glow{position:absolute;left:-34%;top:-34%;right:-34%;bottom:-34%;border-radius:50%;background:radial-gradient(circle,rgba(255,243,210,.30),rgba(255,243,210,0) 68%)}
+.hDream .actor .eyes-open .pupil{transform:translate(var(--ex,0px),var(--ey,0px));transition:transform .3s ease-out}   /* 目線（えりちゃんは 先生を 見上げる・先生は えりちゃんを 見る） */
+.hDream .actor.yoshiharu.aside .bob{transform:rotate(-9deg) translate(-5%,0)}   /* スタッフの ほう（画面の 左）を 向く（5年目） */
+.hDream .bubble.side{max-width:132px}
+.hDream .tw{position:absolute;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;background:#fff3d2;opacity:0;animation:twinkle 2.6s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.6)}50%{opacity:.85;transform:scale(1)}}
 /* なごみ度のごほうび（v1.15.0）：出る夜のカード。季節のカードと同じつくり */
 .hReward{position:absolute;left:50%;top:33%;transform:translate(-50%,-50%) scale(.95);z-index:650;pointer-events:none;opacity:0;transition:opacity .4s,transform .4s;background:#fff8f4;border:2px solid #f0b7ae;border-radius:20px;padding:12px 22px;text-align:center;width:max-content;min-width:200px;max-width:86%;box-shadow:0 6px 18px rgba(120,80,60,.18)}
 .hReward.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
@@ -1440,6 +1454,34 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
   <symbol id="i-suzume" viewBox="0 0 40 40"><path d="M30 20 L39 14 L38 22 L31 24Z" fill="#6e4b2f"/><ellipse cx="21" cy="23" rx="12" ry="9" fill="#a8835f"/><path d="M12 21 Q22 10 33 19 Q27 17 21 19 Q16 20 12 21Z" fill="#7d5a3b"/><ellipse cx="18" cy="27" rx="8.5" ry="5" fill="#efe5d2"/><path d="M16 20 L19 24 M20 19 L23 23 M24 19 L27 22" stroke="#5f4027" stroke-width="1" stroke-linecap="round" opacity=".8"/><circle cx="11" cy="17" r="7" fill="#8f5f3d"/><circle cx="9.5" cy="19" r="3.4" fill="#fffaf0"/><circle cx="9.2" cy="19.4" r="1.4" fill="#2f2622"/><circle cx="8.6" cy="15.2" r="1.3" fill="#2f2622"/><path d="M4.6 16.4 L1.2 18.2 L4.8 19.4Z" fill="#4a3a30"/><path d="M12 23 Q13.5 24.6 15 23" stroke="#2f2622" stroke-width="1.2" fill="none" stroke-linecap="round"/><path d="M17 31 L16.5 36 M16.5 36 L13.5 37.6 M16.5 36 L19.5 37.6 M24 31 L24 36 M24 36 L21 37.6 M24 36 L27 37.6" stroke="#c98a4a" stroke-width="1.4" stroke-linecap="round" fill="none"/></symbol>
 </svg>
 <!-- 顔だけキャラの原画。ここを直すと、畑の上のコマも、にっきや夕がたのアイコンも一緒に変わります -->
+<!-- v1.75.0：よしはる先生（1年の さいごの 夜の 夢。依頼者の 希望）。依頼者の 写真 2枚（10月24日 13:24）から、この ゲームの 顔の 型（100×100）で：
+     頭の てっぺんが 薄く 横と うしろに 髪（白髪まじり）・大きな 耳・細い 金属の めがね（角の まるい 四角）・歯の 見える 大きな 笑顔と 笑いじわ・白衣の えり（中は 紺の 服）に 赤い 丸い バッジ（本人の 左むね＝画面の 右）。
+     表情：normal＝ひとみ（目線が 動く）＋笑顔／happy＝∩の 目＋大きな 笑顔（話す とき） -->
+<template id="tpl-yoshiharu">
+<svg class="face" viewBox="0 0 100 100" aria-hidden="true">
+  <path d="M7 104 L30 79 L50 97 L70 79 L93 104Z" fill="#fffdf8" stroke="#d9d0c3" stroke-width="2" stroke-linejoin="round"/>   <!-- 白衣の えり -->
+  <path d="M37.5 104 L50 91 L62.5 104Z" fill="#2b3a5c"/>
+  <circle cx="71" cy="95.5" r="3" fill="#d8322b"/><circle cx="71" cy="95.5" r="1.1" fill="#ffffff"/>   <!-- 赤い 丸い バッジ -->
+  <path d="M22 33 C15 37 11.5 50 12.5 61 C13 66.5 15.5 71 19 74 C23 71.5 25.5 67 26 60 L26 38Z" fill="#3e3a38"/>   <!-- 横〜うしろの 髪の ふくらみ（頭の うしろ。耳の うしろまで。13:43 依頼者「少しだけ 量を 減らして」＝外がわを 3 せまく） -->
+  <path d="M78 33 C85 37 88.5 50 87.5 61 C87 66.5 84.5 71 81 74 C77 71.5 74.5 67 74 60 L74 38Z" fill="#3e3a38"/>
+  <path d="M19 55 C19 29 31 11 50 11 C69 11 81 29 81 55 C81 75 67 90 50 90 C33 90 19 75 19 55Z" fill="#efcdaa"/>   <!-- 頭（てっぺんまで 肌） -->
+  <ellipse cx="42" cy="22" rx="10" ry="5" fill="#ffffff" opacity=".2"/>
+  <path d="M24 31 C20.5 35 18.5 44 18.5 52 C18.5 57 19.2 61 20.5 64.5 C22.5 61 24 56 24.5 50 C25 44 25.5 38 27 33.5 C26.5 32 25.5 31 24 31Z" fill="#3e3a38"/>   <!-- こめかみの 髪（頭の 上に。うしろの ふくらみと つながる。13:43 で 1.5 細く） -->
+  <path d="M76 31 C79.5 35 81.5 44 81.5 52 C81.5 57 80.8 61 79.5 64.5 C77.5 61 76 56 75.5 50 C75 44 74.5 38 73 33.5 C73.5 32 74.5 31 76 31Z" fill="#3e3a38"/>
+  <path d="M22.5 37 Q20.2 45 20.5 54 M77.5 37 Q79.8 45 79.5 54 M15.5 47 Q14 56 15 65 M84.5 47 Q86 56 85 65" fill="none" stroke="#8d8784" stroke-width="1.3" stroke-linecap="round" opacity=".8"/>   <!-- 白髪 -->
+  <circle cx="17" cy="60" r="7" fill="#e6c09c"/><circle cx="83" cy="60" r="7" fill="#e6c09c"/>   <!-- 大きな 耳（髪の 前） -->
+  <path d="M26.5 44 Q35 40 43 43.5 M57 43.5 Q65 40 73.5 44" fill="none" stroke="#3e3a38" stroke-width="3.2" stroke-linecap="round"/>
+  <g class="normal eyes-open"><g class="pupil"><circle cx="35" cy="58" r="3" fill="#302724"/><circle cx="65" cy="58" r="3" fill="#302724"/></g></g>
+  <g class="happy" fill="none" stroke="#302724" stroke-width="3.2" stroke-linecap="round"><path d="M30 60 Q35 54 40 60"/><path d="M60 60 Q65 54 70 60"/></g>
+  <g fill="#ffffff" fill-opacity=".1" stroke="#5a524c" stroke-width="2.2"><rect x="23" y="49" width="23" height="17" rx="7"/><rect x="54" y="49" width="23" height="17" rx="7"/></g>   <!-- 細い めがね -->
+  <path d="M46 55.5 Q50 53.5 54 55.5 M23 54 L18 52 M77 54 L82 52" fill="none" stroke="#5a524c" stroke-width="2" stroke-linecap="round"/>
+  <path d="M33 69 Q30.5 75 34 81 M67 69 Q69.5 75 66 81" fill="none" stroke="#d6a98a" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>   <!-- 笑いじわ -->
+  <ellipse cx="27" cy="70" rx="4.6" ry="3" fill="#e8907c" opacity=".3"/><ellipse cx="73" cy="70" rx="4.6" ry="3" fill="#e8907c" opacity=".3"/>
+  <path d="M47.5 67 Q50 69.5 52.5 67" fill="none" stroke="#c49a7c" stroke-width="2.2" stroke-linecap="round"/>
+  <path class="normal" d="M37.5 74.5 Q50 85.5 62.5 74.5" fill="none" stroke="#a8645c" stroke-width="3" stroke-linecap="round"/>   <!-- 笑顔 -->
+  <g class="happy"><path d="M36 74 Q50 91 64 74Z" fill="#8d3f3b" stroke="#8b554a" stroke-width="2" stroke-linejoin="round"/><path d="M38.5 75.5 Q50 80.5 61.5 75.5 Q50 85 38.5 75.5Z" fill="#ffffff"/></g>   <!-- 歯の 見える 大きな 笑顔 -->
+</svg>
+</template>
 <template id="tpl-eri">
 <svg class="face" viewBox="0 0 100 100" aria-hidden="true">
   <path class="hairB" d="M50 5 C23 5 10 27 11 53 C11 70 12 82 17 90 Q22 97 32 95 Q50 99 68 95 Q78 97 83 90 C88 82 89 70 89 53 C90 27 77 5 50 5Z" fill="#24211f"/>   <!-- v1.73.0：.hairB＝うしろ髪（風の 日に なびく） -->
@@ -1618,7 +1660,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.74.0</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.75.0</span></span>
   </div>
 
   <div class="hud">
@@ -2040,6 +2082,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
       </div>
       <div class="hReward" id="hReward" aria-hidden="true"><svg><use href="#i-heart"/></svg><small id="hRewardAt"></small><b id="hRewardName"></b></div>
       <div class="hBlack" id="hBlack" aria-hidden="true"></div>
+      <div class="hDream" id="hDream" aria-hidden="true"><div class="hDreamBox" id="hDreamBox"></div></div>   <!-- v1.75.0：夢の 場面（1年の さいごの 夜） -->
     </div>
     <div class="sheet" id="sheet"><div class="card" id="sheetCard" role="dialog" aria-modal="true"></div></div>
   </div>
@@ -10847,10 +10890,52 @@ async function homeEvening(cands){
      そのあと homeMorning が もう一度 おうちを出していた。いまは、暗い部屋を そのまま まっくらにして（deep）、おうちは出したまま朝へわたす */
   home.classList.add('deep');
   await sleep(reduceMotion?300:1250);
+  if(yearEndTonight()) await dreamScene();   /* v1.75.0：1年の さいごの 夜は 夢（よしはる先生） */
   eveningBar.classList.remove('on'); panelEl.classList.remove('atHome');
   Snd.ambient();
 }
 
+/* v1.75.0（依頼者 10月24日「1年の終わり、冬から春になる1年最後の夜に、えりちゃんが夢をみます。タイミングは、おやすみ（次の日へ）のボタンを押して、画面がまっくらになった時です。
+   暗闇の中にうっすらと明かりが灯り「よしはる先生」が登場して、えりちゃんと、ひとことだけ会話します。」）：
+   1年の さいごの 夜（冬の 2日め）に「おやすみ」を 押して まっくらに なった あと（homeEvening・resumeEveningEnd の 2か所）、夢の 場面 → 朝。
+   よしはる先生の ことば（y）は 依頼者が 決めた 5つを 年ごとに この 順で（6年目からは 1つめに もどる）。5つめは「今日やっときましょう。」の あと、横を 向いて スタッフに「おい、今日いけるな？」（aside＝横の 吹き出し）。
+   えりちゃんの 返事（e）は すべて「はい、先生。」（依頼者 13:24「えりちゃんの返事はすべて「はい、先生。」に統一します。」） */
+const DREAM_LINES=[
+  {y:'あきらめたらあかん！',                  e:'はい、先生。'},
+  {y:'いいですか。「がんばらない」んですよ。',    e:'はい、先生。'},
+  {y:'「木を見て、森を見る」ことが大切です。',   e:'はい、先生。'},
+  {y:'「陰」と「陽」のバランスを整えましょう。',  e:'はい、先生。'},
+  {y:'今日やっときましょう。', aside:'おい、今日いけるな？', e:'はい、先生。'}
+];
+const yearEndTonight=()=>!!S && S.day%(SEASON_DAYS*4)===0;   /* 1年の さいごの 日（冬の 2日め）の 夜 */
+async function dreamScene(){
+  const n=(yearNo()-1)%DREAM_LINES.length, L=DREAM_LINES[n], lay=$('#hDream'), box=$('#hDreamBox');
+  const rd=t=>readMs(t)+(reduceMotion?400:800);
+  Snd.hush(9000+rd(L.y)+rd(L.e)+(L.aside?rd(L.aside)+800:0));   /* 夢の あいだ 音楽は 止めたまま（朝の チャイムの あとで また 流れる） */
+  box.innerHTML='';
+  const mk=(who,tok,x,y)=>{ const e=document.createElement('div'); e.className='actor dream '+who; e.dataset.face=who; e.dataset.mood='normal'; e.style.setProperty('--tok',tok+'px'); e.innerHTML='<div class="glow"></div><div class="bob"></div><div class="bubble"></div>'; e.querySelector('.bob').appendChild(makeFace(who)); e.style.transform='translate('+x+'px,'+y+'px)'; box.appendChild(e); return e; };
+  const Y=mk('yoshiharu',96,200,196), E=mk('eri',64,92,334);
+  const look=(el,ex,ey)=>{ el.style.setProperty('--ex',ex+'px'); el.style.setProperty('--ey',ey+'px'); };
+  if(!reduceMotion) [[48,70,0],[300,96,.9],[236,330,1.6],[40,250,.5],[322,210,2.1],[130,118,1.3],[268,40,1.9]].forEach(([x,y,d])=>{ const t=document.createElement('i'); t.className='tw'; t.style.left=x+'px'; t.style.top=y+'px'; t.style.animationDelay=d+'s'; box.appendChild(t); });
+  const dsay=(el,text,cls)=>{ const b=el.querySelector('.bubble'); b.className='bubble '+cls; b.innerHTML=bubbleHTML(text); void b.offsetWidth; b.classList.add('on'); saidAdd(text); return sleep(rd(text)); };
+  const dhush=el=>el.querySelector('.bubble').classList.remove('on');
+  lay.classList.add('on'); await pause(900);   /* うっすらと 明かり */
+  E.classList.add('in'); await pause(600);
+  Y.classList.add('in'); Snd.play('poron'); await pause(900);
+  look(E,2.6,-3); look(Y,-2.4,2.4);   /* えりちゃんは 見上げる・先生は えりちゃんを 見る */
+  Y.dataset.mood='happy';   /* 大きな 笑顔で（指を 立てるのは 依頼者 13:43「消します」） */
+  await dsay(Y,L.y,'toL');
+  if(L.aside){ dhush(Y); Y.classList.add('aside'); look(Y,-3.4,0); await pause(400); await dsay(Y,L.aside,'side toL'); dhush(Y); Y.classList.remove('aside'); look(Y,-2.4,2.4); await pause(350); }
+  else { dhush(Y); await pause(300); }
+  Y.dataset.mood='normal';   /* えりちゃんを 見て 聞く */
+  E.dataset.mood='smile';
+  await dsay(E,L.e,'toR');
+  dhush(E); await pause(400);
+  Y.classList.remove('in'); E.classList.remove('in'); await pause(750);
+  lay.classList.remove('on'); await pause(reduceMotion?300:950);
+  box.innerHTML='';
+  log('1年のさいごの夜。えりちゃんは、よしはる先生の夢を見ました。「'+L.y+'」');
+}
 /* 朝のおうち（v1.13.0。依頼者の希望）：ふとんで目をさまして「おはよう。」→ すぐ外へ（お見送りの場面）。おうちの中なので「。」 */
 const FUTON={eri:{x:172,y:348}, homare:{x:242,y:348}, shada:{x:309,y:354}};
 /* v1.55.0：朝の あいさつのあとの ひとこと（3日に1日くらい。セリフは依頼者が了解ずみ）。[だれ, セリフ, 表情, うごき] */
@@ -12476,6 +12561,7 @@ async function resumeEveningEnd(){
   sleepBtn.disabled=true; Snd.hush(4200); Snd.play('night',.5);
   home.classList.add('deep');
   await sleep(reduceMotion?300:1250);
+  if(yearEndTonight()) await dreamScene();   /* v1.75.0：1年の さいごの 夜は 夢（よしはる先生） */
   eveningBar.classList.remove('on'); panelEl.classList.remove('atHome');
   Snd.ambient();
   await nextMorning();
@@ -12889,7 +12975,7 @@ if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitleEn)
 { const v=document.querySelector('.ver'); let taps=[];
   if(v) v.addEventListener('click',e=>{ e.stopPropagation(); const t=Date.now(); taps=taps.filter(x=>t-x<3000); taps.push(t); if(taps.length>=5){ taps=[]; openGyojiMenu(); } }); }
 if(location.hash.indexOf('debug')>=0){
-  window.__hatake={ tell, tellWait, readMs, workTalk, eriLineDone, jobQuiet, jobInfo:()=>({lastJob,jobStreak,lineUntil}), teaTime, ladleOn, flipOn, flipOff, gaze, gazeAt, gazeClear, shadaGesture, shadaGestureOK, gestClear, GEST_MS, shadaShake, shadaWag, shadaEyeFollow, splashShada, gestForce, dirtBurst, breath, get REPLY_AT(){return REPLY_AT;}, get WALK_AFTER(){return WALK_AFTER;}, get lineRead(){return lineRead;}, clampView, BAND_Y, CARRY_PX, carryMs, hcarry, hLayout, eriTool, eriToolFor, WORK_MS, work, seedFall, hhold, ukeTake, hbubOff, poseArms, strumHand, POSE, holdCenter, poseSpot, roomToBody, chopSpot, POT_HAND, stirBurst, chopOn, chopOff, eatOn, eatOff, PLAY_SETS, THUNDER_SETS, HIDE_LINES, thunderScene, SHELTER, SHELTER_FREE, resumeEveningEnd, saveData, get eveSnap(){return eveSnap;}, goHidden, goVisible, jastaSuikaNight, jastaSuikaDue, jastaSuikaPreview, jportion, getJasta, get JA(){return JA;}, hgassho, carryBasketHome, carryBasketOut, basketTo, basketFrontOf, BK, BK_HOME, get basketAtDoor(){return basketAtDoor;}, set basketAtDoor(v){basketAtDoor=!!v;}, fitTop, renderNagomi, addNagomi, hNagomi, dressHome, HFUKU, renderPaddyLife, paddyLifeKind, paddyFrogTap, tonboFlyTo, tonboNose, paddyLifePreview, PADDY_FROGS, TONBO_ZONE, get plTonbo(){return plTonbo;}, riceBagLevel, renderRiceBag, gyojiLog, get hanamiRice(){return hanamiRice;}, tipOK, GIFT_TALK, VISIT_SETS, VISIT_CALL, visitScene, vary, saidOK, get SAID(){return SAID;}, ERI_TALK, OKAWARI, eriTalk, etSlot, MORN_X, mornExtra, reportLine, svgPop, liftOffFaces, walkHomeTogether, camGlide, bplates, bslice, bcakeSVG, get cameWithH(){return cameWithH;}, TANBO, tanboDue, hakobiDue, shinmaiDue, tanboScene, hakobiScene, shinmaiTalk, shinmaiPreview, tanboPreview, tanboState, renderPaddy, paddyArt, paddyHint, paddyTap, giftTonight, giftServed, giftPick, moreServe, moreEaten, giftRiceTalk, dessertAdd, dessertDue, dessertTime, dessertForm, fieldDessertNight, gourmetPreview, FIELD_DESSERT, DESSERT_LINES, GIFT_BY_SEASON, GIFT_EAT, RICE_DISHES, RICE_TALK, menuOK, riceShow, riceFill, get riceMix(){return riceMix;}, set riceMix(v){riceMix=v||'';}, RICE_MIX, openSeeds, chooseMenu, closeSheet, get tanboView(){return tanboView;}, sayTest:say, focusRange, seedOK, recipeOK, hsay, bubbleHTML, TSUKIMI, hotDry, returnBigCan, eriReturnBigCan, eriCarry, DRY_RUN, spOf, spKeys, spEmpty, HOT_AT, get bigCanCarry(){return bigCanCarry;}, get wxQueue(){return wxQueue;}, weatherScenes, askScene, askLeft, renderAsk, compostTap, ASK_MAX, COMPOST_MAX, place, moveTo, moveShada, shadaCanDown, shadaCarry, shadaMode, afterAction, returnCan, shadaSelfWater, get canDownScene(){return canDownScene;}, rollBig, spawnBug, startRain, yearReview, yearReviewScene, yearSnap, yearLines, openZukan, openDiary, dayStr, get sheetKind(){return sheetKind;}, get bg(){return bg;}, bgWait, set forceWait(v){forceWait=v;}, gyojiPat, GYOJI_LEAD, birthdayNight, get gyojiStep(){return gyojiStep;}, rollWeather, pickPre, gyojiNightDue, nightOn, nightOff, nightOuting, fwLaunch, senkoOn, HANABI, hangCan, hangScene, hangMorning, renderShed, shedTap, nextHoshiDish, hoshiReady, morningPlan, morning, GYOJI, GYOJI_SCENE, gyojiDue, gyojiScene, hRoute, hCross, hInB, HTABLE, HSPOT, hmove, get S(){return S;}, get busy(){return busy;}, get hiddenNow(){return hiddenNow;}, get pausedMs(){return pausedMs;}, gnow, shadaAcc, lapBlanket, heightArt, plantArt, pawArt, fishbowlArt, BLANKET, ACC, SONGS, playSong, homeMorning, get sceneDepth(){return sceneDepth;}, pumpTimers, mikanFit, basketPlace, get lastErr(){return lastErr;}, get stall(){return {n:stallN,max:stallMax};}, saveDiag, saveNow, get saveOK(){return saveOK;}, A, homeEvening, pickPre, dishCandidates, makeRequest, get HA(){return HA;}, advance, maybeEvent, renderAll, addHarvest, checkUnlocks, nextMorning, Store, CROPS, RECIPES, UNLOCKS, EVENTS, FRIDGE, rollFridge, rollWeather, placeFrost, weatherScenes, importSave, exportSave, normalize, Snd, GIFTS, planVisit, visitDue, fitVisit, DISH, setPortions, shelterAtShed, restAtHome, placeTreasure, rest, FRUITS, plantTree, plantVine, pickFruit, TREES, treeTap, dessertNight, fruitMorning, renderTree, moveShada, shadaSelfWater, selfWaterTarget, returnCan, playerAction, endDay, plantBasil, pickBasil, pickV, judgeBigDay, giftDetour, basilInFridge, SLOT_MAX, makeRoomFor, seasonSwap, fixup, workLeft, decorShown, closetTalk, openFridge, cuckoo, feedFish, mirrorReflect, strum, playUke, sitRock, seasonalDue, seasonalShow, SEASONAL, SEASONAL_SCENE, setupRoom, REWARD_NIGHT, DECOR, REWARDS, rewardSetup, LOOP, LOOP_SCENE, lapNext, lapReward, lapReady, lapPreview, renderLooks, showLook, bringOut, tugGame, tugRope, paintArt, LOOK_ART, lookN, lookV, nextReward, dueReward, renderNagomi, openNagomi, rewardCard, sweetsNight, updatePhoto, get SW(){return {n:S.swN,day:S.swDay,can:S.canOut};},
+  window.__hatake={ tell, tellWait, readMs, workTalk, eriLineDone, jobQuiet, jobInfo:()=>({lastJob,jobStreak,lineUntil}), teaTime, ladleOn, flipOn, flipOff, gaze, gazeAt, gazeClear, shadaGesture, shadaGestureOK, gestClear, GEST_MS, shadaShake, shadaWag, shadaEyeFollow, splashShada, gestForce, dirtBurst, dreamScene, yearEndTonight, DREAM_LINES, breath, get REPLY_AT(){return REPLY_AT;}, get WALK_AFTER(){return WALK_AFTER;}, get lineRead(){return lineRead;}, clampView, BAND_Y, CARRY_PX, carryMs, hcarry, hLayout, eriTool, eriToolFor, WORK_MS, work, seedFall, hhold, ukeTake, hbubOff, poseArms, strumHand, POSE, holdCenter, poseSpot, roomToBody, chopSpot, POT_HAND, stirBurst, chopOn, chopOff, eatOn, eatOff, PLAY_SETS, THUNDER_SETS, HIDE_LINES, thunderScene, SHELTER, SHELTER_FREE, resumeEveningEnd, saveData, get eveSnap(){return eveSnap;}, goHidden, goVisible, jastaSuikaNight, jastaSuikaDue, jastaSuikaPreview, jportion, getJasta, get JA(){return JA;}, hgassho, carryBasketHome, carryBasketOut, basketTo, basketFrontOf, BK, BK_HOME, get basketAtDoor(){return basketAtDoor;}, set basketAtDoor(v){basketAtDoor=!!v;}, fitTop, renderNagomi, addNagomi, hNagomi, dressHome, HFUKU, renderPaddyLife, paddyLifeKind, paddyFrogTap, tonboFlyTo, tonboNose, paddyLifePreview, PADDY_FROGS, TONBO_ZONE, get plTonbo(){return plTonbo;}, riceBagLevel, renderRiceBag, gyojiLog, get hanamiRice(){return hanamiRice;}, tipOK, GIFT_TALK, VISIT_SETS, VISIT_CALL, visitScene, vary, saidOK, get SAID(){return SAID;}, ERI_TALK, OKAWARI, eriTalk, etSlot, MORN_X, mornExtra, reportLine, svgPop, liftOffFaces, walkHomeTogether, camGlide, bplates, bslice, bcakeSVG, get cameWithH(){return cameWithH;}, TANBO, tanboDue, hakobiDue, shinmaiDue, tanboScene, hakobiScene, shinmaiTalk, shinmaiPreview, tanboPreview, tanboState, renderPaddy, paddyArt, paddyHint, paddyTap, giftTonight, giftServed, giftPick, moreServe, moreEaten, giftRiceTalk, dessertAdd, dessertDue, dessertTime, dessertForm, fieldDessertNight, gourmetPreview, FIELD_DESSERT, DESSERT_LINES, GIFT_BY_SEASON, GIFT_EAT, RICE_DISHES, RICE_TALK, menuOK, riceShow, riceFill, get riceMix(){return riceMix;}, set riceMix(v){riceMix=v||'';}, RICE_MIX, openSeeds, chooseMenu, closeSheet, get tanboView(){return tanboView;}, sayTest:say, focusRange, seedOK, recipeOK, hsay, bubbleHTML, TSUKIMI, hotDry, returnBigCan, eriReturnBigCan, eriCarry, DRY_RUN, spOf, spKeys, spEmpty, HOT_AT, get bigCanCarry(){return bigCanCarry;}, get wxQueue(){return wxQueue;}, weatherScenes, askScene, askLeft, renderAsk, compostTap, ASK_MAX, COMPOST_MAX, place, moveTo, moveShada, shadaCanDown, shadaCarry, shadaMode, afterAction, returnCan, shadaSelfWater, get canDownScene(){return canDownScene;}, rollBig, spawnBug, startRain, yearReview, yearReviewScene, yearSnap, yearLines, openZukan, openDiary, dayStr, get sheetKind(){return sheetKind;}, get bg(){return bg;}, bgWait, set forceWait(v){forceWait=v;}, gyojiPat, GYOJI_LEAD, birthdayNight, get gyojiStep(){return gyojiStep;}, rollWeather, pickPre, gyojiNightDue, nightOn, nightOff, nightOuting, fwLaunch, senkoOn, HANABI, hangCan, hangScene, hangMorning, renderShed, shedTap, nextHoshiDish, hoshiReady, morningPlan, morning, GYOJI, GYOJI_SCENE, gyojiDue, gyojiScene, hRoute, hCross, hInB, HTABLE, HSPOT, hmove, get S(){return S;}, get busy(){return busy;}, get hiddenNow(){return hiddenNow;}, get pausedMs(){return pausedMs;}, gnow, shadaAcc, lapBlanket, heightArt, plantArt, pawArt, fishbowlArt, BLANKET, ACC, SONGS, playSong, homeMorning, get sceneDepth(){return sceneDepth;}, pumpTimers, mikanFit, basketPlace, get lastErr(){return lastErr;}, get stall(){return {n:stallN,max:stallMax};}, saveDiag, saveNow, get saveOK(){return saveOK;}, A, homeEvening, pickPre, dishCandidates, makeRequest, get HA(){return HA;}, advance, maybeEvent, renderAll, addHarvest, checkUnlocks, nextMorning, Store, CROPS, RECIPES, UNLOCKS, EVENTS, FRIDGE, rollFridge, rollWeather, placeFrost, weatherScenes, importSave, exportSave, normalize, Snd, GIFTS, planVisit, visitDue, fitVisit, DISH, setPortions, shelterAtShed, restAtHome, placeTreasure, rest, FRUITS, plantTree, plantVine, pickFruit, TREES, treeTap, dessertNight, fruitMorning, renderTree, moveShada, shadaSelfWater, selfWaterTarget, returnCan, playerAction, endDay, plantBasil, pickBasil, pickV, judgeBigDay, giftDetour, basilInFridge, SLOT_MAX, makeRoomFor, seasonSwap, fixup, workLeft, decorShown, closetTalk, openFridge, cuckoo, feedFish, mirrorReflect, strum, playUke, sitRock, seasonalDue, seasonalShow, SEASONAL, SEASONAL_SCENE, setupRoom, REWARD_NIGHT, DECOR, REWARDS, rewardSetup, LOOP, LOOP_SCENE, lapNext, lapReward, lapReady, lapPreview, renderLooks, showLook, bringOut, tugGame, tugRope, paintArt, LOOK_ART, lookN, lookV, nextReward, dueReward, renderNagomi, openNagomi, rewardCard, sweetsNight, updatePhoto, get SW(){return {n:S.swN,day:S.swDay,can:S.canOut};},
     visit:async()=>{ if(busy) return false; busy=true; renderButtons(); S.oji={sy:Math.floor((S.day-1)/SEASON_DAYS),day:S.day,at:S.clock,done:false}; await visitScene(); busy=false; renderButtons(); return true; },
     force:async id=>{ if(busy) return false; busy=true; renderButtons(); S.sinceEvent=9; const r=await maybeEvent(false,id); await checkUnlocks(); busy=false; renderButtons(); return r; } };
 }
