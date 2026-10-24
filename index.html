@@ -336,6 +336,31 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 .face .yawnMouth{display:none;transform-box:fill-box;transform-origin:50% 0%}   /* v1.73.3：あくびの 口も どこでも かくす（v1.73.2 の しっぽと 同じ 直し。前は #actors だけ だったので おうち・小さな 顔で ピンクの 口が 出ていた） */
 #actors .actor.shada.gest-yawn .face .yawnMouth{display:inline;animation:yawnOpen 1.4s ease-in-out 1}
 @keyframes yawnOpen{0%,100%{transform:scale(.3)}30%,70%{transform:scale(1)}}
+/* v1.74.0（依頼者「しゃだはる君の 畑での 可愛い 行動を いくつか 増やしたい」10月24日）：待ちしぐさ 3つ＝首かしげ tilt（えりちゃんの ほうへ こてん。--tilt＝えりちゃんの いる 向き）／ほじほじ dig（鼻を 下げて 3回 ほる。土つぶ .fx.dirt が はねる）／ごろん roll（ころんと 横に なって、すぐ 起きる。目は にっこり） */
+#actors .actor.shada.gest-tilt .bob{animation:headTilt 1.3s ease-in-out 1}
+@keyframes headTilt{0%,100%{transform:rotate(0) translateY(0)}28%,76%{transform:rotate(calc(var(--tilt,1)*16deg)) translateY(2%)}}
+#actors .actor.shada.gest-dig .bob{animation:digNose 1.4s ease-in-out 1}
+@keyframes digNose{0%,100%{transform:translateY(0) rotate(0)}18%{transform:translateY(11%) rotate(-8deg)}32%{transform:translateY(5%) rotate(-4deg)}46%{transform:translateY(12%) rotate(-9deg)}60%{transform:translateY(5%) rotate(-4deg)}74%{transform:translateY(12%) rotate(-9deg)}88%{transform:translateY(3%) rotate(-2deg)}}
+#actors .actor.shada.gest-dig .face .nose{transform-box:fill-box;transform-origin:center;animation:noseWiggle .28s ease-in-out 5}
+#actors .actor.shada.gest-roll .bob{transform-origin:50% 62%;animation:rollOver 1.7s ease-in-out 1}
+@keyframes rollOver{0%,100%{transform:rotate(0) translateY(0)}22%,74%{transform:rotate(calc(var(--tilt,1)*90deg)) translateY(10%)}}
+#actors .actor.shada.gest-roll .face .normal{display:none}
+#actors .actor.shada.gest-roll .face .happy{display:inline}
+/* v1.74.0：ぶるぶる shaking（水しぶき・雪。0.6秒。目を つぶる）／くしゃみ sneeze（花だん）／雪に 顔を つっこむ dive／朝・夕がたの しっぽ wagging／頭の 上の はっぱ .onHead／鼻の 雪 .snowNose */
+#actors .actor.shada.shaking .bob{animation:shakeOff .6s linear 1}
+@keyframes shakeOff{0%,100%{transform:rotate(0)}12%{transform:rotate(-10deg)}27%{transform:rotate(10deg)}42%{transform:rotate(-9deg)}57%{transform:rotate(8deg)}72%{transform:rotate(-6deg)}86%{transform:rotate(4deg)}}
+#actors .actor.shada.shaking .face .normal,#actors .actor.shada.sneeze .face .normal{display:none}
+#actors .actor.shada.shaking .face g.sleepy,#actors .actor.shada.sneeze .face g.sleepy{display:inline}
+#actors .actor.shada.shaking .face ellipse.sleepy,#actors .actor.shada.sneeze .face ellipse.sleepy{display:none}
+#actors .actor.shada.sneeze .bob{animation:sneeze .62s ease-in-out 1}
+@keyframes sneeze{0%{transform:none}32%{transform:translateY(-9%) scale(1.03,1.08)}52%{transform:translateY(8%) scale(1.07,.9) rotate(calc(var(--side,1)*-7deg))}100%{transform:none}}
+#actors .actor.shada.dive .bob{animation:snowDive 1.5s ease-in-out 1}
+@keyframes snowDive{0%,100%{transform:translateY(0) rotate(0)}26%,72%{transform:translateY(17%) rotate(-9deg)}}
+#actors .actor.shada.wagging .face .tail{display:inline;animation:tailWag .2s ease-in-out infinite alternate}
+#actors .actor.shada.creep .bob{transform:translateY(7%) scale(1.05,.94);transition:transform .35s}   /* そーっと 近づく（すずめ）：少し かがんで、はねずに すべる */
+#actors .actor.shada .onHead{position:absolute;left:50%;top:1%;width:14px;height:14px;margin-left:-4px;transform:rotate(24deg);z-index:4;pointer-events:none;transition:opacity .4s}
+#actors .actor.shada .onHead svg{display:block;width:100%;height:100%}
+#actors .actor.shada .snowNose{position:absolute;left:50%;top:60%;width:13px;height:11px;margin:-5px 0 0 -6.5px;border-radius:55% 55% 45% 45%;background:#fff;border:1px solid #c3ccd6;z-index:4;pointer-events:none}
 /* v1.73.0（ロードマップ 畑④「季節の 演出」。依頼者「A ア」）：冬は 話すと 白い 息（breath()＝.bob の 中に <i class="breath"> を 1つ。口もと（えり・ほまれ 76%・しゃだはる 72%・おじさん 84%）から 上へ ふわっと のぼって 1.2秒で 消える）。畑の コマだけ */
 #actors .actor .breath{position:absolute;left:50%;top:76%;width:18px;height:18px;margin:-9px 0 0 -9px;pointer-events:none;z-index:4;opacity:0;animation:breathUp 1.25s ease-out forwards}
 #actors .actor.shada .breath{top:72%}
@@ -566,6 +591,15 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 .fx.away>span{animation:away .8s ease-in forwards}
 .fx.tane>span{width:11px;height:11px;animation:seedFall .5s ease-in forwards}   /* v1.68.0：種袋の 口から 畑へ 落ちる 種つぶ（--sx/--sy＝落ちる 先。顔の 左下を 通って マスの 左上へ）。クラス名は tane（seed は 種えらびの ボタンの 名前） */
 @keyframes seedFall{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}12%{opacity:1;transform:translate(calc(-50% + var(--sx,0px)*.1),calc(-50% + var(--sy,0px)*.04)) scale(1)}100%{opacity:.9;transform:translate(calc(-50% + var(--sx,0px)),calc(-50% + var(--sy,0px))) scale(.85)}}
+/* v1.74.0：はねる つぶ（dirt＝土つぶ・spray＝しずく・雪・はっぱ。--dx/--dy＝とぶ 先）・すずめ（bird。--bf＝向き。絵は 左向き） */
+.fx.dirt>span{width:7px;height:7px;animation:fxBurst .55s ease-out forwards}
+.fx.spray>span{width:9px;height:9px;animation:fxBurst .5s ease-out forwards}
+@keyframes fxBurst{0%{opacity:1;transform:translate(-50%,-50%) scale(.7)}55%{opacity:1;transform:translate(calc(-50% + var(--dx,10px)),calc(-50% + var(--dy,-14px))) scale(1)}100%{opacity:0;transform:translate(calc(-50% + var(--dx,10px)*1.35),calc(-50% + var(--dy,-14px)*.3)) scale(.9)}}
+.fx.bird>span{width:26px;height:26px;transform:translate(-50%,-50%) scaleX(var(--bf,1))}
+.fx.bird.hopping>span{animation:birdHop .5s ease-out 2}
+@keyframes birdHop{0%,100%{transform:translate(-50%,-50%) scaleX(var(--bf,1))}40%{transform:translate(-50%,-62%) scaleX(var(--bf,1)) scaleY(1.06)}}
+.fx.bird.flyoff>span{animation:birdFlap .18s ease-in-out infinite alternate}
+@keyframes birdFlap{0%{transform:translate(-50%,-50%) scaleX(var(--bf,1)) scaleY(1)}100%{transform:translate(-50%,-50%) scaleX(var(--bf,1)) scaleY(.8)}}
 .fx.snack{transition:opacity .3s}
 .fx.snack>span{width:30px;height:30px;animation:snackIn .4s ease-out}
 .fx.text>span{width:auto;height:auto;font-size:13px;font-weight:700;color:#3f7a35;white-space:nowrap;animation:pop .9s ease-out forwards}
@@ -1398,6 +1432,12 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
   <symbol id="i-wind" viewBox="0 0 40 40"><g fill="none" stroke="#8fb7cf" stroke-width="3" stroke-linecap="round"><path d="M4 14 H23 C28 14 29.5 7.5 25 6.2 C22 5.4 20 7.6 20.4 9.6"/><path d="M4 22 H31 C36.5 22 37 29.5 32 30 C29.4 30.2 28 28.2 28.4 26.6"/><path d="M8 30 H19"/></g></symbol>
   <symbol id="i-storm" viewBox="0 0 40 40"><path d="M11 23 A7 7 0 0 1 12 9 A9 9 0 0 1 29 10 A6.5 6.5 0 0 1 29 23Z" fill="#8e9bab"/><path d="M21 19 L14 29 H19.5 L17 38 L26.5 26 H21 L24 19Z" fill="#f4c94e" stroke="#d9a62c" stroke-width="1" stroke-linejoin="round"/></symbol>
   <symbol id="i-snow" viewBox="0 0 40 40"><path d="M11 24 A7 7 0 0 1 12 10 A9 9 0 0 1 29 11 A6.5 6.5 0 0 1 29 24Z" fill="#c3ccd6"/><g fill="#ffffff" stroke="#a9b5c2" stroke-width="1"><circle cx="13" cy="32" r="2.4"/><circle cx="21" cy="34" r="2.4"/><circle cx="28" cy="31" r="2.4"/></g></symbol>
+  <!-- v1.74.0：しゃだはる君の 行動（土つぶ・雪の つぶ・落ち葉の 山・すずめ） -->
+  <symbol id="i-tsuchi" viewBox="0 0 40 40"><path d="M9 25 C6 15 14 8 21 10 C29 8 35 15 32 25 C29 33 13 34 9 25Z" fill="#9e6f49" stroke="#7b5538" stroke-width="2" stroke-linejoin="round"/><circle cx="17" cy="19" r="2.2" fill="#b8875c"/></symbol>
+  <symbol id="i-koyuki" viewBox="0 0 40 40"><circle cx="20" cy="20" r="13" fill="#ffffff" stroke="#c3ccd6" stroke-width="2"/></symbol>
+  <symbol id="i-ochiba" viewBox="0 0 60 30"><ellipse cx="30" cy="25" rx="29" ry="4.5" fill="#b8642f"/><path d="M2 24 Q6 12 18 12 Q16 24 2 24Z" fill="#d9573a"/><path d="M58 24 Q54 12 42 12 Q44 24 58 24Z" fill="#e9a24b"/><path d="M12 24 Q12 6 26 4 Q28 18 12 24Z" fill="#e58a3c"/><path d="M48 24 Q48 6 34 4 Q32 18 48 24Z" fill="#c9573a"/><path d="M20 25 Q30 14 40 25Z" fill="#f0b25a"/><path d="M26 5 L24 17 M34 5 L36 17 M7 16 L12 21 M53 16 L48 21" stroke="#8a4a24" stroke-width="1.1" fill="none" stroke-linecap="round" opacity=".7"/><path d="M3 25 Q30 30 57 25" stroke="#9a4e24" stroke-width="1.2" fill="none" opacity=".6"/></symbol>   <!-- 落ち葉の 山（横長。しゃだはる君の あごの 前に 置く＝足もとが 葉に うずまる） -->
+  <symbol id="i-yukiyama" viewBox="0 0 60 30"><path d="M2 26 Q8 8 30 7 Q52 8 58 26Z" fill="#ffffff" stroke="#c3ccd6" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 24 Q18 14 30 13 Q42 14 50 24" fill="none" stroke="#e4ebf2" stroke-width="2" stroke-linecap="round"/><ellipse cx="30" cy="26" rx="29" ry="3.5" fill="#eef3f7"/></symbol>   <!-- 雪の 山（雪に 顔を つっこむ とき、あごの 前に） -->
+  <symbol id="i-suzume" viewBox="0 0 40 40"><path d="M30 20 L39 14 L38 22 L31 24Z" fill="#6e4b2f"/><ellipse cx="21" cy="23" rx="12" ry="9" fill="#a8835f"/><path d="M12 21 Q22 10 33 19 Q27 17 21 19 Q16 20 12 21Z" fill="#7d5a3b"/><ellipse cx="18" cy="27" rx="8.5" ry="5" fill="#efe5d2"/><path d="M16 20 L19 24 M20 19 L23 23 M24 19 L27 22" stroke="#5f4027" stroke-width="1" stroke-linecap="round" opacity=".8"/><circle cx="11" cy="17" r="7" fill="#8f5f3d"/><circle cx="9.5" cy="19" r="3.4" fill="#fffaf0"/><circle cx="9.2" cy="19.4" r="1.4" fill="#2f2622"/><circle cx="8.6" cy="15.2" r="1.3" fill="#2f2622"/><path d="M4.6 16.4 L1.2 18.2 L4.8 19.4Z" fill="#4a3a30"/><path d="M12 23 Q13.5 24.6 15 23" stroke="#2f2622" stroke-width="1.2" fill="none" stroke-linecap="round"/><path d="M17 31 L16.5 36 M16.5 36 L13.5 37.6 M16.5 36 L19.5 37.6 M24 31 L24 36 M24 36 L21 37.6 M24 36 L27 37.6" stroke="#c98a4a" stroke-width="1.4" stroke-linecap="round" fill="none"/></symbol>
 </svg>
 <!-- 顔だけキャラの原画。ここを直すと、畑の上のコマも、にっきや夕がたのアイコンも一緒に変わります -->
 <template id="tpl-eri">
@@ -1578,7 +1618,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.73.16</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.74.0</span></span>
   </div>
 
   <div class="hud">
@@ -3382,20 +3422,54 @@ function setMood(who,mood,ms){
 /* しゃだはる君のようす：follow＝ついてくる／nap＝昼寝／watch＝見張り／errand＝おつかい中／hide＝雷がこわくて家に避難中 */
 /* v1.69.0（ロードマップ 畑②）：しゃだはる君の 待ちしぐさ。shadaGesture(kind)＝くんくん sniff／しっぽ wag／おすわり sit／空を 見上げる lookup／あくび yawn（kind が なければ くじ。同じものを 続けて 出さない）。
    出せるのは：畑に いて・ついてくる（follow）・立っている・吹き出しが 出ていない・ふつうの 顔・うしろの 場面も 外の 場面も ない とき。寄りそった あと 3回に 1回（shadaAccompany）、長く 待つ あいだは 6秒ごとに 3回に 1回（前の しぐさから 5秒 あけて） */
-const GEST_MS={sniff:1000,wag:1200,sit:1300,lookup:1300,yawn:1400};
+/* v1.74.0（依頼者「しゃだはる君の 畑での 可愛い 行動を いくつか 増やしたい」10月24日。この版までの 決まりは そのまま）：待ちしぐさに 3つ＝首かしげ tilt・ほじほじ dig・ごろん roll。
+   出る 決まりは いまの 5つと 同じ（shadaGestureOK・くじ pickV）。tilt と roll は えりちゃんの いる 向きへ（--tilt）。dig は 鼻を 下げて 3回 ほる＝土つぶ（.fx.dirt）が 左右に はねる。roll は 目が にっこり（CSS） */
+const GEST_MS={sniff:1000,wag:1200,sit:1300,lookup:1300,yawn:1400,tilt:1300,dig:1400,roll:1700};
 function shadaGestureOK(){
   const s=A.shada;
   return !!(S && S.intro && !hiddenNow && !modal && !reduceMotion && !home.classList.contains('on') && s.mode==='follow' && !s.gest && !bg && sceneDepth===0 && !canDownScene && !s.el.classList.contains('walking') && !s.el.classList.contains('working') && !s.bub.classList.contains('on') && s.el.dataset.mood==='normal');
 }
 function shadaGesture(kind){
   const s=A.shada; if(!shadaGestureOK()) return false;
-  kind=kind||pickV(['sniff','wag','sit','lookup','yawn']);
-  s.gest=kind; s.gestAt=Date.now(); s.el.classList.add('gest-'+kind);
-  if(kind==='lookup') gaze(s,0,-3.4,GEST_MS[kind]); else if(kind==='sniff') gaze(s,0,3,GEST_MS[kind]);
+  kind=kind||pickV(['sniff','wag','sit','lookup','yawn','tilt','dig','roll']);   /* v1.74.0：3つ 足した */
+  s.gest=kind; s.gestAt=Date.now();
+  if(kind==='tilt'||kind==='roll') s.el.style.setProperty('--tilt', A.eri.x<s.x?-1:1);   /* v1.74.0：えりちゃんの ほうへ */
+  s.el.classList.add('gest-'+kind);
+  if(kind==='lookup') gaze(s,0,-3.4,GEST_MS[kind]); else if(kind==='sniff'||kind==='dig') gaze(s,0,3,GEST_MS[kind]); else if(kind==='tilt') gazeAt(s,A.eri,GEST_MS[kind]);
+  if(kind==='dig') [250,640,1040].forEach((t,k)=>setTimeout(()=>{ if(s.gest==='dig') dirtBurst(s,k%2?1:-1); },t));   /* v1.74.0：ほる たびに 土つぶ（digNose の 下がる ところに 合わせて） */
   setTimeout(()=>{ if(s.gest===kind) gestClear(s); },GEST_MS[kind]);
   return true;
 }
 function gestClear(a){ if(!a||!a.gest) return; a.el.classList.remove('gest-'+a.gest); a.gest=null; }
+/* v1.74.0：土つぶ（ほじほじ）。顔の 下から 左右へ 2つずつ はねる（.fx.dirt。--dx/--dy＝とぶ 先。顔の 手前に） */
+function dirtBurst(s,side){ for(let k=0;k<2;k++){ const f=fx('i-tsuchi',{x:s.x+side*(5+k*5),y:s.y+15},'dirt',620); if(f){ f.style.zIndex=Math.round(s.y)+1; f.style.setProperty('--dx',(side*(12+Math.floor(rnd()*12)))+'px'); f.style.setProperty('--dy',(-(10+Math.floor(rnd()*10)))+'px'); } } }
+/* v1.74.0：ぶるぶる（えりちゃんの 水やりの しぶき＝5回に 1回／雪に 顔を つっこんだ あと）。.bob を 0.6秒 速く ふる・目を つぶる。iconId が あれば しずく（i-drop）や 雪（i-koyuki）が 3つ 飛ぶ。ことばは なし */
+function shadaShake(iconId){
+  const s=A.shada; if(reduceMotion) return;
+  gestClear(s); s.el.classList.remove('shaking'); void s.el.offsetWidth; s.el.classList.add('shaking');
+  setTimeout(()=>s.el.classList.remove('shaking'),640);
+  if(iconId) [[-1,40],[1,160],[-1,300]].forEach(([d,t])=>setTimeout(()=>{ const f=fx(iconId,{x:s.x+d*9,y:s.y-4},'spray',540); if(f){ f.style.zIndex=Math.round(s.y)+1; f.style.setProperty('--dx',(d*(18+Math.floor(rnd()*10)))+'px'); f.style.setProperty('--dy',(-(8+Math.floor(rnd()*12)))+'px'); } },t));
+}
+/* v1.74.0：水しぶき。えりちゃんが 水やりを する マス（c0）から しずくが 1つ 飛んできて、しゃだはる君が ぶるぶる。そばに いて（90px）・歩いていない ときだけ。しごとと 同時に 流れる（await しない＝テンポは そのまま） */
+async function splashShada(c0){
+  const s=A.shada; if(reduceMotion || s.mode!=='follow' || s.el.classList.contains('walking') || Math.hypot(s.x-c0.x,s.y-c0.y)>90) return;
+  await flyIcon('i-drop',{x:c0.x,y:c0.y-6},{x:s.x,y:s.y-8},.6);
+  if(s.mode!=='follow' || s.el.classList.contains('walking')) return;
+  shadaShake('i-drop');
+}
+/* v1.74.0：しっぽ ふりふり（朝の「いってらっしゃい！」・夕がたの「おかえり！」）。gest-wag と 同じ 動き。場面の 中なので 待ちしぐさの 決まり（shadaGestureOK）は 通さない */
+function shadaWag(ms){ const s=A.shada; if(reduceMotion) return; s.el.classList.add('wagging'); setTimeout(()=>s.el.classList.remove('wagging'),ms||1400); }
+/* v1.74.0：収穫した 野菜が かごへ 飛ぶのを 目で 追う（5回に 1回）。飛ぶ 時間は flyIcon と 同じ 計算。おわったら えりちゃんを 見て、もどす。歩きだしたら やめる */
+function shadaEyeFollow(from,to){
+  const s=A.shada; if(reduceMotion) return;
+  const ms=Math.round(clamp(Math.hypot(to.x-from.x,to.y-from.y)*1.4,420,900)), tok=(s.eyeTok=(s.eyeTok||0)+1);
+  s.eyeBusy=true;   /* say の 目線（相手を 見る）は かけない */
+  const stop=()=>{ if(s.eyeTok===tok) s.eyeBusy=false; };
+  [0,.35,.7,1].forEach(f=>setTimeout(()=>{ if(s.eyeTok!==tok) return; if(s.el.classList.contains('walking')){ stop(); return; } gazeAt(s,{x:from.x+(to.x-from.x)*f,y:from.y+(to.y-from.y)*f},0); },Math.round(ms*f)));
+  setTimeout(()=>{ if(s.eyeTok!==tok) return; stop(); if(s.el.classList.contains('walking')) return; gazeAt(s,A.eri,900); setTimeout(()=>{ if(s.eyeTok===tok && s.mode==='follow') setMood('shada','happy',1500); },450); },ms+160);   /* えりちゃんを 見て、にっこり */
+}
+/* v1.74.0：出来事の 中で しぐさを 出す（mode が event でも。待ちしぐさの 決まり（shadaGestureOK）は 通さない）。ms の あと はずす */
+function gestForce(kind,ms){ const s=A.shada; if(reduceMotion) return; gestClear(s); s.gest=kind; s.gestAt=Date.now(); s.el.classList.add('gest-'+kind); if(kind==='sniff'||kind==='dig') gaze(s,0,3,ms); setTimeout(()=>{ if(s.gest===kind) gestClear(s); else s.el.classList.remove('gest-'+kind); },ms); }
 function shadaIdleTick(){ const s=A.shada; if(Date.now()-(s.gestAt||0)<5000) return; if(rnd()<1/3) shadaGesture(); }
 function shadaMode(m){
   gestClear(A.shada);   /* v1.69.0 */
@@ -3654,8 +3728,8 @@ function say(who,text,ms,mood,keep){
   /* v1.69.0：話しかけた 相手へ 目線（言う 人も 聞く 人も。近く（150px）に いるとき。歩いている 人は 歩く 向きの まま）。えりちゃんの「ありがとう」「えらいね」などは、しゃだはる君が 見上げる */
   if((who==='eri'||who==='shada') && o && o.el.offsetParent && near2(a,o,150) && !reduceMotion){
     const dur=ms || (1900+text.length*95);
-    if(!a.el.classList.contains('walking')) gazeAt(a,o,dur);
-    if(!o.el.classList.contains('walking')){ const praise=who==='eri' && /ありがとう|えらいね|えらい|すごい|じょうず|いいこ/.test(text); if(!(o===A.shada && o.gest)) gazeAt(o,a,dur,praise?-3.4:null); }
+    if(!a.el.classList.contains('walking') && !a.eyeBusy) gazeAt(a,o,dur);   /* v1.74.0：収穫を 目で 追っている あいだ（eyeBusy）は そのまま */
+    if(!o.el.classList.contains('walking')){ const praise=who==='eri' && /ありがとう|えらいね|えらい|すごい|じょうず|いいこ/.test(text); if(!(o===A.shada && (o.gest||o.eyeBusy))) gazeAt(o,a,dur,praise?-3.4:null); }
   }
   let dir=who==='eri'?'toL':'toR';
   const sx=a.x-scroller.scrollLeft, vw=scroller.clientWidth, need=Math.min(190,vw*.48)+8;
@@ -7171,6 +7245,7 @@ async function playerAction(kind,i,seed){
       follow.then(()=>flyIcon('s-seed',{x:A.shada.x,y:A.shada.y+8},{x:to.x,y:to.y+2})).then(()=>renderWorld());
     }
   }else if(kind==='water'){
+    if(shadaNear && !reduceMotion && rnd()<.2) setTimeout(()=>splashShada(c0),300);   /* v1.74.0：5回に 1回、しぶきが 飛んで ぶるぶる（依頼者。しごとと 同時に 流れる） */
     await work(A.eri,i,'i-drop','water');   /* v1.63.0：3代目を 持っている 午後は、じょうろを かたむける（.pour）。v1.68.0：初代・2代目の じょうろも（work の 中で） */
     const done=[i];
     p.watered=true; p.dry=false;
@@ -7209,10 +7284,12 @@ async function playerAction(kind,i,seed){
     S.plots[i]=Object.assign(p,{crop:null,growth:0,watered:false,dry:false,soggy:false,bug:false,frost:false,dried:false,big:null});   /* v1.50.0：big ももどす */
     Snd.play('harvest'); if(big) setTimeout(()=>Snd.play('spark'),260);
     /* v1.71.0：読める 間（workTalk）。野菜が かごへ 飛ぶ あいだに 言う。大きな 野菜（v1.39.0。依頼者が了解ずみ）は いつも、ふつうの 収穫は 2回に 1回 */
-    if(shadaNear) setMood('shada','happy',1600);   /* v1.71.1：だまって 働く 回も うれしい 顔（v1.70.1 までと 同じ） */
-    const talk=(big||!quiet)?workTalk(big?'わあ、大きな'+c.name+'。':pickFresh('harvE',{n:c.name}),'happy',shadaNear?(big?'おおきいばう！':pickFresh('harvS',{n:c.name})):null,'happy',follow):Promise.resolve();
+    const watchFly=shadaNear && !reduceMotion && !A.shada.el.classList.contains('walking') && rnd()<.2;   /* v1.74.0：5回に 1回、かごへ 飛ぶ 野菜を 目で 追う（依頼者）。その 回は 目を あけたまま（うれしい 顔は 目を とじるので 目線が 見えない）＝追いおわって えりちゃんを 見てから にっこり（shadaEyeFollow） */
+    if(shadaNear && !watchFly) setMood('shada','happy',1600);   /* v1.71.1：だまって 働く 回も うれしい 顔（v1.70.1 までと 同じ） */
+    const talk=(big||!quiet)?workTalk(big?'わあ、大きな'+c.name+'。':pickFresh('harvE',{n:c.name}),'happy',shadaNear?(big?'おおきいばう！':pickFresh('harvS',{n:c.name})):null,watchFly?null:'happy',follow):Promise.resolve();
     renderPlots();
     addHarvest(key,big?2:1,big,true);   /* v1.61.1：記録は 飛ぶ前に（とちゅうで とじても 野菜が 消えない）。かごの絵は 飛んだあと */
+    if(watchFly) shadaEyeFollow(c0,{x:290,y:243});   /* v1.74.0：行き先は flyToBasket と 同じ */
     await flyToBasket(key,c0,big);
     renderWorld();
     log(big?'大きな'+c.name+'を収穫しました。かごに2こぶんです。':c.name+'を1こ収穫しました。');
@@ -11506,13 +11583,119 @@ EVENTS.push(
       await tellWait();
     }}
 );
+/* v1.74.0（依頼者「しゃだはる君の 畑での 可愛い 行動を いくつか」。ことばは 依頼者 了解ずみ 10月24日 08:46「この内容でお願いします。」）：季節の 出来事 3つ＋どの 季節も 1つ。みんな ひとりの 出来事（EVENT_SOLO＝うしろで 流せる）。1日 1回ずつ。
+   道の 上（stone・slip と 同じ 列）で。いまの 出来事の 決まり（1日の 上限・3行動 あける・季節の 出来事は 1日 1つ）は そのまま */
+EVENTS.push(
+  /* 春：花だんの 花の においを かいで、くしゅん（花だんが あって・晴れ・花が ひらいている）。花だん（692〜828・326〜378）の 近い がわの はしに 立つ */
+  { id:'flower', w:{helpful:1.2,goofy:1.6,sleepy:.8}, can:()=>season()===0 && !!S.unlocked.flower && !S.raining && bloomStage()>0 && S.flowerDay!==S.day,
+    async run(){
+      S.flowerDay=S.day;
+      const s=A.shada, left=s.x<760, spot=left?{x:684,y:364}:{x:838,y:364};
+      await moveShada(spot);
+      await pause(200);
+      gestForce('sniff',1100); gaze(s,left?3.2:-3.2,2.6,1100);   /* 花の ほうへ 鼻を 近づけて くんくん */
+      await pause(1250);
+      if(!reduceMotion){ s.el.classList.add('sneeze'); setTimeout(()=>s.el.classList.remove('sneeze'),640); }
+      fxText('くしゅん！',{x:spot.x+(left?24:-24),y:spot.y-40}); Snd.play('blow');
+      await pause(750);
+      await tellWait(); setMood('shada','happy',1800);
+      await tell('shada','おはな、いいにおいばう。');
+      setMood('eri','smile',2000); addNagomi(1,s);
+      log('しゃだはる君が、花だんの花のにおいをかいで、くしゅんと くしゃみをしました。');
+      await tellWait();
+    }},
+  /* 秋：落ち葉の 山に とびこむ（晴れ）。はっぱが はねて、1枚 頭に のる（5〜6秒で 落ちる）。山は 足もとの 手前に 置く＝足が 葉に うずまる */
+  { id:'leafpile', w:{helpful:1.2,goofy:2,sleepy:.7}, can:()=>season()===2 && !S.raining && S.leafDay!==S.day,
+    async run(){
+      S.leafDay=S.day;
+      const s=A.shada, y=FY+3*(PS+G)+4, x=clamp(s.x+(rnd()<.5?-1:1)*(80+Math.floor(rnd()*50)),FX+24,FX+4*(PS+G)-30), bf=s.x<x?1:-1;   /* bf＝山の 向き（1＝右に ある） */
+      let ended=false;
+      const pile=fx('i-ochiba',{x,y:y+17},'still',0);   /* 山は 横長 48×24。あご（y+5）から 足もとの 下（y+29）まで＝顔の 下 半分が 葉に うずまる */
+      if(pile){ pile.firstChild.style.width='48px'; pile.firstChild.style.height='24px'; pile.style.zIndex=y+40; pile.style.opacity='0'; pile.style.transition='opacity .4s'; void pile.offsetWidth; pile.style.opacity='1'; }
+      await moveShada({x:x-bf*32,y});   /* 山の 手前まで */
+      await pause(350);
+      Snd.play('hop');
+      if(!reduceMotion){ s.el.style.setProperty('--lean','0deg'); s.el.classList.add('jumping'); setTimeout(()=>s.el.classList.remove('jumping'),920); }
+      await moveTo(s,{x,y},{slide:true,ms:380});   /* とびこむ（はねながら すべりこむ） */
+      [0,140,300,440].forEach((t,k)=>setTimeout(()=>{ if(ended) return; const d=k%2?1:-1, f=fx('i-momiji',{x:x+d*(6+k*3),y:y+8},'spray',700); if(f){ f.style.zIndex=y+41; f.firstChild.style.width=f.firstChild.style.height='14px'; f.style.setProperty('--dx',(d*(16+k*6))+'px'); f.style.setProperty('--dy',(-(26+Math.floor(rnd()*14)))+'px'); } },t));
+      setTimeout(()=>{ if(ended || reduceMotion) return; const h=document.createElement('i'); h.className='onHead'; h.innerHTML=icon('i-momiji'); s.el.querySelector('.bob').appendChild(h); setTimeout(()=>{ h.style.opacity='0'; setTimeout(()=>h.remove(),450); },5600); },700);
+      await pause(1000);
+      await tellWait(); setMood('shada','happy',1800);
+      await tell('shada','はっぱ、ふかふかばう！');
+      setMood('eri','smile',2000); addNagomi(1,s);
+      log('しゃだはる君が、落ち葉の山にとびこみました。頭に、はっぱが1枚のっています。');
+      await tellWait();
+      await moveShada({x:x+(bf>0?-36:36),y});   /* 山から 出る（来た がわへ） */
+      ended=true;
+      if(pile){ pile.style.opacity='0'; setTimeout(()=>pile.remove(),450); }
+    }},
+  /* 冬：雪に 顔を つっこむ（雪が つもっている・晴れ）。鼻に 雪を つけて 出てきて「つめたいばう！」→ ぶるぶる */
+  { id:'snowdive', w:{helpful:1,goofy:2.2,sleepy:.7}, can:()=>season()===3 && !!S.snowCover && !S.raining && S.snowDiveDay!==S.day,
+    async run(){
+      S.snowDiveDay=S.day;
+      const s=A.shada, y=FY+3*(PS+G)+6, x=clamp(s.x+(rnd()<.5?-1:1)*(60+Math.floor(rnd()*50)),FX+24,FX+4*(PS+G)-24);
+      let ended=false, nose=null;
+      await moveShada({x,y});
+      await pause(250);
+      gaze(s,0,3,1300);
+      const heap=fx('i-yukiyama',{x,y:y+17},'still',0);   /* 雪の 山（横長 48×24）を あごの 前に＝顔の 下 半分が 雪に 入る */
+      if(heap){ heap.firstChild.style.width='48px'; heap.firstChild.style.height='24px'; heap.style.zIndex=y+40; heap.style.opacity='0'; heap.style.transition='opacity .25s'; void heap.offsetWidth; heap.style.opacity='1'; }
+      if(!reduceMotion){ s.el.classList.add('dive'); setTimeout(()=>s.el.classList.remove('dive'),1500); }
+      setTimeout(()=>{ if(ended) return; [[-1,0],[1,80],[-1,160]].forEach(([d,t])=>setTimeout(()=>{ if(ended) return; const f=fx('i-koyuki',{x:s.x+d*7,y:s.y+12},'spray',520); if(f){ f.style.zIndex=Math.round(s.y)+1; f.style.setProperty('--dx',(d*(12+Math.floor(rnd()*10)))+'px'); f.style.setProperty('--dy',(-(6+Math.floor(rnd()*8)))+'px'); } },t)); },380);
+      setTimeout(()=>{ if(ended || reduceMotion) return; nose=document.createElement('i'); nose.className='snowNose'; s.el.querySelector('.bob').appendChild(nose); },1150);
+      await pause(1500);
+      await tellWait(); setMood('shada','happy',1800);
+      await tell('shada','つめたいばう！');
+      await pause(500);
+      shadaShake('i-koyuki'); setTimeout(()=>{ if(nose){ nose.remove(); nose=null; } },220);
+      setMood('eri','smile',2000); addNagomi(1,s);
+      log('しゃだはる君が、雪に顔をつっこみました。鼻に雪をつけて、ぶるぶるしました。');
+      await tellWait();
+      ended=true; if(nose){ nose.remove(); nose=null; }
+      if(heap){ heap.style.opacity='0'; setTimeout(()=>heap.remove(),300); }
+    }},
+  /* どの 季節：すずめと にらめっこ（晴れ）。道に おりた すずめへ、はねずに そーっと 近づく → 飛んでいく →「にげられたばう……」。絵（i-suzume）は 左向き＝しゃだはる君の ほうを 向く（--bf） */
+  { id:'bird', w:{helpful:.8,goofy:1.2,sleepy:.6}, can:()=>!S.raining && S.birdDay!==S.day,
+    async run(){
+      S.birdDay=S.day;
+      const s=A.shada, y=FY+3*(PS+G)+2, bxOf=d=>clamp(s.x+d*(120+Math.floor(rnd()*50)),FX+20,FX+4*(PS+G)-20);
+      let dir=rnd()<.5?-1:1, bx=bxOf(dir);
+      if(Math.abs(bx-s.x)<70 || Math.hypot(bx-A.eri.x,y-A.eri.y)<56){ dir=-dir; bx=bxOf(dir); }
+      const bf=bx>s.x?1:-1;
+      const by=y+12;   /* 絵の 足が 道に つく 高さ（しゃだはる君の 足もと y+23 に 合わせる） */
+      const bird=fx('i-suzume',{x:bx,y:by-150},'still bird',0);
+      if(bird){ bird.style.zIndex=y+14; bird.style.setProperty('--bf',bf); bird.style.transition='transform 680ms ease-in'; void bird.offsetWidth; bird.style.transform='translate('+bx+'px,'+by+'px)'; }
+      await pause(720);
+      if(bird) bird.classList.add('hopping');
+      gazeAt(s,{x:bx,y},1500);
+      await pause(400);
+      s.el.style.setProperty('--tilt',bf); gestForce('tilt',1300); gazeAt(s,{x:bx,y},1300);   /* 首を かしげて 見る */
+      await pause(1400);
+      const stop={x:bx-bf*46,y:y+2};
+      if(!reduceMotion) s.el.classList.add('creep');   /* かがんで */
+      await moveTo(s,stop,{slide:true,ms:Math.round(clamp(Math.hypot(stop.x-s.x,stop.y-s.y)*6,700,1900))});   /* そーっと（はねずに すべる。ふだんの 半分の 速さ） */
+      gazeAt(s,{x:bx,y},1400);
+      await pause(900);   /* にらめっこ */
+      s.el.classList.remove('creep');
+      if(bird){ bird.classList.remove('hopping'); bird.classList.add('flyoff'); bird.style.transition='transform 950ms ease-in,opacity 950ms'; bird.style.transform='translate('+(bx+bf*120)+'px,'+(by-210)+'px)'; bird.style.opacity='0'; setTimeout(()=>bird.remove(),1000); }
+      if(!reduceMotion){ s.el.classList.add('lookup'); setTimeout(()=>s.el.classList.remove('lookup'),1400); }
+      gaze(s,bf*2.4,-3.2,1400);
+      await pause(900);
+      await tellWait();
+      await tell('shada','にげられたばう……');
+      setMood('eri','smile',2000); addNagomi(1,s);
+      log('しゃだはる君が、すずめに そーっと近づきましたが、飛んでいってしまいました。');
+      await tellWait();
+      s.el.classList.remove('creep'); if(bird) bird.remove();
+    }}
+);
 function watchable(){
   return growingPlots().filter(i=>{ const p=S.plots[i], remain=totalOf(p)-p.growth; return p.watered && remain>=60 && remain<=Math.min(120,DAY_END-S.clock-30); });   /* v1.27.3：見張り（じーっ）は、あと2時間半までの野菜だけ（前は5時間。じっとしている時間が長すぎた） */
 }
 /* 季節の出来事（v1.14.0。依頼者の希望「もう少し頻度を高く」）：どの季節も1回はかならず＋出やすさ2倍。
    S.seasonEv＝{sy:季節の通し番号, seen:この季節に もう出たか, day:さいごに出た日}。出やすさは2倍。同じ日に2回は出さない（1季節に1〜2回になる）。
    季節のさいごの日に まだなら、しゃだはる君が動ける さいしょの機会に かならず出す（1日の上限も、あいだの3行動も またぐ）。おうちの pickPre と同じ考えかた */
-const SEASONAL_EV={butterfly:1,shade:1,acorn:1,snowman:1,slip:1,tonbo:1};   /* v1.57.0：tonbo（夏。田植えをした年） */
+const SEASONAL_EV={butterfly:1,shade:1,acorn:1,snowman:1,slip:1,tonbo:1,flower:1,leafpile:1,snowdive:1};   /* v1.57.0：tonbo（夏。田植えをした年）。v1.74.0：flower（春）・leafpile（秋）・snowdive（冬） */
 function seasonEv(){ const sy=Math.floor((S.day-1)/SEASON_DAYS); if(!S.seasonEv || S.seasonEv.sy!==sy) S.seasonEv={sy,seen:false,day:0}; return S.seasonEv; }
 async function maybeEvent(resting,forceId){
   if(A.shada.mode!=='follow') return false;
@@ -11542,7 +11725,7 @@ async function maybeEvent(resting,forceId){
   return true;
 }
 /* v1.37.2：しゃだはる君ひとりで進む出来事（うしろで流せる）。pull（いっしょに引っぱる）と shade（えりちゃんが小屋へ）は えりちゃんが動くので いままでどおり止める */
-const EVENT_SOLO={water:1,bug:1,stone:1,soggy:1,nap:1,watch:1,butterfly:1,acorn:1,snowman:1,slip:1,compost:1,tonbo:1};   /* compost は v1.40.0 */
+const EVENT_SOLO={water:1,bug:1,stone:1,soggy:1,nap:1,watch:1,butterfly:1,acorn:1,snowman:1,slip:1,compost:1,tonbo:1,flower:1,leafpile:1,snowdive:1,bird:1};   /* compost は v1.40.0。flower・leafpile・snowdive・bird は v1.74.0 */
 let forceWait=false;   /* しらべる用：true のあいだは うしろで流さず待つ */
 
 /* ================= 1日の流れ ================= */
@@ -11944,6 +12127,7 @@ async function endDayBody(){
     place(A.homare,SPOT.doorHomare.x,SPOT.doorHomare.y,0);
     A.homare.el.classList.add('on');
     say('homare',vary('doorH',['おかえり！','えりちゃん、おかえり！','おかえり！おつかれさま！','おかえり！まってたよ！','ふたりとも、おかえり！']));   /* v1.55.0：2つ足した */
+    shadaWag(1500); setMood('shada','happy',1500);   /* v1.74.0：しっぽ ふりふり（依頼者） */
     await pause(1100);
     /* えりちゃんも、玄関の前でこたえる（外のあいさつは「！」。おうちの中の「ただいま。」とは分けている） */
     A.homare.bub.classList.remove('on');
@@ -12114,6 +12298,7 @@ async function morning_(info){
       A.eri.bub.classList.remove('on'); A.shada.bub.classList.remove('on'); await pause(250);
     }
     await tell('homare','いってらっしゃい！',null,true);
+    shadaWag(1500); setMood('shada','happy',1500);   /* v1.74.0：しっぽ ふりふり（依頼者） */
     await tellWait();
     A.homare.bub.classList.remove('on');
     await tell('eri','いってきます！','happy',true);
@@ -12704,7 +12889,7 @@ if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitleEn)
 { const v=document.querySelector('.ver'); let taps=[];
   if(v) v.addEventListener('click',e=>{ e.stopPropagation(); const t=Date.now(); taps=taps.filter(x=>t-x<3000); taps.push(t); if(taps.length>=5){ taps=[]; openGyojiMenu(); } }); }
 if(location.hash.indexOf('debug')>=0){
-  window.__hatake={ tell, tellWait, readMs, workTalk, eriLineDone, jobQuiet, jobInfo:()=>({lastJob,jobStreak,lineUntil}), teaTime, ladleOn, flipOn, flipOff, gaze, gazeAt, gazeClear, shadaGesture, shadaGestureOK, gestClear, GEST_MS, breath, get REPLY_AT(){return REPLY_AT;}, get WALK_AFTER(){return WALK_AFTER;}, get lineRead(){return lineRead;}, clampView, BAND_Y, CARRY_PX, carryMs, hcarry, hLayout, eriTool, eriToolFor, WORK_MS, work, seedFall, hhold, ukeTake, hbubOff, poseArms, strumHand, POSE, holdCenter, poseSpot, roomToBody, chopSpot, POT_HAND, stirBurst, chopOn, chopOff, eatOn, eatOff, PLAY_SETS, THUNDER_SETS, HIDE_LINES, thunderScene, SHELTER, SHELTER_FREE, resumeEveningEnd, saveData, get eveSnap(){return eveSnap;}, goHidden, goVisible, jastaSuikaNight, jastaSuikaDue, jastaSuikaPreview, jportion, getJasta, get JA(){return JA;}, hgassho, carryBasketHome, carryBasketOut, basketTo, basketFrontOf, BK, BK_HOME, get basketAtDoor(){return basketAtDoor;}, set basketAtDoor(v){basketAtDoor=!!v;}, fitTop, renderNagomi, addNagomi, hNagomi, dressHome, HFUKU, renderPaddyLife, paddyLifeKind, paddyFrogTap, tonboFlyTo, tonboNose, paddyLifePreview, PADDY_FROGS, TONBO_ZONE, get plTonbo(){return plTonbo;}, riceBagLevel, renderRiceBag, gyojiLog, get hanamiRice(){return hanamiRice;}, tipOK, GIFT_TALK, VISIT_SETS, VISIT_CALL, visitScene, vary, saidOK, get SAID(){return SAID;}, ERI_TALK, OKAWARI, eriTalk, etSlot, MORN_X, mornExtra, reportLine, svgPop, liftOffFaces, walkHomeTogether, camGlide, bplates, bslice, bcakeSVG, get cameWithH(){return cameWithH;}, TANBO, tanboDue, hakobiDue, shinmaiDue, tanboScene, hakobiScene, shinmaiTalk, shinmaiPreview, tanboPreview, tanboState, renderPaddy, paddyArt, paddyHint, paddyTap, giftTonight, giftServed, giftPick, moreServe, moreEaten, giftRiceTalk, dessertAdd, dessertDue, dessertTime, dessertForm, fieldDessertNight, gourmetPreview, FIELD_DESSERT, DESSERT_LINES, GIFT_BY_SEASON, GIFT_EAT, RICE_DISHES, RICE_TALK, menuOK, riceShow, riceFill, get riceMix(){return riceMix;}, set riceMix(v){riceMix=v||'';}, RICE_MIX, openSeeds, chooseMenu, closeSheet, get tanboView(){return tanboView;}, sayTest:say, focusRange, seedOK, recipeOK, hsay, bubbleHTML, TSUKIMI, hotDry, returnBigCan, eriReturnBigCan, eriCarry, DRY_RUN, spOf, spKeys, spEmpty, HOT_AT, get bigCanCarry(){return bigCanCarry;}, get wxQueue(){return wxQueue;}, weatherScenes, askScene, askLeft, renderAsk, compostTap, ASK_MAX, COMPOST_MAX, place, moveTo, moveShada, shadaCanDown, shadaCarry, shadaMode, afterAction, returnCan, shadaSelfWater, get canDownScene(){return canDownScene;}, rollBig, spawnBug, startRain, yearReview, yearReviewScene, yearSnap, yearLines, openZukan, openDiary, dayStr, get sheetKind(){return sheetKind;}, get bg(){return bg;}, bgWait, set forceWait(v){forceWait=v;}, gyojiPat, GYOJI_LEAD, birthdayNight, get gyojiStep(){return gyojiStep;}, rollWeather, pickPre, gyojiNightDue, nightOn, nightOff, nightOuting, fwLaunch, senkoOn, HANABI, hangCan, hangScene, hangMorning, renderShed, shedTap, nextHoshiDish, hoshiReady, morningPlan, morning, GYOJI, GYOJI_SCENE, gyojiDue, gyojiScene, hRoute, hCross, hInB, HTABLE, HSPOT, hmove, get S(){return S;}, get busy(){return busy;}, get hiddenNow(){return hiddenNow;}, get pausedMs(){return pausedMs;}, gnow, shadaAcc, lapBlanket, heightArt, plantArt, pawArt, fishbowlArt, BLANKET, ACC, SONGS, playSong, homeMorning, get sceneDepth(){return sceneDepth;}, pumpTimers, mikanFit, basketPlace, get lastErr(){return lastErr;}, get stall(){return {n:stallN,max:stallMax};}, saveDiag, saveNow, get saveOK(){return saveOK;}, A, homeEvening, pickPre, dishCandidates, makeRequest, get HA(){return HA;}, advance, maybeEvent, renderAll, addHarvest, checkUnlocks, nextMorning, Store, CROPS, RECIPES, UNLOCKS, EVENTS, FRIDGE, rollFridge, rollWeather, placeFrost, weatherScenes, importSave, exportSave, normalize, Snd, GIFTS, planVisit, visitDue, fitVisit, DISH, setPortions, shelterAtShed, restAtHome, placeTreasure, rest, FRUITS, plantTree, plantVine, pickFruit, TREES, treeTap, dessertNight, fruitMorning, renderTree, moveShada, shadaSelfWater, selfWaterTarget, returnCan, playerAction, endDay, plantBasil, pickBasil, pickV, judgeBigDay, giftDetour, basilInFridge, SLOT_MAX, makeRoomFor, seasonSwap, fixup, workLeft, decorShown, closetTalk, openFridge, cuckoo, feedFish, mirrorReflect, strum, playUke, sitRock, seasonalDue, seasonalShow, SEASONAL, SEASONAL_SCENE, setupRoom, REWARD_NIGHT, DECOR, REWARDS, rewardSetup, LOOP, LOOP_SCENE, lapNext, lapReward, lapReady, lapPreview, renderLooks, showLook, bringOut, tugGame, tugRope, paintArt, LOOK_ART, lookN, lookV, nextReward, dueReward, renderNagomi, openNagomi, rewardCard, sweetsNight, updatePhoto, get SW(){return {n:S.swN,day:S.swDay,can:S.canOut};},
+  window.__hatake={ tell, tellWait, readMs, workTalk, eriLineDone, jobQuiet, jobInfo:()=>({lastJob,jobStreak,lineUntil}), teaTime, ladleOn, flipOn, flipOff, gaze, gazeAt, gazeClear, shadaGesture, shadaGestureOK, gestClear, GEST_MS, shadaShake, shadaWag, shadaEyeFollow, splashShada, gestForce, dirtBurst, breath, get REPLY_AT(){return REPLY_AT;}, get WALK_AFTER(){return WALK_AFTER;}, get lineRead(){return lineRead;}, clampView, BAND_Y, CARRY_PX, carryMs, hcarry, hLayout, eriTool, eriToolFor, WORK_MS, work, seedFall, hhold, ukeTake, hbubOff, poseArms, strumHand, POSE, holdCenter, poseSpot, roomToBody, chopSpot, POT_HAND, stirBurst, chopOn, chopOff, eatOn, eatOff, PLAY_SETS, THUNDER_SETS, HIDE_LINES, thunderScene, SHELTER, SHELTER_FREE, resumeEveningEnd, saveData, get eveSnap(){return eveSnap;}, goHidden, goVisible, jastaSuikaNight, jastaSuikaDue, jastaSuikaPreview, jportion, getJasta, get JA(){return JA;}, hgassho, carryBasketHome, carryBasketOut, basketTo, basketFrontOf, BK, BK_HOME, get basketAtDoor(){return basketAtDoor;}, set basketAtDoor(v){basketAtDoor=!!v;}, fitTop, renderNagomi, addNagomi, hNagomi, dressHome, HFUKU, renderPaddyLife, paddyLifeKind, paddyFrogTap, tonboFlyTo, tonboNose, paddyLifePreview, PADDY_FROGS, TONBO_ZONE, get plTonbo(){return plTonbo;}, riceBagLevel, renderRiceBag, gyojiLog, get hanamiRice(){return hanamiRice;}, tipOK, GIFT_TALK, VISIT_SETS, VISIT_CALL, visitScene, vary, saidOK, get SAID(){return SAID;}, ERI_TALK, OKAWARI, eriTalk, etSlot, MORN_X, mornExtra, reportLine, svgPop, liftOffFaces, walkHomeTogether, camGlide, bplates, bslice, bcakeSVG, get cameWithH(){return cameWithH;}, TANBO, tanboDue, hakobiDue, shinmaiDue, tanboScene, hakobiScene, shinmaiTalk, shinmaiPreview, tanboPreview, tanboState, renderPaddy, paddyArt, paddyHint, paddyTap, giftTonight, giftServed, giftPick, moreServe, moreEaten, giftRiceTalk, dessertAdd, dessertDue, dessertTime, dessertForm, fieldDessertNight, gourmetPreview, FIELD_DESSERT, DESSERT_LINES, GIFT_BY_SEASON, GIFT_EAT, RICE_DISHES, RICE_TALK, menuOK, riceShow, riceFill, get riceMix(){return riceMix;}, set riceMix(v){riceMix=v||'';}, RICE_MIX, openSeeds, chooseMenu, closeSheet, get tanboView(){return tanboView;}, sayTest:say, focusRange, seedOK, recipeOK, hsay, bubbleHTML, TSUKIMI, hotDry, returnBigCan, eriReturnBigCan, eriCarry, DRY_RUN, spOf, spKeys, spEmpty, HOT_AT, get bigCanCarry(){return bigCanCarry;}, get wxQueue(){return wxQueue;}, weatherScenes, askScene, askLeft, renderAsk, compostTap, ASK_MAX, COMPOST_MAX, place, moveTo, moveShada, shadaCanDown, shadaCarry, shadaMode, afterAction, returnCan, shadaSelfWater, get canDownScene(){return canDownScene;}, rollBig, spawnBug, startRain, yearReview, yearReviewScene, yearSnap, yearLines, openZukan, openDiary, dayStr, get sheetKind(){return sheetKind;}, get bg(){return bg;}, bgWait, set forceWait(v){forceWait=v;}, gyojiPat, GYOJI_LEAD, birthdayNight, get gyojiStep(){return gyojiStep;}, rollWeather, pickPre, gyojiNightDue, nightOn, nightOff, nightOuting, fwLaunch, senkoOn, HANABI, hangCan, hangScene, hangMorning, renderShed, shedTap, nextHoshiDish, hoshiReady, morningPlan, morning, GYOJI, GYOJI_SCENE, gyojiDue, gyojiScene, hRoute, hCross, hInB, HTABLE, HSPOT, hmove, get S(){return S;}, get busy(){return busy;}, get hiddenNow(){return hiddenNow;}, get pausedMs(){return pausedMs;}, gnow, shadaAcc, lapBlanket, heightArt, plantArt, pawArt, fishbowlArt, BLANKET, ACC, SONGS, playSong, homeMorning, get sceneDepth(){return sceneDepth;}, pumpTimers, mikanFit, basketPlace, get lastErr(){return lastErr;}, get stall(){return {n:stallN,max:stallMax};}, saveDiag, saveNow, get saveOK(){return saveOK;}, A, homeEvening, pickPre, dishCandidates, makeRequest, get HA(){return HA;}, advance, maybeEvent, renderAll, addHarvest, checkUnlocks, nextMorning, Store, CROPS, RECIPES, UNLOCKS, EVENTS, FRIDGE, rollFridge, rollWeather, placeFrost, weatherScenes, importSave, exportSave, normalize, Snd, GIFTS, planVisit, visitDue, fitVisit, DISH, setPortions, shelterAtShed, restAtHome, placeTreasure, rest, FRUITS, plantTree, plantVine, pickFruit, TREES, treeTap, dessertNight, fruitMorning, renderTree, moveShada, shadaSelfWater, selfWaterTarget, returnCan, playerAction, endDay, plantBasil, pickBasil, pickV, judgeBigDay, giftDetour, basilInFridge, SLOT_MAX, makeRoomFor, seasonSwap, fixup, workLeft, decorShown, closetTalk, openFridge, cuckoo, feedFish, mirrorReflect, strum, playUke, sitRock, seasonalDue, seasonalShow, SEASONAL, SEASONAL_SCENE, setupRoom, REWARD_NIGHT, DECOR, REWARDS, rewardSetup, LOOP, LOOP_SCENE, lapNext, lapReward, lapReady, lapPreview, renderLooks, showLook, bringOut, tugGame, tugRope, paintArt, LOOK_ART, lookN, lookV, nextReward, dueReward, renderNagomi, openNagomi, rewardCard, sweetsNight, updatePhoto, get SW(){return {n:S.swN,day:S.swDay,can:S.canOut};},
     visit:async()=>{ if(busy) return false; busy=true; renderButtons(); S.oji={sy:Math.floor((S.day-1)/SEASON_DAYS),day:S.day,at:S.clock,done:false}; await visitScene(); busy=false; renderButtons(); return true; },
     force:async id=>{ if(busy) return false; busy=true; renderButtons(); S.sinceEvent=9; const r=await maybeEvent(false,id); await checkUnlocks(); busy=false; renderButtons(); return r; } };
 }
