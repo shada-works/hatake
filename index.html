@@ -389,18 +389,19 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 #actors .actor.hasTool .tool{display:block}
 #actors .actor .tool.bag{transform:none}
 #actors .actor .tool svg{width:100%;height:100%;display:block}
-#actors .actor .tool.kuwa svg{transform-origin:22% 8%;transform:rotate(-38deg)}
+#actors .actor .tool.kuwa{margin:13px 0 0 -40px}   /* v1.76.1（依頼者「くわ・鎌は 頭の 上側ではなく 顔の 下側から」）：持ち手（支点）を あごの 左（コマの (6,38)）に。前は 前髪の 左（(9,10)） */
+#actors .actor .tool.kuwa svg{transform-origin:22% 8%;transform:rotate(-104deg)}   /* v1.76.1：休み＝柄を 左上へ（刃は 目の 高さの 左）。前は -38deg */
 #actors .actor.working .tool.kuwa svg{animation:hoeSwing .3s ease-in-out 3}
-@keyframes hoeSwing{0%,100%{transform:rotate(-38deg)}40%{transform:rotate(14deg)}55%{transform:rotate(12deg)}}
+@keyframes hoeSwing{0%,100%{transform:rotate(-104deg)}40%{transform:rotate(-29deg)}55%{transform:rotate(-32deg)}}   /* v1.76.1：ふり下ろすと 刃が 左下の 地面へ（前は -38 → 14） */
 #actors .actor .tool.bag svg{transform-origin:50% 70%}
 #actors .actor.working .tool.bag svg{animation:bagTip .4s ease-in-out 2}
 @keyframes bagTip{0%,100%{transform:rotate(0)}35%,65%{transform:rotate(26deg)}}
 #actors .actor .tool.jouro svg{transform:rotate(-8deg)}   /* クラス名は jouro（.can に すると 3代目の .actor.eri .can の 置き場所が かぶる） */
 #actors .actor.working .tool.jouro svg{animation:canTip .44s ease-in-out 1}
-#actors .actor .tool.kama{margin-top:-7px}   /* v1.73.13：鎌は 手の 高さ（顔の まんなかより 8px 下） */
-#actors .actor .tool.kama svg{transform-origin:20% 8%;transform:rotate(-14deg)}   /* v1.73.13：鎌。柄の 上を 支点に、刈る あいだ ひと ふり（work の 0.44秒）＝上から いねの 根もとへ */
+#actors .actor .tool.kama{margin:13px 0 0 -40px}   /* v1.76.1：鎌も 持ち手を あごの 左に（v1.73.13 は 顔の まんなかより 8px 下＝ほおの 高さ） */
+#actors .actor .tool.kama svg{transform-origin:20% 8%;transform:rotate(-38deg)}   /* v1.76.1：休み＝柄を 左下へ（刃は 左下）。前は -14deg */
 #actors .actor.working .tool.kama svg{animation:kamaSwing .44s ease-in-out 1}
-@keyframes kamaSwing{0%,100%{transform:rotate(-14deg)}45%{transform:rotate(30deg)}62%{transform:rotate(26deg)}}
+@keyframes kamaSwing{0%,100%{transform:rotate(-38deg)}45%{transform:rotate(10deg)}62%{transform:rotate(6deg)}}   /* v1.76.1：刈る ときは あごの 下へ（前は -14 → 30） */
 .actor.shada.hasCan.working.job-water .can{animation:canTip .44s ease-in-out 1}   /* v1.68.0：しゃだはる君の じょうろも かたむける */
 .actor.tumble .bob{animation:tumble .7s ease-in-out 1}
 .actor.wobble .bob{animation:wobble .46s ease-in-out infinite}
@@ -1661,7 +1662,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.76.0</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.76.2</span></span>
   </div>
 
   <div class="hud">
@@ -12217,7 +12218,7 @@ async function endDayBody(){
   /* 帰り道は、ゆっくり（v1.18.0。依頼者の希望：「帰ろう」のセリフが読めるように）。ふたりのセリフは、立ちどまったまま読めるようにして（約3秒）、しまってから歩きだす。歩く速さも ふだんの6割くらいに */
   /* v1.64.0：ことばは 読める長さ（readMs）だけ。ふたりの ことばは 両方 残す */
   lineUntil=0;
-  await tell('eri', S.clock>=DUSK ? pickV(['そろそろ帰ろっか。','日がくれてきたね。帰ろう。']) : pickV(['今日はここまでにしよっか。','つづきは、あしたね。']),'smile',true);   /* v1.35.5：夕暮れ（17:00）からは「帰ろう」 */
+  await tell('eri', S.clock>=DUSK ? pickV(['そろそろ帰ろっか。','日がくれてきたね。帰ろう。']) : pickV(['今日はここまでにして、帰ろっか。','つづきは、あしたね。帰ろう。']),'smile',true);   /* v1.35.5：夕暮れ（17:00）からは「帰ろう」。v1.76.2：17:00 より 前にも 帰る ことば（依頼者「ア」。1年目は 畑が 小さく 15時ごろに 終わるので「帰ろう」が 出なかった） */
   cancelErrand(); wakeShada(false); stopWatch();
   if(A.shada.mode==='hide'){ shadaMode('follow'); setMood('shada','normal'); }
   const hkDay=hakobiDue();   /* v1.56.0：稲刈りの日は、このあと ほまれくんが 田んぼへ むかえに来て 3人で帰るので、「かえるばう！」「ほまれくん、まってるばう！」は言わない */
