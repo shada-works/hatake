@@ -1660,7 +1660,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.75.1</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.75.2</span></span>
   </div>
 
   <div class="hud">
@@ -2694,6 +2694,9 @@ const Snd=(()=>{
     poppo:(c,o,t)=>{ [0,.95].forEach(d=>{ tone(c,o,t+d,{f:698,dur:.2,vol:.1,attack:.02}); tone(c,o,t+d,{f:1396,type:'triangle',dur:.12,vol:.018,attack:.02}); tone(c,o,t+d+.27,{f:554,dur:.42,vol:.1,attack:.02}); tone(c,o,t+d+.27,{f:1108,type:'triangle',dur:.2,vol:.018,attack:.02}); }); },
     /* ウクレレ（v1.33.0）：poron＝ぽろん（ドミソドを少しずらして）、uke＝ほまれくんの歌の短い曲（約4.8秒。三角波。ハ長調） */
     poron:(c,o,t)=>{ [261.63,329.63,392,523.25].forEach((f,i)=>tone(c,o,t+i*.045,{f,type:'triangle',dur:.9,vol:.06,attack:.005})); },
+    /* v1.75.2：夢（依頼者「ウ」）。dreamUp＝明かりが 灯る とき、ハープのように 上がる（やわらかい sine・さいごに 高い きらっ）／dreamDown＝先生が 消える とき、下がる */
+    dreamUp:(c,o,t)=>{ notes(c,o,t,[NOTE.C5,NOTE.E5,NOTE.G5,NOTE.C6,NOTE.E6,NOTE.G6,NOTE.C7],.085,{type:'sine',dur:1.5,vol:.05,attack:.012,lastDur:2.4}); tone(c,o,t+.75,{f:2637.02,dur:1.2,vol:.014,attack:.02}); },
+    dreamDown:(c,o,t)=>notes(c,o,t,[NOTE.C7,NOTE.G6,NOTE.E6,NOTE.C6,NOTE.G5,NOTE.E5,NOTE.C5],.11,{type:'sine',dur:1.6,vol:.04,attack:.015,lastDur:2.6}),
     uke:(c,o,t)=>{ const q=.3, seq=[[659.25,1],[783.99,1],[880,1],[783.99,1],[659.25,1],[587.33,1],[523.25,2],[587.33,1],[659.25,1],[783.99,1],[659.25,1],[587.33,1],[523.25,3]]; let at=0;
       seq.forEach(([f,l])=>{ tone(c,o,t+at*q,{f,type:'triangle',dur:l*q*1.15,vol:.07,attack:.005}); at+=l; });
       [[0,[261.63,329.63,392]],[2.4,[392,493.88,587.33]],[3.6,[261.63,329.63,392]]].forEach(([d,fs])=>fs.forEach((f,i)=>tone(c,o,t+d+i*.04,{f,type:'triangle',dur:1.1,vol:.022,attack:.005}))); },
@@ -10911,7 +10914,7 @@ const yearEndTonight=()=>!!S && S.day%(SEASON_DAYS*4)===0;   /* 1年の さい�
 async function dreamScene(){
   const n=(yearNo()-1)%DREAM_LINES.length, L=DREAM_LINES[n], lay=$('#hDream'), box=$('#hDreamBox');
   const rd=t=>readMs(t)+(reduceMotion?400:800);
-  Snd.hush(9000+rd(L.y)+rd(L.e)+(L.aside?rd(L.aside)+800:0));   /* 夢の あいだ 音楽は 止めたまま（朝の チャイムの あとで また 流れる） */
+  Snd.hush(9500+rd(L.y)+rd(L.e)+(L.aside?rd(L.aside)+800:0));   /* 夢の あいだ 音楽は 止めたまま（朝の チャイムの あとで また 流れる）。v1.75.2：明かり → 先生の 間を 0.5秒 のばした ぶん */
   box.innerHTML='';
   const mk=(who,tok,x,y)=>{ const e=document.createElement('div'); e.className='actor dream '+who; e.dataset.face=who; e.dataset.mood='normal'; e.style.setProperty('--tok',tok+'px'); e.innerHTML='<div class="glow"></div><div class="bob"></div><div class="bubble"></div>'; e.querySelector('.bob').appendChild(makeFace(who)); e.style.transform='translate('+x+'px,'+y+'px)'; box.appendChild(e); return e; };
   const Y=mk('yoshiharu',96,200,196), E=mk('eri',64,92,334);
@@ -10919,9 +10922,9 @@ async function dreamScene(){
   if(!reduceMotion) [[48,70,0],[300,96,.9],[236,330,1.6],[40,250,.5],[322,210,2.1],[130,118,1.3],[268,40,1.9]].forEach(([x,y,d])=>{ const t=document.createElement('i'); t.className='tw'; t.style.left=x+'px'; t.style.top=y+'px'; t.style.animationDelay=d+'s'; box.appendChild(t); });
   const dsay=(el,text,cls)=>{ const b=el.querySelector('.bubble'); b.className='bubble '+cls; b.innerHTML=text.split('\n').map(bubbleHTML).join('<br>'); void b.offsetWidth; b.classList.add('on'); saidAdd(text.replace(/\n/g,'')); return sleep(rd(text)); };   /* v1.75.1：\n の ところで 折る（行ごとに bubbleHTML） */
   const dhush=el=>el.querySelector('.bubble').classList.remove('on');
-  lay.classList.add('on'); await pause(900);   /* うっすらと 明かり */
-  E.classList.add('in'); await pause(600);
-  Y.classList.add('in'); Snd.play('poron'); await pause(900);
+  lay.classList.add('on'); Snd.play('dreamUp'); await pause(1200);   /* うっすらと 明かり＋上がる音（v1.75.2） */
+  E.classList.add('in'); await pause(800);
+  Y.classList.add('in'); Snd.play('poron'); await pause(900);   /* 先生が あらわれる 瞬間の ぽろん（依頼者「ウ」＝残す） */
   look(E,2.6,-3); look(Y,-2.4,2.4);   /* えりちゃんは 見上げる・先生は えりちゃんを 見る */
   Y.dataset.mood='happy';   /* 大きな 笑顔で（指を 立てるのは 依頼者 13:43「消します」） */
   await dsay(Y,L.y,'toL');
@@ -10931,7 +10934,7 @@ async function dreamScene(){
   E.dataset.mood='smile';
   await dsay(E,L.e,'toR');
   dhush(E); await pause(400);
-  Y.classList.remove('in'); E.classList.remove('in'); await pause(750);
+  Snd.play('dreamDown'); Y.classList.remove('in'); E.classList.remove('in'); await pause(750);   /* v1.75.2：消える とき 下がる音 */
   lay.classList.remove('on'); await pause(reduceMotion?300:950);
   box.innerHTML='';
   log('1年のさいごの夜。えりちゃんは、よしはる先生の夢を見ました。「'+L.y.replace(/\n/g,'')+'」');   /* v1.75.1：できごと欄には 改行を 入れない */
@@ -12820,7 +12823,7 @@ $('#paddyBtn').addEventListener('click',e=>{ e.stopPropagation(); paddyTap(); })
 $('#tbox').addEventListener('click',e=>{ e.stopPropagation(); fxText('たからばこ：石 '+boxed('stone')+'こ'+(boxed('acorn')?'・どんぐり '+boxed('acorn')+'こ':''),{x:90,y:292}); });
 $('#sndBtn').addEventListener('click',e=>{ e.stopPropagation(); Snd.toggle(); });
 /* 音をためす：アドレスの最後に #sound をつけて開くと、右上に「音をためす」が出て、効果音を1つずつ聴ける（音の調整用。ふだんは出ない） */
-const SFX_LABEL={pick:'えらぶ',dig:'たがやす',plant:'種まき',water:'水やり',harvest:'収穫',basket:'かごに入る',shoo:'虫を追いはらう',frost:'霜柱',pet:'なでる',bau:'しゃだはる君の声',unlock:'できたものが増えた',spark:'きらっ',heart:'ハート',snail:'かたつむり',frog:'カエル',slip:'つるっ',thunder:'雷',rainbow:'虹',wind:'風',morning:'朝',season:'季節が変わった',night:'おやすみ',fridge:'冷蔵庫',chop:'料理（とんとん）',simmer:'料理（ことこと）',sizzle:'料理（じゅー）',camera:'写真',eat:'もぐもぐ',yum:'美味しい！',hop:'ぴょん',rest:'ひとやすみ',visit:'おじさんが来た',ice:'氷（カラン）',lamp:'電気をけす',furin:'風鈴',mushi:'虫の声（お月見）',hanabiUp:'花火（ヒュ〜）',hanabiDon:'花火（ドーン）',hanabiPara:'花火（パラパラ）',senko:'線香花火（パチパチ）',poto:'線香花火（ぽとっ）',chime:'玄関のチャイム（誕生日）',bday:'ハッピーバースデーの歌',blow:'ろうそくを ふーっ',poppo:'はと時計（ぽっぽー）',poron:'ウクレレ（ぽろん）',uke:'ほまれくんの歌（ウクレレ）',song1:'ほまれくんの新しい曲1（しゃだはるの うた）',song2:'ほまれくんの新しい曲2（はたけの うた）',song3:'ほまれくんの新しい曲3（3にんの うた）'};
+const SFX_LABEL={pick:'えらぶ',dig:'たがやす',plant:'種まき',water:'水やり',harvest:'収穫',basket:'かごに入る',shoo:'虫を追いはらう',frost:'霜柱',pet:'なでる',bau:'しゃだはる君の声',unlock:'できたものが増えた',spark:'きらっ',heart:'ハート',snail:'かたつむり',frog:'カエル',slip:'つるっ',thunder:'雷',rainbow:'虹',wind:'風',morning:'朝',season:'季節が変わった',night:'おやすみ',fridge:'冷蔵庫',chop:'料理（とんとん）',simmer:'料理（ことこと）',sizzle:'料理（じゅー）',camera:'写真',eat:'もぐもぐ',yum:'美味しい！',hop:'ぴょん',rest:'ひとやすみ',visit:'おじさんが来た',ice:'氷（カラン）',lamp:'電気をけす',furin:'風鈴',mushi:'虫の声（お月見）',hanabiUp:'花火（ヒュ〜）',hanabiDon:'花火（ドーン）',hanabiPara:'花火（パラパラ）',senko:'線香花火（パチパチ）',poto:'線香花火（ぽとっ）',chime:'玄関のチャイム（誕生日）',bday:'ハッピーバースデーの歌',blow:'ろうそくを ふーっ',poppo:'はと時計（ぽっぽー）',poron:'ウクレレ（ぽろん）',dreamUp:'夢（明かりが灯る）',dreamDown:'夢（消える）',uke:'ほまれくんの歌（ウクレレ）',song1:'ほまれくんの新しい曲1（しゃだはるの うた）',song2:'ほまれくんの新しい曲2（はたけの うた）',song3:'ほまれくんの新しい曲3（3にんの うた）'};
 /* 曲のボタン（v1.36.0）：#sound の画面と、版番号5回タップの画面（アプリのプレビューでも聴けるように）の両方で使う */
 const TUNE_LABEL={spring:'A. 春の畑の曲',summer:'B. 夏の畑の曲',autumn:'C. 秋の畑の曲',winter:'D. 冬の畑の曲',home:'E. おうちの曲'};
 function tuneSection(){
