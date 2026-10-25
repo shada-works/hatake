@@ -1695,7 +1695,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.77.0</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.77.1</span></span>
   </div>
 
   <div class="hud">
@@ -4999,14 +4999,15 @@ async function shinmaiTalk(E,D,H,preview,pat){
   hhush();
   const sk=first?0:(pat?((pat-2)%3+3)%3:(((T.sn||2)-2)%3+3)%3);   /* v1.56.0：2年目から 3組（依頼者が了解ずみ）。0＝前からの「今年も、新米だよ。」 */
   const sl=first?['今日から、新米だよ。','わあ、つやつやだ。','しんまい、ばう。']:[['今年も、新米だよ。','つやつやだね。','しんまい、ばう。'],['今年の 新米、どうかな。','……うん、あまい。','ほかほかばう。'],['新米の かおり、いいね。','ごはんだけで、ごちそうだね。','しんまい、ばう。']][sk];
-  const talk=async()=>{
+  const talk=async(eat)=>{   /* v1.77.1：eat＝お箸の 動き（味見の 組だけ。よぶ側が 渡す） */
     hmood(E,'happy',2200); hsay(E,sl[0],{mood:'happy'}); await w(1900);
+    if(eat){ hhush(); await w(200); await eat(); await w(300); }   /* v1.77.1（依頼者「お箸が動くよりも前に味の感想を答えている」）：「どうかな。」→ お箸（もぐもぐ）→「……うん、あまい。」の 順に */
     hmood(H,'happy',2000); hsay(H,sl[1]); await w(1700);
     hmood(D,'happy',1800); hsay(D,sl[2]); await w(1600);
     if(first){ hsay(E,'3人で作った、お米だね。',{mood:'smile'}); await w(2000); if(!preview){ hNagomi(1,{x:(E.x+H.x)/2,y:E.y-40}); await w(700); } }
     hhush();
   };
-  /* v1.56.0：「……うん、あまい。」の組（sk＝1）は 食べてからの ことばなので、ここでは言わずに talk を返す（よぶ側が「いただきます」のあとで よぶ） */
+  /* v1.56.0：「……うん、あまい。」の組（sk＝1）は 食べてからの ことばなので、ここでは言わずに talk を返す（よぶ側が「いただきます」のあとで よぶ。v1.77.1：お箸の 動き eat を 渡すと、1つめの ことばの あとに はさむ） */
   if(sk===1 && !first){ if(!preview) log('今年も、新米のごはんです。'); return talk; }
   await talk();
   if(!preview) log(first?'今夜から、新米のごはんです。':'今年も、新米のごはんです。');
@@ -5028,7 +5029,7 @@ async function shinmaiPreview(pat){
     hgassho([E,H],true);   /* v1.59.2 */
     hsay(E,'いただきます。',{mood:'smile'}); hsay(H,'いただきます。'); hsay(D,'いただきますばう。');
     await sleep(1600); hhush(); await sleep(250); hgassho([E,H],false); await sleep(400);
-    if(after){ await after(); await sleep(400); }   /* v1.56.0 */
+    if(after){ await after(async()=>{ eatOn([E,H]); await hwork(D); hfxText('もぐもぐ',{x:D.x,y:D.y-34}); Snd.play('eat'); await hwork(D); await sleep(500); eatOff([E,H]); }); await sleep(400); }   /* v1.56.0。v1.77.1：お箸の 動きも はさむ（本番と 同じ 順） */
   }finally{ await sleep(400); home.classList.remove('show'); await sleep(600); home.classList.remove('on','dark'); setupRoom(); }
 }
 async function tanboPreview(kind,pat){
@@ -10696,8 +10697,8 @@ async function homeEvening(cands){
     hsay(E,'いただきます。',{mood:'smile'}); hsay(H,'いただきます。'); hsay(D,'いただきますばう。');
     await hp(1500);
     hhush(); await hp(250); hgassho([E,H],false); await hp(300);
-    if(shinAfter) await shinAfter();
-    eatOn([E,H]); await hwork(D); hfxText('もぐもぐ',{x:D.x,y:D.y-34}); if(!homeSkip) Snd.play('eat'); await hwork(D); await hp(500); eatOff([E,H]);   /* v1.67.0：えりちゃんと ほまれくんは おはしを 口へ（しゃだはる君は これまでどおり） */
+    const eatBite=async()=>{ eatOn([E,H]); await hwork(D); hfxText('もぐもぐ',{x:D.x,y:D.y-34}); if(!homeSkip) Snd.play('eat'); await hwork(D); await hp(500); eatOff([E,H]); };   /* v1.67.0：えりちゃんと ほまれくんは おはしを 口へ（しゃだはる君は これまでどおり） */
+    if(shinAfter) await shinAfter(eatBite); else await eatBite();   /* v1.77.1（依頼者「お箸が動くよりも前に味の感想を答えている」）：新米の 味見の 組は「どうかな。」→ お箸 →「……うん、あまい。」（前は 3つ 言ってから お箸） */
     /* 料理は、食べているあいだも見せたままにする（v1.12.0。前は、ここで すぐ うすくしていた） */
     $('#hDish').classList.add('eating');
     /* 食べたときのひとことは、日によって2とおり */
