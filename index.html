@@ -1695,7 +1695,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.77.1</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.77.2</span></span>
   </div>
 
   <div class="hud">
@@ -8088,11 +8088,11 @@ const LAP=[ '',
 ];
 /* 15 おめかし（家の しゃだはる君の顔 viewBox 0 0 100 100 に のせる）。かがみの中は 左右はんたい（顔の(50,52)→(56,62)、0.24倍） */
 const ACC={
-  ribbon:'<g transform="translate(69.5 21.5) rotate(18) scale(1.15)"><path d="M0 0 C-4 -7.4 -12.4 -7.4 -12.4 0 C-12.4 7.4 -4 7.4 0 0Z" fill="#f28aa5" stroke="#d9607d" stroke-width="1.9" stroke-linejoin="round"/><path d="M0 0 C4 -7.4 12.4 -7.4 12.4 0 C12.4 7.4 4 7.4 0 0Z" fill="#f28aa5" stroke="#d9607d" stroke-width="1.9" stroke-linejoin="round"/><path d="M-1.4 2 L-4.6 11 M1.4 2 L4.6 11" stroke="#e8708f" stroke-width="3.2" stroke-linecap="round"/><circle r="3.4" fill="#ea7c98" stroke="#d9607d" stroke-width="1.5"/></g>',
+  badge:'<g transform="translate(36.5 87.2)"><circle r="7" fill="#f4c94e" stroke="#c99a2b" stroke-width="1.4"/><path d="M0.00 -5.60 L1.48 -2.04 L5.33 -1.73 L2.40 0.78 L3.29 4.53 L0.00 2.52 L-3.29 4.53 L-2.40 0.78 L-5.33 -1.73 L-1.48 -2.04Z" fill="#fff4c2" stroke="#c99a2b" stroke-width=".9" stroke-linejoin="round"/><circle cx="-2.6" cy="-2.9" r="1.1" fill="#ffffff" opacity=".85"/></g>',   /* v1.77.2（依頼者「男の子なのでリボンではなく」→「エ 星のバッジ」）：金の 星の バッジ。首輪の 左（鈴の となり）。前は ピンクの リボン（頭の 右上 translate(69.5 21.5)） */
   bowtie:'<g transform="translate(50 91.5)"><path d="M0 0 L-12.5 -6.6 Q-15 0 -12.5 6.6Z" fill="#6f93c9" stroke="#4f71a6" stroke-width="1.7" stroke-linejoin="round"/><path d="M0 0 L12.5 -6.6 Q15 0 12.5 6.6Z" fill="#6f93c9" stroke="#4f71a6" stroke-width="1.7" stroke-linejoin="round"/><path d="M-9 -2.6 v5.2 M9 -2.6 v5.2" stroke="#a9c1e4" stroke-width="1.4" stroke-linecap="round"/><rect x="-3.2" y="-3.8" width="6.4" height="7.6" rx="2.2" fill="#5a7fb8" stroke="#4f71a6" stroke-width="1.3"/></g>',
   flower:'<g transform="translate(29.5 21) scale(1.25)"><g fill="#f7b6c8" stroke="#e58aa6" stroke-width="1.2">'+[0,72,144,216,288].map(a=>'<ellipse cx="0" cy="-5.2" rx="3.6" ry="4.6" transform="rotate('+a+')"/>').join('')+'</g><circle r="3.3" fill="#f6c95a" stroke="#e0a93c" stroke-width="1"/></g>'
 };
-const ACC_ORDER=['ribbon','bowtie','flower'];
+const ACC_ORDER=['badge','bowtie','flower'];   /* v1.77.2：ribbon → badge */
 const mirrorAccArt=k=>'<g transform="translate(56 62) scale(-.24 .24) translate(-50 -52)">'+ACC[k]+'</g>';
 /* しゃだはる君の おめかし。k＝null で はずす。その夜は つけたまま（依頼者「ア」）：setupRoom（つぎの朝・つぎの夜）で はずす。
    おうちの しゃだはる君と、外の しゃだはる君（行事の夜に 外へ出るとき）の 両方に（顔の絵は 同じ makeFace） */
@@ -8758,13 +8758,13 @@ Object.assign(LOOP_SCENE,{
     await hwalkAll([[D,HSPOT.tableShada],[E,HSPOT.tableEri],[H,HSPOT.tableHomare]]);
     return 'しゃだはる君の きれいな石を、金魚ばちに 入れてあげました。';
   },
-  /* 15 かがみの前で おめかし：2周め＝リボン（えりちゃんから）／3周め＝ちょうネクタイ（ほまれくんから）／4周め＝お花（えりちゃんから）。
+  /* 15 かがみの前で おめかし：2周め＝金の 星の バッジ（えりちゃんから。v1.77.2。前は ピンクの リボン）／3周め＝ちょうネクタイ（ほまれくんから）／4周め＝お花（えりちゃんから）。
      しゃだはる君が そばへ行って つけてもらい、かがみの前へ。その夜は つけたまま（依頼者「ア」。夕ごはんの前に＝homeEvening の runPre。setupRoom で はずす） */
   async mirror(E,D,H,n){
     const v=lookV(n), k=ACC_ORDER[v-1], G=v===2?H:E;
     bringOut('mirror');
     if(v===2) hsay(H,'しゃだはる、ちょうネクタイ してみる？');
-    else hsay(E,v===1?'しゃだはる、おいで。おめかし しよう。':'しゃだはる、お花を つけてあげる。',{mood:'smile'});
+    else hsay(E,v===1?'しゃだはる、おいで。バッジを つけてあげる。':'しゃだはる、お花を つけてあげる。',{mood:'smile'});   /* v1.77.2：バッジ（依頼者の確認まち。前は「おめかし しよう。」） */
     await hp(1800);
     /* つけてあげる人の そばへ（台所で 料理中なら 台の前、食卓なら となり） */
     await hmove(D,G.y<230?{x:Math.max(140,G.x+18),y:259}:{x:G.x+(G===E?-40:34),y:G.y+14});
@@ -8779,17 +8779,17 @@ Object.assign(LOOP_SCENE,{
     await hmove(D,HSPOT.mirrorD); D.el.classList.add('lookupL'); mirrorReflect(true);
     await hp(500);
     hmood(D,'happy',2200);
-    hsay(D,['しゃだはる、かわいいばう！','かっこいいばう！','いいにおいばう。'][v-1]); hopD(D); mirrorHop();
+    hsay(D,['ほしが、ぴかぴかばう！','かっこいいばう！','いいにおいばう。'][v-1]); hopD(D); mirrorHop();   /* v1.77.2：1つめ＝バッジ（依頼者の確認まち。前は「しゃだはる、かわいいばう！」） */
     await hp(1700);
     if(v===2){ hmood(E,'happy',1800); hsay(E,'ふふ、おでかけ みたいだね。',{mood:'happy'}); }
-    else { hmood(H,'happy',1800); hsay(H,v===1?'よく にあうよ。':'お花が、よく にあうね。'); }
+    else { hmood(H,'happy',1800); hsay(H,v===1?'星の バッジ、かっこいいね。':'お花が、よく にあうね。'); }   /* v1.77.2：バッジ（依頼者の確認まち。前は「よく にあうよ。」） */
     await hp(1700);
     hmood(D,'happy',2000);
-    hsay(D,['かがみの しゃだはるも、おめかし してるばう！','かがみの しゃだはるも、かっこいいばう！','かがみの しゃだはるも、お花ばう！'][v-1]);
+    hsay(D,['かがみの しゃだはるも、ほしが ついてるばう！','かがみの しゃだはるも、かっこいいばう！','かがみの しゃだはるも、お花ばう！'][v-1]);   /* v1.77.2：1つめ＝バッジ（依頼者の確認まち。前は「おめかし してるばう！」） */
     await hp(2100);
     mirrorReflect(false); D.el.classList.remove('lookupL');
     await hwalkAll([[D,HSPOT.tableShada]]);   /* 吹き出しは しまってから（歩くと ついてきて はしで切れる） */
-    return 'かがみの前で、しゃだはる君が おめかしを しました（'+['ピンクの リボン','青い ちょうネクタイ','ピンクの お花'][v-1]+'）。';
+    return 'かがみの前で、しゃだはる君が おめかしを しました（'+['金の 星の バッジ','青い ちょうネクタイ','ピンクの お花'][v-1]+'）。';   /* v1.77.2 */
   },
   /* 16 ほまれくんの新しい曲：周ごとに 新しい曲（しゃだはるの うた → はたけの うた → 3にんの うた）。吹き出しに 歌詞 */
   async ukulele(E,D,H,n){
