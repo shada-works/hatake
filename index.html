@@ -1695,7 +1695,7 @@ h1 .en{display:block;font-size:.7em;font-weight:400;font-style:italic;color:#8a9
 <div class="game" id="game">
   <div class="head">
     <h1>えりとしゃだはるの ちいさな畑<span class="en" id="titleEn">— Days on a Tiny Garden —</span></h1>
-    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.78.0</span></span>
+    <span class="headR"><button class="sndBtn" id="sndBtn" type="button" aria-label="音"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.6L12 6v12l-4.4-3.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14.6 9.6q1.7 2.4 0 4.8"/><path class="w2" d="M17.2 7.6q3.2 4.4 0 8.8"/></g><g class="note"><path d="M20.6 9.2V2.8q2.2.5 2.5 2.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="9.3" rx="1.9" ry="1.45" transform="rotate(-20 19 9.3)" fill="currentColor"/></g><path class="slash" d="M15.2 9.6l5 5M20.2 9.6l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><span class="ver">v1.78.1</span></span>
   </div>
 
   <div class="hud">
@@ -11059,7 +11059,7 @@ async function homeMorning(){
   /* ちゃぶ台をかたづけて、ふとんを3つ。窓の外は朝の空（雨や雪になる日は、少しくもっている） */
   home.classList.add('morning','dark');
   $('#roomTable').style.display='none'; $('#futonBack').style.display=''; $('#futonFront').style.display='';
-  ['#g-cushion','#g-fan','#g-heater'].forEach(q=>{ $(q).style.display='none'; });   /* v1.28.2（依頼者の希望）：朝のふとんの場面では、しゃだはる君のクッション・せんぷうき・ストーブも、ちゃぶ台といっしょに かたづけてある。夕がたは setupRoom が出しなおす */
+  ['#g-cushion','#g-fan','#g-heater','#g-rug'].forEach(q=>{ $(q).style.display='none'; });   /* v1.28.2（依頼者の希望）：朝のふとんの場面では、しゃだはる君のクッション・せんぷうき・ストーブも、ちゃぶ台といっしょに かたづけてある。夕がたは setupRoom が出しなおす。v1.78.1（依頼者「お布団が出ている時には…画面から消して」）：まるいラグも（ふとんの 下に しいてあって、しゃだはる君の ふとんの 右に はみ出して 見えていた） */
   $('#hSky').setAttribute('fill',dull?'#cdd5dc':['#cfe6f5','#bfe3fb','#f7dfc4','#dde8f2'][season()]);
   ['#hMoon','#hMoonC','#hStars','#hRain','#hSnow'].forEach(q=>{ $(q).style.display='none'; });
   $('#hSun').style.display=dull?'none':''; $('#hMornBeam').style.display=dull?'none':''; $('#hBeam').style.display='none';
